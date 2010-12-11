@@ -12,11 +12,7 @@ class App extends unfiltered.filter.Plan {
 
   def intent = {
     case GET(Path("/rsvps", Params(p, _))) =>
-      val rsvps = Meetup.rsvps
-      val json = compact(render(rsvps map {
-        case (id, name, photo) =>
-          ("id" -> id) ~ ("name" -> name) ~ ("photo" -> photo)
-      }))
+      val json = compact(render(Meetup.rsvps))
       JsonContent ~> (p("callback") match {
         case Seq(cb) => ResponseString("%s(%s)" format(cb, json))
         case _ => ResponseString(json)
