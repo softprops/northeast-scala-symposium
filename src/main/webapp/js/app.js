@@ -4,7 +4,7 @@
       $("#tban").html(s + " functional types");
       for(var tp in typers) {
           var t = typers[tp];
-          ul.append('<li><a href={"http://www.meetup.com/ny-scala/members/'+t.id+'"><span><img src="'+t.photo+'" title="'+t.name+'"/></span></a></li>');
+          ul.append('<li><a href="http://www.meetup.com/ny-scala/members/'+t.id+'"><span><img src="'+t.photo+'" title="'+t.name+'"/></span></a></li>');
       }
       $('#rsvps li img').tipsy({fade:true, live:true, gravity:'sw'});
   });
