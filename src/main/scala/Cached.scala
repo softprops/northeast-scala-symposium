@@ -1,7 +1,8 @@
 package com.meetup
 
 trait Cached {
-  import com.google.appengine.api.memcache.{Expiration, MemcacheServiceFactory,MemcacheService}
+  import com.google.appengine.api.memcache.{Expiration, MemcacheServiceFactory, 
+                                            MemcacheService}
  
   case class Cache(val svc: MemcacheService) {
     def isDefinedAt(k: String) = svc.contains(k)

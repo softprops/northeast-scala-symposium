@@ -36,15 +36,19 @@ object Meetup extends Cached with Config {
   val client: Client = APIKeyClient(property("api_key"))
   implicit def http = new dispatch.AppEngineHttp
 
-  val rsvpCache = cache("rsvps")
-  val eventCache = cache("events")
-
-  def rsvps = {
+  private def cacheOr(cname: String, key: String)(apifn: => (JValue, Option[Long])) = {
     import net.liftweb.json.JsonParser._
-    val json = rsvpCache.getOr("current")({
+    parse(cache(cname).getOr(key) {
+      val (apiRes, exp) = apifn
+      (compact(render(apiRes)), exp)
+    })
+  }
+
+  def rsvps =
+    cacheOr("rsvps", "current") {
       val (res, _) = client.call(Rsvps.event_id(event_id))
       val defaultImage = "http://img1.meetupstatic.com/39194172310009655/img/noPhoto_50.gif"
-      val result = 
+      val result =
         for {
           r <- res
           id <- Rsvp.id(r)
@@ -55,18 +59,14 @@ object Meetup extends Cached with Config {
         } yield {
           (id, name, if(photo.isEmpty) defaultImage else photo)
         }
-      (compact(render(result map {
+      (result map {
         case (id, name, photo) =>
           ("id" -> id) ~ ("name" -> name) ~ ("photo" -> photo)
-      })), Some(System.currentTimeMillis + intProperty("ttl")))
-    })
-    parse(json)
-  }
+      }, Some(System.currentTimeMillis + intProperty("ttl")))
+    }
 
-
-  def event = {
-    import net.liftweb.json.JsonParser._
-    val json = eventCache.getOr(event_id) {
+  def event =
+    cacheOr("events", event_id) {
       val (res, _) = client.call(Events.id(event_id))
       val result = 
         for {
@@ -78,12 +78,10 @@ object Meetup extends Cached with Config {
         } yield {
           (cutoff, yes, no, limit)
         }
-      (compact(render(result map {
+      (result map {
         case (cutoff, yes, no, limit) =>
           ("cutoff" ->  cutoff) ~ ("yes" -> yes) ~ ("no" -> no) ~ 
             ("limit" -> limit)
-      })), Some(System.currentTimeMillis + intProperty("ttl")))
+      }, Some(System.currentTimeMillis + intProperty("ttl")))
     }
-    parse(json)
-  }
 }
