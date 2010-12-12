@@ -32,7 +32,18 @@ trait Config {
     file.close()
     props
   }
-  def property(name: String) = props.getProperty(name).toString
+
+  def property(name: String) = props.getProperty(name) match {
+    case null => error("missing property %s" format name)
+    case value => value
+  }
+
+  def intProperty(name: String) =
+    try {
+      property(name).toInt
+    } catch { case nfe: NumberFormatException => 
+      error("%s was not an int" format property(name))
+    }
 }
 
 object Meetup extends Cached with Config {
@@ -50,11 +61,12 @@ object Meetup extends Cached with Config {
   implicit def http = new dispatch.AppEngineHttp
 
   val rsvpCache = cache("rsvps")
+  val eventCache = cache("events")
 
   def rsvps = {
     import net.liftweb.json.JsonParser._
-    val json = rsvpCache.getOr("rsvps")({
-      val (res, meta) = client.call(Rsvps.event_id(event_id))
+    val json = rsvpCache.getOr("current")({
+      val (res, _) = client.call(Rsvps.event_id(event_id))
       val defaultImage = "http://img1.meetupstatic.com/39194172310009655/img/noPhoto_50.gif"
       val result = 
         for {
@@ -72,6 +84,30 @@ object Meetup extends Cached with Config {
           ("id" -> id) ~ ("name" -> name) ~ ("photo" -> photo)
       })), Some(System.currentTimeMillis + 1000 * 60 * 2))
     })
+    parse(json)
+  }
+
+
+  def event = {
+    import net.liftweb.json.JsonParser._
+    val json = eventCache.getOr(event_id) {
+      val (res, _) = client.call(Events.id(event_id))
+      val result = 
+        for {
+          e <- res
+          cutoff <- Event.rsvp_cutoff(e)
+          yes <- Event.rsvpcount(e)
+          no <- Event.no_rsvpcount(e)
+          limit <- Event.rsvp_limit(e)
+        } yield {
+          (cutoff, yes, no, limit)
+        }
+      (compact(render(result map {
+        case (cutoff, yes, no, limit) =>
+          ("cutoff" ->  cutoff) ~ ("yes" -> yes) ~ ("no" -> no) ~ 
+            ("limit" -> limit)
+      })), Some(System.currentTimeMillis + 1000 * 60 * 2))
+    }
     parse(json)
   }
 }

@@ -11,11 +11,10 @@ class App extends unfiltered.filter.Plan {
   import net.liftweb.json.JsonDSL._
 
   def intent = {
-    case GET(Path("/rsvps", Params(p, _))) =>
-      val json = compact(render(Meetup.rsvps))
-      JsonContent ~> (p("callback") match {
-        case Seq(cb) => ResponseString("%s(%s)" format(cb, json))
-        case _ => ResponseString(json)
-      })
+    case GET(Path("/rsvps", Jsonp.Optional(jsonp, _))) =>
+      JsonContent ~> ResponseString(jsonp.wrap(compact(render(Meetup.rsvps))))
+
+    case GET(Path("/event", Jsonp.Optional(jsonp, _))) =>
+      JsonContent ~> ResponseString(jsonp.wrap(compact(render(Meetup.event))))
   }
 }

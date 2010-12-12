@@ -1,4 +1,10 @@
-(function($){
+(function($){ 
+  $.ajaxSetup({ 
+    'beforeSend': function(xhr) {
+        xhr.setRequestHeader("Accept", "text/javascript");
+     }
+  });
+
   $.getJSON("/rsvps?callback=?", function(typers) {
       var s = typers.length, ul = $("#rsvps");
       $("#tban").html(s + " functional types");
@@ -8,6 +14,12 @@
       }
       $('#rsvps li img').tipsy({fade:true, live:true, gravity:'sw'});
   });
+
+  $.getJSON("/event?callback=?", function(events) {
+      var open = parseInt(events[0].limit) - parseInt(events[0].yes);
+      $("#seats").html(open + " open seats");
+  });
+
   var pass = function() {
     var i  = $('<img class="i" src="/images/c.png" />'), ref = $(i);
     $("#container").append(i);

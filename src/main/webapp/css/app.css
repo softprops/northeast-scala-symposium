@@ -46,7 +46,7 @@ body {
   height:100%;
   overflow-x:hidden;
 }
- 
+h1 { clear:both; } 
 h1, h2 { font-weight:bold; line-height:1.2em; letter-spacing:-1px;}
 h1 span { color:#FF005E; display:block; font-size:90px; }
 h3 span { display:block; line-height:0em; font-size:18px; color:#ccc;}
