@@ -82,7 +82,7 @@ object Meetup extends Cached with Config {
       (compact(render(result map {
         case (id, name, photo) =>
           ("id" -> id) ~ ("name" -> name) ~ ("photo" -> photo)
-      })), Some(System.currentTimeMillis + 1000 * 60 * 2))
+      })), Some(System.currentTimeMillis + intProperty("ttl")))
     })
     parse(json)
   }
@@ -106,7 +106,7 @@ object Meetup extends Cached with Config {
         case (cutoff, yes, no, limit) =>
           ("cutoff" ->  cutoff) ~ ("yes" -> yes) ~ ("no" -> no) ~ 
             ("limit" -> limit)
-      })), Some(System.currentTimeMillis + 1000 * 60 * 2))
+      })), Some(System.currentTimeMillis + intProperty("ttl")))
     }
     parse(json)
   }
