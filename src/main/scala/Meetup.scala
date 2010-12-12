@@ -14,7 +14,6 @@ trait Cached {
             case None => svc.put(k, value)
             case Some(exp) => svc.put(k, value, Expiration.onDate(new java.util.Date(exp)))
           }
-          svc.put(k, value)
           value
         case value => value
       }).asInstanceOf[T]
