@@ -45,10 +45,9 @@ body {
 }
 
 #container {
-  z-index:9999;
   width:100%;
   height:100%;
-  overflow-x:hidden;
+  background: url(../images/c.png) no-repeat 35px 35px;
 }
 h1 { clear:both; }
 h1, h2 { font-weight:bold; line-height:1.2em; letter-spacing:-1px;}
