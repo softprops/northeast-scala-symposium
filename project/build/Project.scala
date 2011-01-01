@@ -13,7 +13,8 @@ class Project(info: ProjectInfo) extends AppengineProject(info)
   val dispatch_vers = "0.8.0.Beta2"
   // uses local snapshot for Events.id method
   lazy val dispatch_meetup = "net.databinder" %% "dispatch-meetup" % "0.7.8-SNAPSHOT"
-  lazy val dispatch_twitter = "net.databinder" %% "dispatch-twitter" % "0.7.8"
+  // uses local snapshot for authenticated twitter search
+  lazy val dispatch_twitter = "net.databinder" %% "dispatch-twitter" % "0.7.8-SNAPSHOT"
   lazy val dispatch_gae = "net.databinder" %% "dispatch-http-gae" % dispatch_vers
   // persistence
   // val jdo = "javax.jdo" % "jdo2-api" % "2.3-ea"

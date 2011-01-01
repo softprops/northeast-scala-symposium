@@ -5,7 +5,7 @@ object Twitter extends JsonCached with Config {
   import twitter._
   import dispatch.liftjson.Js._
   import Http._
-
+  import oauth._
   import net.liftweb.json.JsonAST._
   import net.liftweb.json.JsonDSL._
 
@@ -13,7 +13,8 @@ object Twitter extends JsonCached with Config {
 
   def tweets =
     cacheOr("tweets", "current") {
-      val twts = http(Search("#nescala"))
+      val twts = http(Search("#nescala") as(Consumer(property("twttr_consumer"), property("twttr_consumer_secret")),
+                                            Token(property("twttr_token"), property("twttr_token_secret"))))
       val result: List[(Option[BigDecimal], Option[String], Option[String], Option[String])] = try { for {
         t <- twts
       } yield {
