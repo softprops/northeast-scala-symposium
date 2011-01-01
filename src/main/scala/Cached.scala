@@ -1,9 +1,9 @@
 package com.meetup
 
 trait Cached {
-  import com.google.appengine.api.memcache.{Expiration, MemcacheServiceFactory, 
+  import com.google.appengine.api.memcache.{Expiration, MemcacheServiceFactory,
                                             MemcacheService}
- 
+
   case class Cache(val svc: MemcacheService) {
     def isDefinedAt(k: String) = svc.contains(k)
     /** conditional get. */
@@ -23,4 +23,17 @@ trait Cached {
   }
 
   def cache(name: String) = Cache(MemcacheServiceFactory.getMemcacheService(name))
+}
+
+trait JsonCached extends Cached {
+  import net.liftweb.json.JsonAST._
+  import net.liftweb.json.JsonDSL._
+  import net.liftweb.json.JsonParser._
+  def cacheOr(cname: String, key: String)(fn: => (JValue, Option[Long])) = {
+    import net.liftweb.json.JsonParser._
+    parse(cache(cname).getOr(key) {
+      val (response, expires) = fn
+      (compact(render(response)), expires)
+    })
+  }
 }
