@@ -21,7 +21,7 @@
       var open = parseInt(events[0].limit) - parseInt(events[0].yes);
       $("#seats").html(open + " open seats");
   });
-
+    /* gae cannot be rate limited! http://dev.twitter.com/pages/rate-limiting
   $.getJSON("/twttr?callback=?", function(tweets) {
       var s = tweets.length, ul = $("#tweets"), linkify = function(raw) {
         var links = /((ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?)/gi,
@@ -50,6 +50,6 @@
       for(t in tweets) {
         ul.append(template(tweets[t]));
       }
-  });
+  });*/
 
 })(jQuery);
