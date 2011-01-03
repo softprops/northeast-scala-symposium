@@ -22,6 +22,7 @@
       $("#seats").html(open + " open seats");
   });
 
+ /*
   $.getJSON("/twttr?callback=?", function(tweets) {
       var s = tweets.length, ul = $("#tweets"), linkify = function(raw) {
         var links = /((ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?)/gi,
@@ -50,6 +51,6 @@
       for(t in tweets) {
         ul.append(template(tweets[t]));
       }
-  });
+  });*/
 
 })(jQuery);

@@ -13,16 +13,31 @@ object Twitter extends JsonCached with Config {
   private final val log = Logger.getLogger(getClass.getName)
 
   implicit def http = new dispatch.AppEngineHttp
+  val consumer = Consumer(property("twttr_consumer"), property("twttr_consumer_secret"))
+  val token = Token(property("twttr_token"), property("twttr_token_secret"))
+
+  def rate_limit =
+    http(Account.rate_limit_status_as(consumer, token)) match {
+      case js =>
+        val RateLimitStatus.remaining_hits(hits) = js
+        val RateLimitStatus.reset_time_in_seconds(resetSecs) = js
+        val RateLimitStatus.hourly_limit(lim) = js
+        val RateLimitStatus.reset_time(resetTime) = js
+        (hits, resetSecs, lim, resetTime)
+    }
 
   def tweets =
     cacheOr("tweets", "current") {
       val twts: List[dispatch.json.JsObject] = try {
-        http(Search("#nescala").as(Consumer(property("twttr_consumer"), property("twttr_consumer_secret")),
-                                            Token(property("twttr_token"), property("twttr_token_secret"))))
+        http(Search("#nescala") user_agent("Dispatch-nescala/1.0"))
       } catch { case _ =>
-        log.warning("Exception occured in twitter search api call, this client may be pass its rate limit")
+        log.warning("Exception occured in twitter search api call, this client may be past its rate limit")
         Nil
       }
+      val (hits, resetSecs, lim, resetTime) = rate_limit
+      log.info("Twitter API rate limit status. remaining: %s, reset time in secs: %s, hourly limit: %s reset time: %s".format(
+        hits, resetSecs, lim, resetTime
+      ))
       val result: List[(Option[BigDecimal], Option[String], Option[String], Option[String])] = try { for {
         t <- twts
       } yield {

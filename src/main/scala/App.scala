@@ -17,7 +17,7 @@ class App extends unfiltered.filter.Plan {
     case GET(Path("/event", Jsonp.Optional(jsonp, _))) =>
       JsonContent ~> ResponseString(jsonp.wrap(compact(render(Meetup.event))))
 
-   case GET(Path("/twttr", Jsonp.Optional(jsonp, _))) =>
-      JsonContent ~> ResponseString(jsonp.wrap(compact(render(Twitter.tweets))))
+   //case GET(Path("/twttr", Jsonp.Optional(jsonp, _))) =>
+   //   JsonContent ~> ResponseString(jsonp.wrap(compact(render(Twitter.tweets))))
   }
 }
