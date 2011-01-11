@@ -8,6 +8,7 @@ import dispatch.oauth.Token
 import net.liftweb.json.JsonAST._
 import net.liftweb.json.JsonDSL._
 import scala.collection.JavaConversions._
+import java.lang.{Integer => JInt}
 
 object Poll {
   val VOTES = 5
@@ -17,30 +18,28 @@ object Poll {
         val member_id = Meetup.member_id(Token(v,s))
         val query = mgr.newQuery(classOf[Vote], "member_id == id_param")
         query.declareParameters("int id_param")
-        val votes = query.execute(member_id).asInstanceOf[java.util.List[Vote]]
-        val ids = votes map { _.entry_id }
-
-        
-        val opt_id = params("entry_id").headOption.map { _.toInt } flatMap { entry_id =>
+        def q_ids = {
+          val votes = query.execute(member_id).asInstanceOf[java.util.List[Vote]]
+          votes map { _.entry_id }
+        }
+        val ids = q_ids
+        params("entry_id").headOption.map { _.toInt }.foreach { entry_id =>
           params("action") match {
-            case Seq("Vote") if ids.size <= VOTES && !ids.contains(entry_id) =>
+            case Seq("Vote") if ids.size < VOTES && !ids.contains(entry_id) =>
               val vote = new Vote
               vote.entry_id = entry_id.toInt
               vote.member_id = member_id
               mgr.makePersistent(vote)
-              Some(vote.entry_id)
             case Seq("Undo") =>
-              val query = mgr.newQuery(classOf[Vote])
-              query.setFilter("member_id == member_param")
-              query.setFilter("entry_id == entry_param")
-              query.declareParameters("int member_param, int entry_param")
-              def int(i: Int) = new java.lang.Integer(i)
-              query.deletePersistentAll(int(member_id), int(entry_id))
-              None
-            case p => None
+              val del = mgr.newQuery(classOf[Vote])
+              del.setFilter("member_id == member_param")
+              del.setFilter("entry_id == entry_param")
+              del.declareParameters("int member_param, int entry_param")
+              del.deletePersistentAll(new JInt(member_id), new JInt(entry_id))
+            case _ => ()
           }
         }
-        JsonContent ~> ResponseString(compact(render(ids ++ opt_id)))
+        JsonContent ~> ResponseString(compact(render(q_ids)))
       }
  
     case GET(CookieToken(ClientToken(v, s, Some(c)))) =>
@@ -91,7 +90,46 @@ object Poll {
           yet extremely type-safe (parameters to queries, operations
           on fields, and results are all statically typed). This talk
           will explore the API and the implementation of Foursquare's
-          Query Language.""") :: Nil
+          Query Language.""") ::
+    Entry("Harry Heymann", "Advanced Lift Techniques",
+          """Currently the largest lift site in production (I think?),
+          foursquare serves over 1000 requests per second to users of
+          our website and Rest API. Over the past year and a half
+          we've developed some interesting techniques for building
+          large scale Lift based applications. We've also worked with
+          dpp and the Lift team to continue to push the framework as a
+          whole. I will show off some of these techniques in
+          foursquare code and answer questions about running Lift in
+          production.""") ::
+    Entry("Brendan W. McAdams", "MongoDB + Scala",
+          """I'd love to do an updated version of my talk on MongoDB +
+          Scala. Casbah 2.0 will be out and well along by the time
+          this runs. It'll also give me a chance to wax on Pimp My
+          Library, implicit conversions, type aliasing and all the
+          other fun things aspiring coders should know.""") ::
+    Entry("Josh Suereth", 
+          "Implicits without import tax: How to make clean APIs with implicits",
+          """This talk covers how to utilize Scala implicits for
+          powerful, expressive APIs without requiring explicit import
+          statements for the user. These techiniques will help you
+          improve your own libraries .... """) ::
+    Entry("Paul Chiusano", "Actors: can we do better?",
+          """Actors have gotten a lot of attention as an approach to
+          writing concurrent programs. Unfortunately, actors rely on
+          side effects and as a result have limited composability. In
+          this talk I'll explore an alternative to actors that can be
+          used to express stateful concurrent computations without
+          resorting to side effects and without destroying
+          composability.""") ::
+    Entry("Paul Chiusano", 
+          "Experience report: Scala and purely functional programming at Capital IQ",
+           """Capital IQ has been a commercial user of Scala since
+           2008 and we've primarily used Scala as a purely functional
+           language. During that time we've gone from one person using
+           Scala for a single project to about ten people using or
+           having used Scala on several projects. I'll talk about the
+           good, the bad, and the ugly of our experiences with using
+           Scala during the past three years.""") :: Nil
 }
 case class Entry(speaker: String, title: String, description: String)
 
