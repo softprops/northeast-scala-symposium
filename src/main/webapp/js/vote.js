@@ -1,6 +1,7 @@
 $(function() {
+    var VOTES = 10;
     var update = function(ids) { 
-        $("#remaining").text(5 - ids.length);
+        $("#remaining").text(VOTES - ids.length);
         $(".entry a.vote").each(function(elem) {
             if ($.inArray(parseInt(this.id.substring(1)), ids) > -1) {
                 $(this).text("Undo");

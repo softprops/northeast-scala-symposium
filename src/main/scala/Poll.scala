@@ -11,7 +11,7 @@ import scala.collection.JavaConversions._
 import java.lang.{Integer => JInt}
 
 object Poll {
-  val VOTES = 5
+  val VOTES = 10
   def intent: unfiltered.filter.Plan.Intent = {
     case POST(Params(params) & CookieToken(ClientToken(v, s, Some(c)))) =>
       Storage { mgr =>
