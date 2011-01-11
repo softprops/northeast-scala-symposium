@@ -11,11 +11,13 @@ class App extends unfiltered.filter.Plan {
   import net.liftweb.json.JsonDSL._
 
   def intent = {
-    case GET(Path("/rsvps", Jsonp.Optional(jsonp, _))) =>
+    case GET(Path("/rsvps") & Jsonp.Optional(jsonp)) =>
       JsonContent ~> ResponseString(jsonp.wrap(compact(render(Meetup.rsvps))))
 
-    case GET(Path("/event", Jsonp.Optional(jsonp, _))) =>
+    case GET(Path("/event") & Jsonp.Optional(jsonp)) =>
       JsonContent ~> ResponseString(jsonp.wrap(compact(render(Meetup.event))))
+
+    case req @ GET(Path("/poll")) => Poll.intent(req)
 
    //case GET(Path("/twttr", Jsonp.Optional(jsonp, _))) =>
    //   JsonContent ~> ResponseString(jsonp.wrap(compact(render(Twitter.tweets))))

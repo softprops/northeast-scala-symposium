@@ -3,7 +3,7 @@ import sbt._
 class Project(info: ProjectInfo) extends AppengineProject(info)
   with DataNucleus {
 
-  val uf_version = "0.2.3"
+  val uf_version = "0.3.0"
 
   // unfiltered
   lazy val uff = "net.databinder" %% "unfiltered-filter" % uf_version
