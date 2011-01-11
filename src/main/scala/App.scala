@@ -31,7 +31,7 @@ class App extends unfiltered.filter.Plan with Config {
           Redirect(Auth.authenticate_url(t).to_uri.toString)
 
     case request @ GET(Path("/disconnect")) =>
-      ResponseCookies(Cookie("token", "")) ~> Redirect("/vote")
+      ResponseCookies(Cookie("token", "")) ~> Redirect("/")
 
     case request @ GET(Path("/authenticated") & Params(params)) =>
       val expected = for {
@@ -45,10 +45,12 @@ class App extends unfiltered.filter.Plan with Config {
         CookieToken(request) match {
           case Some(rt) =>
             val at = http(Auth.access_token(Meetup.consumer, Token(rt.value, rt.sec), verifier.get))
-            ResponseCookies(
-               Cookie("token",
-                      ClientToken(at.value, at.secret, verifier)
-                      .toCookieString)) ~> Redirect("/")
+            if (Meetup.has_rsvp(at))
+              ResponseCookies(
+                Cookie("token",
+                       ClientToken(at.value, at.secret, verifier)
+                       .toCookieString)) ~> Redirect("/vote")
+            else error("You must RSVP to vote")
           case _ => error("could not find request token")
         }
       }
