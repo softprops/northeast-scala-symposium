@@ -25,7 +25,7 @@ class App extends unfiltered.filter.Plan with Config {
 
     case GET(Path("/connect")) =>
       val callback = "%s/authenticated" format(property("host"))
-      val t = http(Auth.request_token(consumer, callback))
+      val t = http(Auth.request_token(Meetup.consumer, callback))
       ResponseCookies(
         Cookie("token", ClientToken(t.value, t.secret, None).toCookieString)) ~>
           Redirect(Auth.authenticate_url(t).to_uri.toString)
@@ -44,7 +44,7 @@ class App extends unfiltered.filter.Plan with Config {
       } yield {
         CookieToken(request) match {
           case Some(rt) =>
-            val at = http(Auth.access_token(consumer, Token(rt.value, rt.sec), verifier.get))
+            val at = http(Auth.access_token(Meetup.consumer, Token(rt.value, rt.sec), verifier.get))
             ResponseCookies(
                Cookie("token",
                       ClientToken(at.value, at.secret, verifier)
@@ -61,6 +61,4 @@ class App extends unfiltered.filter.Plan with Config {
    //   JsonContent ~> ResponseString(jsonp.wrap(compact(render(Twitter.tweets))))
   }
   implicit def http = new dispatch.AppEngineHttp
-  lazy val consumer = Consumer(
-    property("mu_consumer"), property("mu_consumer_secret"))
 }

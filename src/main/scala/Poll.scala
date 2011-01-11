@@ -2,10 +2,15 @@ package com.meetup
 
 import unfiltered.response._
 
+import dispatch.oauth.Token
+
 object Poll {
   def intent: unfiltered.filter.Plan.Intent = {
     case CookieToken(ClientToken(v, s, Some(c))) =>
-      html(<span>okay</span>)
+      if (Meetup.has_rsvp(Token(v,s)))
+        html(<span> hooray </span>)
+      else
+        html(<span>You must rsvp to vote!</span>)
     case _ => html(<p><a href="/connect">Sign in with Meetup</a></p>)
   }
   def html(body: xml.NodeSeq) = Html(

@@ -11,9 +11,18 @@ object Meetup extends JsonCached with Config {
   import net.liftweb.json.JsonDSL._
   import net.liftweb.json.JsonParser._
 
+  lazy val consumer = Consumer(
+    property("mu_consumer"), property("mu_consumer_secret"))
+
   val event_id = property("event_id")
   val client: Client = APIKeyClient(property("api_key"))
   implicit def http = new dispatch.AppEngineHttp
+
+  def has_rsvp(tok: oauth.Token) = {
+    val mu = OAuthClient(consumer, tok)
+    val (res, _) = mu.call(Events.id(event_id))
+    res.flatMap(Event.myrsvp).contains("yes")
+  }
 
   def rsvps =
     cacheOr("rsvps", "current") {
