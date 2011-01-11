@@ -1,48 +1,19 @@
 package com.meetup
 
-trait Config {
-  private lazy val props = {
-    val file = getClass.getResourceAsStream("/meetup.properties")
-    val props = new java.util.Properties
-    props.load(file)
-    file.close()
-    props
-  }
-
-  def property(name: String) = props.getProperty(name) match {
-    case null => error("missing property %s" format name)
-    case value => value
-  }
-
-  def intProperty(name: String) =
-    try {
-      property(name).toInt
-    } catch { case nfe: NumberFormatException => 
-      error("%s was not an int" format property(name))
-    }
-}
-
-object Meetup extends Cached with Config {
+object Meetup extends JsonCached with Config {
   import dispatch._
   import meetup._
   import dispatch.liftjson.Js._
   import oauth._
   import Http._
-  
+
   import net.liftweb.json.JsonAST._
   import net.liftweb.json.JsonDSL._
+  import net.liftweb.json.JsonParser._
 
   val event_id = property("event_id")
   val client: Client = APIKeyClient(property("api_key"))
   implicit def http = new dispatch.AppEngineHttp
-
-  private def cacheOr(cname: String, key: String)(apifn: => (JValue, Option[Long])) = {
-    import net.liftweb.json.JsonParser._
-    parse(cache(cname).getOr(key) {
-      val (apiRes, exp) = apifn
-      (compact(render(apiRes)), exp)
-    })
-  }
 
   def rsvps =
     cacheOr("rsvps", "current") {
@@ -68,7 +39,7 @@ object Meetup extends Cached with Config {
   def event =
     cacheOr("events", event_id) {
       val (res, _) = client.call(Events.id(event_id))
-      val result = 
+      val result =
         for {
           e <- res
           cutoff <- Event.rsvp_cutoff(e)
@@ -80,7 +51,7 @@ object Meetup extends Cached with Config {
         }
       (result map {
         case (cutoff, yes, no, limit) =>
-          ("cutoff" ->  cutoff) ~ ("yes" -> yes) ~ ("no" -> no) ~ 
+          ("cutoff" ->  cutoff) ~ ("yes" -> yes) ~ ("no" -> no) ~
             ("limit" -> limit)
       }, Some(System.currentTimeMillis + intProperty("ttl")))
     }

@@ -6,7 +6,7 @@ import unfiltered.response._
 /** Unfiltered plan */
 class App extends unfiltered.filter.Plan {
   import QParams._
-  
+
   import net.liftweb.json.JsonAST._
   import net.liftweb.json.JsonDSL._
 
@@ -16,5 +16,8 @@ class App extends unfiltered.filter.Plan {
 
     case GET(Path("/event", Jsonp.Optional(jsonp, _))) =>
       JsonContent ~> ResponseString(jsonp.wrap(compact(render(Meetup.event))))
+
+   //case GET(Path("/twttr", Jsonp.Optional(jsonp, _))) =>
+   //   JsonContent ~> ResponseString(jsonp.wrap(compact(render(Twitter.tweets))))
   }
 }
