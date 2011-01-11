@@ -20,17 +20,29 @@ object Poll {
         val votes = query.execute(member_id).asInstanceOf[java.util.List[Vote]]
         val ids = votes map { _.entry_id }
 
-        val opt_id = params("entry_id").headOption.map { 
-          _.toInt 
-        }.filterNot(ids.contains).map { entry_id =>
-          val vote = new Vote
-          vote.entry_id = entry_id.toInt
-          vote.member_id = member_id
-          mgr.makePersistent(vote)
-          entry_id
+        
+        val opt_id = params("entry_id").headOption.map { _.toInt } flatMap { entry_id =>
+          params("action") match {
+            case Seq("Vote") if ids.size <= VOTES && !ids.contains(entry_id) =>
+              val vote = new Vote
+              vote.entry_id = entry_id.toInt
+              vote.member_id = member_id
+              mgr.makePersistent(vote)
+              Some(vote.entry_id)
+            case Seq("Undo") =>
+              val query = mgr.newQuery(classOf[Vote])
+              query.setFilter("member_id == member_param")
+              query.setFilter("entry_id == entry_param")
+              query.declareParameters("int member_param, int entry_param")
+              def int(i: Int) = new java.lang.Integer(i)
+              query.deletePersistentAll(int(member_id), int(entry_id))
+              None
+            case p => None
+          }
         }
         JsonContent ~> ResponseString(compact(render(ids ++ opt_id)))
       }
+ 
     case GET(CookieToken(ClientToken(v, s, Some(c)))) =>
       html(
         <p>Votes remaining: <span id="remaining">...</span></p> ++ {
