@@ -142,3 +142,9 @@ dl dd img {
   background:#FF005E;
   color:#385A7A;
 }
+
+#countdown {
+  position: fixed;
+  top: .5em;
+  right: .5em;
+}

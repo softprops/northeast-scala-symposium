@@ -44,7 +44,7 @@ object Poll {
  
     case GET(CookieToken(ClientToken(v, s, Some(c)))) =>
       html(
-        <p>Votes remaining: <span id="remaining">...</span></p> ++ {
+        <div id="countdown"><span id="remaining">...</span> votes</div> ++ {
         Random.shuffle(entries.zipWithIndex).map { case (entry, index) =>
           <div class="entry">
              <h4>{entry.speaker}</h4>
