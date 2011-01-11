@@ -21,7 +21,7 @@ class App extends unfiltered.filter.Plan with Config {
     case GET(Path("/event") & Jsonp.Optional(jsonp)) =>
       JsonContent ~> ResponseString(jsonp.wrap(compact(render(Meetup.event))))
 
-    case req @ GET(Path("/vote")) => Poll.intent(req)
+    case req @ Path("/vote") => Poll.intent(req)
 
     case GET(Path("/connect")) =>
       val callback = "%s/authenticated" format(property("host"))

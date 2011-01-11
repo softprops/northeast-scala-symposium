@@ -24,6 +24,12 @@ object Meetup extends JsonCached with Config {
     res.flatMap(Event.myrsvp).contains("yes")
   }
 
+  def member_id(tok: oauth.Token) = {
+    val mu = OAuthClient(consumer, tok)
+    val (res, _) = mu.call(Members.self)
+    res.flatMap(Member.id).apply(0).toInt
+  }
+
   def rsvps =
     cacheOr("rsvps", "current") {
       val (res, _) = client.call(Rsvps.event_id(event_id))

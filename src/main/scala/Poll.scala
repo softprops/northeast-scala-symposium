@@ -1,24 +1,34 @@
 package com.meetup
 
 import scala.util.Random
+import unfiltered.request._
 import unfiltered.response._
 import dispatch.oauth.Token
 
 object Poll {
   val VOTES = 5
   def intent: unfiltered.filter.Plan.Intent = {
-    case CookieToken(ClientToken(v, s, Some(c))) =>
+    case POST(Params(EntryId(entry_id)) & CookieToken(ClientToken(v, s, Some(c)))) =>
+      Storage { mgr =>
+        val vote = new models.Vote
+        vote.entry_id = entry_id
+        vote.member_id = Meetup.member_id(Token(v,s))
+        mgr.makePersistent(vote)
+        ResponseString("1")
+      }
+    case GET(CookieToken(ClientToken(v, s, Some(c)))) =>
       html(
         <p>You have 5 votes remaining</p> ++ {
         Random.shuffle(entries.zipWithIndex).map { case (entry, index) =>
-          <div>
+          <div class="entry">
              <h4>{entry.speaker}</h4>
-             <h4><a href="#" id={"talk_" + index}>Vote: </a>{entry.title}</h4>
+             <h4><a href="#" class={"v" + index}>Vote: </a>{entry.title}</h4>
              <p>{entry.description}</p>
           </div>
         }
       })
-    case _ => html(<p><a href="/connect">Sign in with Meetup</a></p>)
+    case GET(_) => html(<p><a href="/connect">Sign in with Meetup</a></p>)
+    case _ => BadRequest
   }
   def html(body: xml.NodeSeq) = Html(
     <html>
@@ -29,6 +39,7 @@ object Poll {
         <link rel="stylesheet" type="text/css" href="css/tipsy.css" />
         <link rel="stylesheet" type="text/css" href="css/app.css" />
         <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script>
+        <script type="text/javascript" src="/js/vote.js"></script>
       </head>
       <body>
         <div id="container">
@@ -57,3 +68,15 @@ object Poll {
 }
 case class Entry(speaker: String, title: String, description: String)
 
+object EntryId extends Params.Extract("entry_id", Params.first ~> Params.int)
+
+object Storage {
+  def apply[T](block: javax.jdo.PersistenceManager => T): T = {
+    val mgr = factory.getPersistenceManager
+    try { block(mgr) }
+    finally { mgr.close() }
+  }
+    
+  lazy val factory =
+    javax.jdo.JDOHelper.getPersistenceManagerFactory("transactions-optional")
+}
