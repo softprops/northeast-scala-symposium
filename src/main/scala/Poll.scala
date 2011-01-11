@@ -1,24 +1,39 @@
 package com.meetup
 
+import models.Vote
 import scala.util.Random
 import unfiltered.request._
 import unfiltered.response._
 import dispatch.oauth.Token
+import net.liftweb.json.JsonAST._
+import net.liftweb.json.JsonDSL._
+import scala.collection.JavaConversions._
 
 object Poll {
   val VOTES = 5
   def intent: unfiltered.filter.Plan.Intent = {
-    case POST(Params(EntryId(entry_id)) & CookieToken(ClientToken(v, s, Some(c)))) =>
+    case POST(Params(params) & CookieToken(ClientToken(v, s, Some(c)))) =>
       Storage { mgr =>
-        val vote = new models.Vote
-        vote.entry_id = entry_id
-        vote.member_id = Meetup.member_id(Token(v,s))
-        mgr.makePersistent(vote)
-        ResponseString("1")
+        val member_id = Meetup.member_id(Token(v,s))
+        val query = mgr.newQuery(classOf[Vote], "member_id == id_param")
+        query.declareParameters("int id_param")
+        val votes = query.execute(member_id).asInstanceOf[java.util.List[Vote]]
+        val ids = votes map { _.entry_id }
+
+        val opt_id = params("entry_id").headOption.map { 
+          _.toInt 
+        }.filterNot(ids.contains).map { entry_id =>
+          val vote = new Vote
+          vote.entry_id = entry_id.toInt
+          vote.member_id = member_id
+          mgr.makePersistent(vote)
+          entry_id
+        }
+        JsonContent ~> ResponseString(compact(render(ids ++ opt_id)))
       }
     case GET(CookieToken(ClientToken(v, s, Some(c)))) =>
       html(
-        <p>You have 5 votes remaining</p> ++ {
+        <p>Votes remaining: <span id="remaining">...</span></p> ++ {
         Random.shuffle(entries.zipWithIndex).map { case (entry, index) =>
           <div class="entry">
              <h4>{entry.speaker}</h4>
@@ -67,8 +82,6 @@ object Poll {
           Query Language.""") :: Nil
 }
 case class Entry(speaker: String, title: String, description: String)
-
-object EntryId extends Params.Extract("entry_id", Params.first ~> Params.int)
 
 object Storage {
   def apply[T](block: javax.jdo.PersistenceManager => T): T = {
