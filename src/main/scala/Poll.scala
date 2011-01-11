@@ -53,6 +53,9 @@ object Poll {
           </div>
         }
       })
+    case GET(Params(NoRsvp(params))) => html(
+      <p>You must <a href="http://www.meetup.com/ny-scala/calendar/15526582">rsvp</a> to vote!</p>
+    )
     case GET(_) => html(<p><a href="/connect">Sign in with Meetup</a></p>)
     case _ => BadRequest
   }
@@ -226,3 +229,5 @@ object Storage {
   lazy val factory =
     javax.jdo.JDOHelper.getPersistenceManagerFactory("transactions-optional")
 }
+
+object NoRsvp extends Params.Extract("norsvp", Params.first)

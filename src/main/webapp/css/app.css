@@ -148,3 +148,7 @@ dl dd img {
   top: .5em;
   right: .5em;
 }
+
+div.entry {
+  padding-top: 1em;
+}

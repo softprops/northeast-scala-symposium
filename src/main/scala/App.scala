@@ -50,7 +50,7 @@ class App extends unfiltered.filter.Plan with Config {
                 Cookie("token",
                        ClientToken(at.value, at.secret, verifier)
                        .toCookieString)) ~> Redirect("/vote")
-            else error("You must RSVP to vote")
+            else Redirect("/vote?norsvp")
           case _ => error("could not find request token")
         }
       }
