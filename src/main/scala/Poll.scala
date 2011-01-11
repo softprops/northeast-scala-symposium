@@ -37,7 +37,7 @@ object Poll {
         Random.shuffle(entries.zipWithIndex).map { case (entry, index) =>
           <div class="entry">
              <h4>{entry.speaker}</h4>
-             <h4><a href="#" class={"v" + index}>Vote: </a>{entry.title}</h4>
+             <h4><a href="#" class="vote" id={"v" + index}>Vote</a> {entry.title}</h4>
              <p>{entry.description}</p>
           </div>
         }
