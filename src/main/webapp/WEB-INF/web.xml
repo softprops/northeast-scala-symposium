@@ -14,6 +14,16 @@ PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
     <dispatcher>REQUEST</dispatcher>
     <dispatcher>FORWARD</dispatcher>
   </filter-mapping>
+
+  <security-constraint>
+    <web-resource-collection>
+      <url-pattern>/tally/*</url-pattern>
+    </web-resource-collection>
+    <auth-constraint>
+      <role-name>admin</role-name>
+    </auth-constraint>
+  </security-constraint>
+
   <mime-mapping>
     <extension>html</extension>
     <mime-type>text/html; charset=utf-8</mime-type>

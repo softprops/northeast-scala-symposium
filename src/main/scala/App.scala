@@ -23,6 +23,8 @@ class App extends unfiltered.filter.Plan with Config {
 
     case req @ Path("/vote") => Poll.intent(req)
 
+    case req @ Path("/tally") => Tally.intent(req)
+
     case GET(Path("/connect")) =>
       val callback = "%s/authenticated" format(property("host"))
       val t = http(Auth.request_token(Meetup.consumer, callback))

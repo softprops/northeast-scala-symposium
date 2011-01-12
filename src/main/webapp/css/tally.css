@@ -1,0 +1,28 @@
+#tallies li {
+   width:100%;
+   background:#385A7A;
+   color:#fff;
+   margin:.25em;
+   text-align:right;
+   padding:.25em .5em;
+}
+
+#tallies {
+  width:940px;
+}
+
+#tallies li .bar {
+  position:absolute;
+  color:green;
+  background:#FF005E;
+  color:#FF005E;
+  width:0px;
+  overflow:hidden;
+  z-index:100;
+}
+
+#tallies li .title {
+  z-index:9999;
+  padding-right:.5em;
+  position:relative;
+}
