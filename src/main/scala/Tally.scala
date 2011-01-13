@@ -21,18 +21,22 @@ object Tally extends Templates with Entries {
             m + (v.entry_id -> (v.member_id :: m(v.entry_id))))
       }
 
-      // val max = (tallied.toList max Ordering[Int].on[(_,List[Int])](_._2.size))._2.size
-      val total = (0 /: tallied.values) (_ + _.size)
+      val ordered = tallied.toList sortBy(_._2.size)
 
-      page(<h2>Tally Ho!</h2><ul data-total={total.toString} id="tallies">{ tallied flatMap {
-        case (e, members) =>
-          <li title={entries(e).speaker} id={"e-%s" format e} data-score={((members.size.toDouble / total) * 100).toString}>
-            <span class="bar">.</span>
-            <span class="title">{entries(e).title} <strong>{members.size}</strong></span>
+      val total = (0 /: ordered) (_ + _._2.size)
+
+      page(<h2>Tally Ho!</h2>
+        <ul data-total={total.toString} id="tallies">{ ordered flatMap {
+          case (id, votes) =>
+            <li title={entries(id).speaker} id={"e-%s" format id}
+              data-score={((votes.size.toDouble / total) * 100).toString}>
+              <span class="bar">.</span>
+              <span class="title">{entries(id).title} <strong>{votes.size}</strong></span>
           </li>
-      }}</ul>)
-
+        }}</ul>)
   }
 
-  def page = layout(<link href="/css/tally.css" type="text/css" rel="stylesheet"/>)(<script type="text/javascript" src="js/jquery.tipsy.js"></script><script type="text/javascript" src="/js/tally.js"></script>)_
+  def page = layout(<link href="/css/tally.css" type="text/css" rel="stylesheet"/>)(
+    <script type="text/javascript" src="js/jquery.tipsy.js"></script>
+    <script type="text/javascript" src="/js/tally.js"></script>)_
 }
