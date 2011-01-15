@@ -30,12 +30,14 @@ object Poll extends Templates with Entries {
               vote.entry_id = entry_id.toInt
               vote.member_id = member_id
               mgr.makePersistent(vote)
+           /*
             case Seq("Undo") =>
               val del = mgr.newQuery(classOf[Vote])
               del.setFilter("member_id == member_param")
               del.setFilter("entry_id == entry_param")
               del.declareParameters("int member_param, int entry_param")
               del.deletePersistentAll(new JInt(member_id), new JInt(entry_id))
+           */
             case _ => ()
           }
         }
@@ -44,7 +46,7 @@ object Poll extends Templates with Entries {
 
     case GET(CookieToken(ClientToken(v, s, Some(c)))) =>
       page(
-        <div id="countdown"><span id="remaining">...</span> votes</div> ++ {
+        <div id="countdown"><span id="remaining">... votes</span> left</div> ++ {
         Random.shuffle(entries.zipWithIndex).map { case (entry, index) =>
           <div class="entry" id={"e-%s" format index}>
              <h4>{entry.speaker}</h4>

@@ -21,7 +21,7 @@ object Tally extends Templates with Entries {
             m + (v.entry_id -> (v.member_id :: m(v.entry_id))))
       }
 
-      val ordered = tallied.toList sortBy(_._2.size)
+      val ordered = (tallied.toList sortBy(_._2.size)).reverse
 
       val total = (0 /: ordered) (_ + _._2.size)
 
