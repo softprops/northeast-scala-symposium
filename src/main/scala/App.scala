@@ -21,7 +21,7 @@ class App extends unfiltered.filter.Plan with Config {
     case GET(Path("/event") & Jsonp.Optional(jsonp)) =>
       JsonContent ~> ResponseString(jsonp.wrap(compact(render(Meetup.event))))
 
-    case req @ Path("/vote") => Poll.intent(req)
+    case req @ Path("/vote") => PollOver.intent(req)
 
     case req @ Path("/tally") => Tally.intent(req)
 
