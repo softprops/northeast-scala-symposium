@@ -2,7 +2,7 @@
 cite { font-style:normal; }
 q { content:none; }
 
-#rsvps li {
+#rsvps li, #photos li {
   list-style:none;
   float:left;
   padding:5px;
@@ -19,7 +19,7 @@ q { content:none; }
   background:#B9DDFF;
 }
 
-#rsvps li img {
+#rsvps li img, #photos li img {
   max-width: 50px;
   width:50px;
   overflow:hidden;
@@ -32,30 +32,28 @@ q { content:none; }
   overflow:hidden;
 }
 
-#rsvps li a:link, #rsvps li a:visited {
+#rsvps li a:link, #rsvps li a:visited, #photos li a:link, #photos li a:visited {
   color:transparent;
 }
 
+#talkers dd a { font-size:smaller; }
+
 body {
-  font-family:'Arvo',helvetica;
+  font-family:'Arvo',helvetica, arial;
   font-size:24px;
-  background:#385A7A;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#DBE9F7', endColorstr='#F3F9FF'); /* for IE */
-  background: -webkit-gradient(linear, left top, left bottom, from(#DBE9F7), to(#F3F9FF)); /* for webkit browsers */
-  background: -moz-linear-gradient(top,  #DBE9F7,  #F3F9FF); /* for firefox 3.6+ */
   color:#385A7A;
+  background:#fbfbfb;
 }
 
 #container {
   margin:0 auto;
   width:960px;
-  background: url(../images/c.png) no-repeat 35px 35px;
 }
 h1 { clear:both; }
 h1, h2 { font-weight:bold; line-height:1.2em; letter-spacing:-1px;}
 h1 span { color:#FF005E; display:block; font-size:90px; }
 h3 span { display:block; line-height:0em; font-size:18px; color:#ccc;}
-h2 { font-size:100px; color:#B9DDFF;}
+h2 { font-size:100px; color:#B9DDFF; text-shadow:#ccc -1px -1px 2px; }
 p { margin:1em 0; }
 a:link,a:visited {
  color:#FF005E;
@@ -78,12 +76,18 @@ a:hover {
 }
 ul { list-style:none; margin:0; padding:0; }
 #t li { font-size:80%; }
-#t { width:500px; }
+#t {
+  width:500px;
+  padding-top:.5em;
+  height:100%;
+}
+#t dd { font-size:.85em }
 .i { position:absolute; display:block; z-index:-1;}
-#l { text-align:right; width:400px; }
+#l { text-align:right; width:400px; padding-right:1em; }
 
 #footer {
   clear:both;
+  text-align:center;
   padding:1em;
 }
 
@@ -121,17 +125,6 @@ dl dd img {
   margin:1em 0;
   font-size:70%;
   padding:.5em;
-}
-
-#tweets li:hover, #talkers dd:hover, #proposers dd:hover {
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  border-radius: 5px;
-  background:#B9DDFF;
-}
-
-#tweets li a:hover, #talkers dd a:hover, #proposers dd a:hover {
-  color:#fff;
 }
 
 ::-moz-selection {

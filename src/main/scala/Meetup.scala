@@ -16,23 +16,42 @@ object Meetup extends JsonCached with Config {
 
   val event_id = property("event_id")
   val client: Client = APIKeyClient(property("api_key"))
-  implicit def http = new dispatch.AppEngineHttp
+  implicit def http = new dispatch.gae.Http
 
   def has_rsvp(tok: oauth.Token) = {
     val mu = OAuthClient(consumer, tok)
-    val (res, _) = mu.call(Events.id(event_id))
+    val (res, _) = http(mu.handle(Events.id(event_id)))
     res.flatMap(Event.myrsvp).contains("yes")
   }
 
   def member_id(tok: oauth.Token) = {
     val mu = OAuthClient(consumer, tok)
-    val (res, _) = mu.call(Members.self)
+    val (res, _) = http(mu.handle(Members.self))
     res.flatMap(Member.id).apply(0).toInt
+  }
+
+  def photos = {
+    cacheOr("photos", "current") {
+      val (res, _) = http(client.handle(Photos.event_id(event_id)))
+      val result =
+        for {
+          r <- res
+          id <- Photo.photo_id(r)
+          hr_link <- Photo.highres_link(r)
+          photo_link <- Photo.photo_link(r)
+          thumb_link <- Photo.thumb_link(r)
+        } yield (id, hr_link, photo_link, thumb_link)
+      (result map {
+        case (id, hires_link, photo_link, thumb_link) =>
+          ("id" -> id) ~ ("hires_link" -> hires_link) ~
+            ("photo_link" -> photo_link) ~ ("thumb_link" -> thumb_link)
+      }, Some(System.currentTimeMillis + intProperty("ttl")))
+    }
   }
 
   def rsvps =
     cacheOr("rsvps", "current") {
-      val (res, _) = client.call(Rsvps.event_id(event_id))
+      val (res, _) = http(client.handle(Rsvps.event_id(event_id)))
       val defaultImage = "http://img1.meetupstatic.com/39194172310009655/img/noPhoto_50.gif"
       val result =
         for {
@@ -53,7 +72,7 @@ object Meetup extends JsonCached with Config {
 
   def event =
     cacheOr("events", event_id) {
-      val (res, _) = client.call(Events.id(event_id))
+      val (res, _) = http(client.handle(Events.id(event_id)))
       val result =
         for {
           e <- res

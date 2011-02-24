@@ -10,11 +10,8 @@ class Project(info: ProjectInfo) extends AppengineProject(info)
   lazy val ufj = "net.databinder" %% "unfiltered-jetty" % uf_version
   lazy val ufjs = "net.databinder" %% "unfiltered-json" % uf_version
 
-  val dispatch_vers = "0.8.0.Beta3-SNAPSHOT"
-  // uses local snapshot for Events.id method
+  val dispatch_vers = "0.8.0.Beta4-SNAPSHOT"
   lazy val dispatch_meetup = "net.databinder" %% "dispatch-meetup" % dispatch_vers
-  // uses local snapshot for authenticated twitter search
-  lazy val dispatch_twitter = "net.databinder" %% "dispatch-twitter" % dispatch_vers
   lazy val dispatch_gae = "net.databinder" %% "dispatch-http-gae" % dispatch_vers
   // persistence
   // val jdo = "javax.jdo" % "jdo2-api" % "2.3-ea"

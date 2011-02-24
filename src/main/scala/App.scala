@@ -15,11 +15,13 @@ class App extends unfiltered.filter.Plan with Config {
   import net.liftweb.json.JsonDSL._
 
   def intent = {
+    case GET(Path("/")) => Redirect("/2011")
+
     case GET(Path("/rsvps") & Jsonp.Optional(jsonp)) =>
       JsonContent ~> ResponseString(jsonp.wrap(compact(render(Meetup.rsvps))))
 
-    case GET(Path("/event") & Jsonp.Optional(jsonp)) =>
-      JsonContent ~> ResponseString(jsonp.wrap(compact(render(Meetup.event))))
+    case GET(Path("/photos") & Jsonp.Optional(jsonp)) =>
+      JsonContent ~> ResponseString(jsonp.wrap(compact(render(Meetup.photos))))
 
     case req @ Path("/vote") => PollOver.intent(req)
 
@@ -64,5 +66,5 @@ class App extends unfiltered.filter.Plan with Config {
    //case GET(Path("/twttr", Jsonp.Optional(jsonp, _))) =>
    //   JsonContent ~> ResponseString(jsonp.wrap(compact(render(Twitter.tweets))))
   }
-  implicit def http = new dispatch.AppEngineHttp
+  implicit def http = new dispatch.gae.Http
 }
