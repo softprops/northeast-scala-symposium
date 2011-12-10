@@ -10,10 +10,10 @@ import net.liftweb.json.JsonDSL._
 import scala.collection.JavaConversions._
 import java.lang.{Integer => JInt}
 
-object Tally extends Templates with Entries {
+object Tally extends Templates with ny.Entries {
   def intent: unfiltered.filter.Plan.Intent = {
     case _ =>
-      val tallied: Map[Int, List[Int]] = Storage { mgr =>
+      /*val tallied: Map[Int, List[Int]] = Storage { mgr =>
         val query = mgr.newQuery(classOf[Vote])
         val votes = query.execute().asInstanceOf[java.util.List[Vote]]
         (((Map.empty[Int, List[Int]] /: (0 until entries.size))((m,i)=>
@@ -33,7 +33,9 @@ object Tally extends Templates with Entries {
               <span class="bar">.</span>
               <span class="title">{entries(id).title} <strong>{votes.size}</strong></span>
           </li>
-        }}</ul>)
+        }}</ul>)*/
+
+      ResponseString("used to be tally page")
   }
 
   def page = layout(<link href="/css/tally.css" type="text/css" rel="stylesheet"/>)(

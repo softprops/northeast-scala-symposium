@@ -1,4 +1,4 @@
-package com.meetup
+package com.meetup.ny
 
 trait Entries {
   val entries =

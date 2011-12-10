@@ -1,16 +1,19 @@
-package com.meetup
+package com.meetup.ny
 
 import unfiltered.request._
 import unfiltered.response._
 
 import unfiltered.Cookie
 import dispatch.meetup.Auth
-import dispatch.oauth.{Consumer,Token}
+import dispatch.oauth.{ Consumer, Token }
+
+import com.meetup.{ ClientToken, CookieToken, Config, Meetup, PollOver, Tally }
 
 /** Unfiltered plan */
-class App extends unfiltered.filter.Plan with Config {
+object App extends unfiltered.filter.Plan with Config {
   import QParams._
 
+  import net.liftweb.json.compact
   import net.liftweb.json.JsonAST._
   import net.liftweb.json.JsonDSL._
 
@@ -55,7 +58,7 @@ class App extends unfiltered.filter.Plan with Config {
                        ClientToken(at.value, at.secret, verifier)
                        .toCookieString)) ~> Redirect("/vote")
             else Redirect("/vote?norsvp")
-          case _ => error("could not find request token")
+          case _ => sys.error("could not find request token")
         }
       }
 
@@ -66,5 +69,5 @@ class App extends unfiltered.filter.Plan with Config {
    //case GET(Path("/twttr", Jsonp.Optional(jsonp, _))) =>
    //   JsonContent ~> ResponseString(jsonp.wrap(compact(render(Twitter.tweets))))
   }
-  implicit def http = new dispatch.gae.Http
+  implicit def http = new dispatch.Http
 }

@@ -10,7 +10,7 @@ trait Config {
   }
 
   def property(name: String) = props.getProperty(name) match {
-    case null => error("missing property %s" format name)
+    case null => sys.error("missing property %s" format name)
     case value => value
   }
 
@@ -18,6 +18,6 @@ trait Config {
     try {
       property(name).toInt
     } catch { case nfe: NumberFormatException =>
-      error("%s was not an int" format property(name))
+      sys.error("%s was not an int" format property(name))
     }
 }

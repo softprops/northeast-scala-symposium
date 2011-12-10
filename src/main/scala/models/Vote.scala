@@ -1,19 +1,19 @@
 package com.meetup.models
 
-import javax.jdo.annotations._
+//import javax.jdo.annotations._
 
-@PersistenceCapable(
+/*@PersistenceCapable(
   identityType = IdentityType.APPLICATION,
   detachable = "true"
-)
+)*/
 class Vote() {
-  @PrimaryKey
-  @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
+  //@PrimaryKey
+  //@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
   var id: java.lang.Long = _
 
-  @Persistent
+  //@Persistent
   var entry_id: Int = _
 
-  @Persistent
+  //@Persistent
   var member_id: Int = _
 }

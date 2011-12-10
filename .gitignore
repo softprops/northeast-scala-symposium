@@ -1,6 +1,4 @@
 src/main/resources/meetup.properties
-project/boot/
-src_managed/
-project/plugins/project/build.properties
+project/project
+project/target
 target/
-lib_managed/

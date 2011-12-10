@@ -16,7 +16,7 @@ object Meetup extends JsonCached with Config {
 
   val event_id = property("event_id")
   val client: Client = APIKeyClient(property("api_key"))
-  implicit def http = new dispatch.gae.Http
+  implicit def http = new Http
 
   def has_rsvp(tok: oauth.Token) = {
     val mu = OAuthClient(consumer, tok)
@@ -31,26 +31,23 @@ object Meetup extends JsonCached with Config {
   }
 
   def photos = {
-    cacheOr("photos", "current") {
-      val (res, _) = http(client.handle(Photos.event_id(event_id)))
-      val result =
-        for {
-          r <- res
-          id <- Photo.photo_id(r)
-          hr_link <- Photo.highres_link(r)
-          photo_link <- Photo.photo_link(r)
-          thumb_link <- Photo.thumb_link(r)
-        } yield (id, hr_link, photo_link, thumb_link)
-      (result map {
+    val (res, _) = http(client.handle(Photos.event_id(event_id)))
+    val result =
+      for {
+        r <- res
+        id <- Photo.photo_id(r)
+        hr_link <- Photo.highres_link(r)
+        photo_link <- Photo.photo_link(r)
+        thumb_link <- Photo.thumb_link(r)
+      } yield (id, hr_link, photo_link, thumb_link)
+      result map {
         case (id, hires_link, photo_link, thumb_link) =>
           ("id" -> id) ~ ("hires_link" -> hires_link) ~
             ("photo_link" -> photo_link) ~ ("thumb_link" -> thumb_link)
-      }, Some(System.currentTimeMillis + intProperty("ttl")))
+      }
     }
-  }
 
-  def rsvps =
-    cacheOr("rsvps", "current") {
+  def rsvps = {
       val (res, _) = http(client.handle(Rsvps.event_id(event_id)))
       val defaultImage = "http://img1.meetupstatic.com/39194172310009655/img/noPhoto_50.gif"
       val result =
@@ -64,14 +61,13 @@ object Meetup extends JsonCached with Config {
         } yield {
           (id, name, if(photo.isEmpty) defaultImage else photo)
         }
-      (result map {
+      result map {
         case (id, name, photo) =>
           ("id" -> id) ~ ("name" -> name) ~ ("photo" -> photo)
-      }, Some(System.currentTimeMillis + intProperty("ttl")))
+      }
     }
 
-  def event =
-    cacheOr("events", event_id) {
+  def event = {
       val (res, _) = http(client.handle(Events.id(event_id)))
       val result =
         for {
@@ -83,10 +79,10 @@ object Meetup extends JsonCached with Config {
         } yield {
           (cutoff, yes, no, limit)
         }
-      (result map {
+      result map {
         case (cutoff, yes, no, limit) =>
           ("cutoff" ->  cutoff) ~ ("yes" -> yes) ~ ("no" -> no) ~
             ("limit" -> limit)
-      }, Some(System.currentTimeMillis + intProperty("ttl")))
+      }
     }
 }
