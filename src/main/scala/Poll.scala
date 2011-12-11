@@ -5,8 +5,7 @@ import scala.util.Random
 import unfiltered.request._
 import unfiltered.response._
 import dispatch.oauth.Token
-import net.liftweb.json._//JsonAST._
-//import net.liftweb.json.JsonAST._
+import net.liftweb.json._
 import net.liftweb.json.JsonDSL._
 import scala.collection.JavaConversions._
 import java.lang.{Integer => JInt}
@@ -38,8 +37,9 @@ object Poll extends Templates with ny.Entries {
     case _ => BadRequest
   }
 
-  def page = layout(Nil)(<script type="text/javascript" src="/js/vote.js"></script>)_
-
+  def page = layout(Nil)(
+    <script type="text/javascript" src="/js/vote.js"></script>
+  )_
 }
 
 object NoRsvp extends Params.Extract("norsvp", Params.first)

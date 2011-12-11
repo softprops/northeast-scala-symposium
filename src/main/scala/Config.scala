@@ -9,10 +9,11 @@ trait Config {
     props
   }
 
-  def property(name: String) = props.getProperty(name) match {
-    case null => sys.error("missing property %s" format name)
-    case value => value
-  }
+  def property(name: String) =
+    Option(System.getenv(name)).orElse(Option(props.getProperty(name))) match {
+      case None => sys.error("missing property %s" format name)
+      case Some(value) => value
+    }
 
   def intProperty(name: String) =
     try {

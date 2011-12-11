@@ -11,7 +11,7 @@ import scala.collection.JavaConversions._
 import java.lang.{Integer => JInt}
 
 object Tally extends Templates with ny.Entries {
-  def intent: unfiltered.filter.Plan.Intent = {
+  def intent: unfiltered.Cycle.Intent[Any, Any] = {
     case _ =>
       /*val tallied: Map[Int, List[Int]] = Storage { mgr =>
         val query = mgr.newQuery(classOf[Vote])

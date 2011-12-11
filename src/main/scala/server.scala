@@ -7,6 +7,8 @@ object Server {
   def main(args: Array[String]) {
     Http(8080)
     .resources(getClass().getResource("/www"))
-    .filter(ny.App).run
+    .filter(Planify {
+      NESS.site orElse boston.Boston.site orElse nyc.Nyc.site
+    }).run
   }
 }

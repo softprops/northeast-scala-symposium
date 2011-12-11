@@ -5,8 +5,12 @@ object MyApp extends sbt.Build {
     Project("", file("."),
       settings = sbt.Defaults.defaultSettings ++ Seq(
         scalacOptions += "-deprecation"
-      ) ++ Heroku.herokuSettings
+        libraryDependencies ++= Seq(
+          
+        )
+      ) ++ Heroku.herokuSettings/* ++ heroic.Plugin.heroicSettings*/
     ) dependsOn(dispatchMeetup)
+
   lazy val dispatchMeetup =
     uri("git://github.com/n8han/dispatch-meetup#0.1.2")
 }

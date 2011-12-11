@@ -4,7 +4,7 @@ import unfiltered.request._
 import unfiltered.response._
 
 object PollOver extends Templates {
-  def intent: unfiltered.filter.Plan.Intent = {
+  def intent: unfiltered.Cycle.Intent[Any, Any] = {
     case _ => page(
       <p>
         <h2>Sorry. Polls are closed.</h2>

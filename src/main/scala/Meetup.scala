@@ -11,16 +11,32 @@ object Meetup extends JsonCached with Config {
   import net.liftweb.json.JsonDSL._
   import net.liftweb.json.JsonParser._
 
+  object Cities {
+    val nyc = "nyc"
+    val boston = "boston"
+  }
+
   lazy val consumer = Consumer(
     property("mu_consumer"), property("mu_consumer_secret"))
 
-  val event_id = property("event_id")
+  object Nyc {
+    val event_id = property("nyc.event_id")
+  }
+
+  object Boston {
+    val event_id = property("boston.event_id")
+  }
+
   val client: Client = APIKeyClient(property("api_key"))
+
   implicit def http = new Http
 
-  def has_rsvp(tok: oauth.Token) = {
+  def has_rsvp(city: String, tok: oauth.Token) = {
     val mu = OAuthClient(consumer, tok)
-    val (res, _) = http(mu.handle(Events.id(event_id)))
+    val (res, _) = http(mu.handle(Events.id(city match {
+      case Cities.nyc => Nyc.event_id
+      case _ => Boston.event_id
+    })))
     res.flatMap(Event.myrsvp).contains("yes")
   }
 
@@ -30,8 +46,11 @@ object Meetup extends JsonCached with Config {
     res.flatMap(Member.id).apply(0).toInt
   }
 
-  def photos = {
-    val (res, _) = http(client.handle(Photos.event_id(event_id)))
+  def photos(city: String) = {
+    val (res, _) = http(client.handle(Photos.event_id(city match {
+      case Cities.nyc => Nyc.event_id
+      case _ => Boston.event_id                                                
+    })))
     val result =
       for {
         r <- res
@@ -47,8 +66,11 @@ object Meetup extends JsonCached with Config {
       }
     }
 
-  def rsvps = {
-      val (res, _) = http(client.handle(Rsvps.event_id(event_id)))
+  def rsvps(city: String) = {
+      val (res, _) = http(client.handle(Rsvps.event_id(city match {
+        case Cities.nyc => Nyc.event_id
+        case _ => Boston.event_id
+      })))
       val defaultImage = "http://img1.meetupstatic.com/39194172310009655/img/noPhoto_50.gif"
       val result =
         for {
@@ -67,8 +89,11 @@ object Meetup extends JsonCached with Config {
       }
     }
 
-  def event = {
-      val (res, _) = http(client.handle(Events.id(event_id)))
+  def event(city: String) = {
+      val (res, _) = http(client.handle(Events.id(city match {
+        case Cities.nyc => Nyc.event_id
+        case _  => Boston.event_id
+      })))
       val result =
         for {
           e <- res
