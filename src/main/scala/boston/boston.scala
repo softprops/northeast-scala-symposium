@@ -27,11 +27,11 @@ object Boston extends Templates {
           val proposed = s.get("proposals:%s:count" format mid).getOrElse("0").toInt
           if(proposed > 2) Left("Exceed max proposals")
           else {
-            s.hmset("proposals:%s", Map(
+            s.hmset("proposals:%s" format mid, Map(
               "name" -> n,
               "desc" -> d
             ))
-            Right(s.incr("proposals:%s:count"))
+            Right(s.incr("proposals:%s:count").get)
           }
         }).fold({fail =>
           JsonContent ~> ResponseString("""{"status":400,"msg":"%s"}""" format fail)
