@@ -8,7 +8,7 @@ import dispatch.oauth.Token
 import net.liftweb.json._
 import net.liftweb.json.JsonDSL._
 import scala.collection.JavaConversions._
-import java.lang.{Integer => JInt}
+import java.lang.{ Integer => JInt }
 
 object Poll extends Templates with ny.Entries {
   val VOTES = 10
