@@ -31,7 +31,7 @@ object Boston extends Templates {
               "name" -> n,
               "desc" -> d
             ))
-            Right(s.incr("proposals:%s:count").get)
+            Right(s.incr("proposals:%s:count" format mid).get)
           }
         }).fold({fail =>
           JsonContent ~> ResponseString("""{"status":400,"msg":"%s"}""" format fail)
