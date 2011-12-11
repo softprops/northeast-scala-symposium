@@ -12,15 +12,15 @@ object NESS extends Config {
   def site: unfiltered.Cycle.Intent[Any, Any] = {
     //case GET(Path("/")) => Redirect("/2011")
     
-    case GET(Path("/connect")) =>
-      val callback = "%s/authenticated" format(property("host"))
+    case GET(Path("/connect")) & Params(p) =>
+      val callback = "%s/authenticated" format property("host")
       val t = http(Auth.request_token(Meetup.consumer, callback))
       ResponseCookies(
         Cookie("token", ClientToken(t.value, t.secret, None, None).toCookieString)) ~>
           Redirect(Auth.authenticate_url(t).to_uri.toString)
 
     case GET(Path("/disconnect")) =>
-      ResponseCookies(Cookie("token", "")) ~> Redirect("/")
+      ResponseCookies(Cookie("token", "", maxAge = Some(0))) ~> Redirect("/")
 
     case req @GET(Path("/authenticated") & Params(params)) =>
       val expected = for {
@@ -30,16 +30,15 @@ object NESS extends Config {
         token <- lookup("oauth_token") is
           required("token is required") is
           nonempty("token can not be blank")
+        then <- lookup("then") is optional[String, String]
       } yield {
         CookieToken(req) match {
           case Some(rt) =>
             val at = http(Auth.access_token(Meetup.consumer, Token(rt.value, rt.sec), verifier.get))
-            if (Meetup.has_rsvp(Cities.boston, at))
-              ResponseCookies(
+            ResponseCookies(
                 Cookie("token",
                        ClientToken(at.value, at.secret, verifier, Some(Meetup.member_id(at).toString))
-                       .toCookieString)) ~> Redirect("/vote")
-            else Redirect("/vote?norsvp")
+                       .toCookieString)) ~> Redirect("/#propose-talk")
           case _ => sys.error("could not find request token")
         }
       }

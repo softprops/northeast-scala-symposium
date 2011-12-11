@@ -30,9 +30,9 @@ trait Templates extends nescala.Templates {
 
   def indexNoAuth = index(false)
 
-  def indexWithAuth = index(true)
+  def indexWithAuth(proposals: Seq[Map[String, String]]) = index(true, proposals)
 
-  private def index(authed: Boolean) = bostonLayout(Nil)(
+  private def index(authed: Boolean, proposals: Seq[Map[String, String]] = Nil) = bostonLayout(Nil)(
     <script type="text/javascript" src="/js/boston.js"></script>)(
     <div id="head" class="clearfix">
       <div class="contained">
@@ -60,25 +60,66 @@ trait Templates extends nescala.Templates {
             <h1>Submit a Talk</h1>
             <p>The Northeast Scala Symposium features talks by members of the Boston, New York, and Philadelphia Scala Meetups, and by guests from far afield. All talks are selected in advance by attendees.</p>
             <p>We have space for 16 talks of 30 minutes, and one keynote talk. Speakers may propose one talk on the topic of their choice. Whichever talk accrues the most votes will be the keynote, and this speaker will receive 45 minutes to talk as well as $1000 to offset travel expenses.</p>
+          </div>
             {
               if(authed) {
-                <a href="#" id="propose-talk">Propose a talk</a>
+                <div class="l">
+                  <p class="instruct">
+                    Please provide a single-paragraph description of your proposed talk.
+                  </p>
+                  <p class="instruct">
+                    All submissions will be presented for voting; the only requirement is that you authenticate with a Meetup account. Speakers may enter Twitter usernames and other biographical information in their <a target="_blank" href="http://www.meetup.com/nescala/profile/">member profile page</a>.
+                  </p>
+                </div>
+              } else <div class="l">Talks</div>
+            }
+            <div class="r" id="propose-talk">
+            {
+              if(authed) {
+                if(proposals.size < 3) {
+                <h4>Propose a talk</h4>
                 <div id="propose-form">
                   <form action="POST">
                     <div>
                       <label for="name">What's your talk called?</label>
-                      <input type="text" name="name" maxlenth="200" placeholder="How I learned to love my type system" />
+                      <input type="text" name="name" maxlength="200"
+                        placeholder="How I learned to love my type system" />
                     </div>
                     <div>
                       <label for="desc">What's your talk is about?</label>
                       <div class="limited">
                         <textarea name="desc" data-limit="600" placeholder="Say it in 600 characters or less" />
-                        <div><div class="limit-label"/> <input type="submit" value="Propose Talk" class="btn" /></div>
+                        <div>
+                          <div class="limit-label"/> <input type="submit" value="Propose Talk" class="btn" />
+                        </div>
                       </div>
                     </div>
                   </form>
+                  <h5>Your proposals</h5>
+                <ul id="proposal-list">
+                {
+                  proposals.map { p =>
+                    <li id={ p("id") }>{ p("name") }</li>
+                  }
+                }
+                </ul>
                 </div>
-              } else { <p><a href="/connect">Log into Meetup</a> to submit a talk.</p> }
+                } else {
+                  <div id="propose-form">
+                    <h5>Your proposal list is full</h5>
+                  </div>
+                  <h5>Your proposals</h5>
+                <ul id="proposal-list">
+                {
+                  proposals.map { p =>
+                    <li id={ p("id") }>{ p("name") }</li>
+                  }
+                }
+                </ul>
+                }
+                
+              } else { <span><a href="/connect?then=/#propose-talk">Log into Meetup</a> to submit a talk.</span> }
+
             }
           </div>
         </div>
