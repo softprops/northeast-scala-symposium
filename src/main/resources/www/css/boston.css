@@ -141,6 +141,15 @@ textarea {
   background: -moz-linear-gradient(top, #003950, #0F3036);
 }
 
+#head h2 {
+  margin-top:.45em;
+  line-height:1em;
+}
+
+#head p {
+  margin-top:.5em;
+}
+
 #day-one {
   background:#DBF5FF;
 }
