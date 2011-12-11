@@ -5,10 +5,7 @@ object MyApp extends sbt.Build {
     Project("", file("."),
       settings = sbt.Defaults.defaultSettings ++ Seq(
         scalacOptions += "-deprecation"
-        libraryDependencies ++= Seq(
-          
-        )
-      ) ++ Heroku.herokuSettings/* ++ heroic.Plugin.heroicSettings*/
+      ) ++ Heroku.herokuSettings /*++ heroic.Plugin.heroicSettings*/
     ) dependsOn(dispatchMeetup)
 
   lazy val dispatchMeetup =
