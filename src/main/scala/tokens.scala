@@ -1,20 +1,20 @@
-package com.meetup
+package nescala
 
 import unfiltered.Cookie
 import unfiltered.request.{Cookies, HttpRequest}
 
-case class ClientToken(value: String, sec: String, code: Option[String]) {
-  def toCookieString = code match {
-    case Some(c) => "%s!!!%s!!!%s" format(value, sec, c)
-    case _ => "%s!!!%s" format(value, sec)
+case class ClientToken(value: String, sec: String, code: Option[String], memberId: Option[String]) {
+  def toCookieString = (code, memberId) match {
+    case (Some(c), Some(m)) => "%s|%s|%s|%s" format(value, sec, c, m)
+    case _ => "%s|%s" format(value, sec)
   }
 }
 
 object ClientToken {
-  def fromCookieString(str: String) = str.split("!!!") match {
-    case Array(v, s, c) => ClientToken(v, s, Some(c))
-    case Array(v, s) => ClientToken(v, s, None)
-    case _ => error("invalid token cookie string format %s" format str)
+  def fromCookieString(str: String) = str.split('|') match {
+    case Array(v, s, c, m) => ClientToken(v, s, Some(c), Some(m))
+    case Array(v, s) => ClientToken(v, s, None, None)
+    case ary => sys.error("invalid token cookie string format %s %s" format(str, ary))
   }
 }
 

@@ -1,4 +1,4 @@
-package com.meetup
+package nescala
 
 object Meetup extends JsonCached with Config {
   import dispatch._

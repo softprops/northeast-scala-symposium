@@ -1,4 +1,4 @@
-package com.meetup
+package nescala
 
 trait Cached {
   /*import com.google.appengine.api.memcache.{Expiration, MemcacheServiceFactory,

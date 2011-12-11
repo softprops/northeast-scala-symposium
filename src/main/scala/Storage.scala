@@ -1,12 +1,20 @@
-package com.meetup
+package nescala
 
-object Storage {
-/*  def apply[T](block: javax.jdo.PersistenceManager => T): T = {
-    val mgr = factory.getPersistenceManager
-    try { block(mgr) }
-    finally { mgr.close() }
+object Store extends Config {
+  import com.redis._
+  private lazy val (auth, clients) = {
+    val URI = """^redis://(\w+):(\w+)@(.*):(\d{4}).*""".r
+    val prop = property("REDISTOGO_URL")
+    prop match {
+      case URI(_, pass, host, port) =>
+        (pass, new RedisClientPool(host, port.toInt))
+      case mf => sys.error("malformed redis uri: %s" format mf)
+    }
   }
-
-  lazy val factory =
-    javax.jdo.JDOHelper.getPersistenceManagerFactory("transactions-optional")*/
+ 
+  def apply[T](f: RedisClient => T) =
+    clients.withClient { c =>
+      c.auth(auth)
+      f(c)
+    }
 }

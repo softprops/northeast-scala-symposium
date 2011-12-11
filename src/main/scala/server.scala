@@ -1,4 +1,4 @@
-package com.meetup
+package nescala
 
 object Server {
   import unfiltered.jetty._

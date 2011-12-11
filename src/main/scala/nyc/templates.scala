@@ -1,6 +1,6 @@
-package com.meetup.nyc
+package nescala.nyc
 
-trait Templates extends com.meetup.Templates {
+trait Templates extends nescala.Templates {
 
   def nycLayout(head: xml.NodeSeq)
     (bodyScripts: xml.NodeSeq)

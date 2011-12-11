@@ -1,6 +1,6 @@
-package com.meetup.boston
+package nescala.boston
 
-trait Templates extends com.meetup.Templates {
+trait Templates extends nescala.Templates {
   def bostonLayout(head: xml.NodeSeq)
     (bodyScripts: xml.NodeSeq)
     (body: xml.NodeSeq) = unfiltered.response.Html(
@@ -70,9 +70,9 @@ trait Templates extends com.meetup.Templates {
                       <input type="text" name="name" maxlenth="200" placeholder="How I learned to love my type system" />
                     </div>
                     <div>
-                      <label for="description">What's your talk is about?</label>
+                      <label for="desc">What's your talk is about?</label>
                       <div class="limited">
-                        <textarea name="description" data-limit="600" placeholder="Say it in 600 characters or less" />
+                        <textarea name="desc" data-limit="600" placeholder="Say it in 600 characters or less" />
                         <div><div class="limit-label"/> <input type="submit" value="Propose Talk" class="btn" /></div>
                       </div>
                     </div>

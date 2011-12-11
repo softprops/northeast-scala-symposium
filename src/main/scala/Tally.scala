@@ -1,4 +1,4 @@
-package com.meetup
+package nescala
 
 import models.Vote
 import scala.util.Random
@@ -10,7 +10,7 @@ import net.liftweb.json.JsonDSL._
 import scala.collection.JavaConversions._
 import java.lang.{Integer => JInt}
 
-object Tally extends Templates with ny.Entries {
+object Tally extends Templates with nyc.Entries {
   def intent: unfiltered.Cycle.Intent[Any, Any] = {
     case _ =>
       /*val tallied: Map[Int, List[Int]] = Storage { mgr =>

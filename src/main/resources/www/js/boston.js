@@ -20,6 +20,9 @@
       e.preventDefault();
       $(this).find("input[type='submit']").attr('disabled', 'disabled');
       console.log('submit');
+      $.post("/boston/proposals", $(this).serialize(), function(e){
+         console.log(e);
+      })
       return false;
     });
   });

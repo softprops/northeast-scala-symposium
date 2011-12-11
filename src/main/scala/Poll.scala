@@ -1,4 +1,4 @@
-package com.meetup
+package nescala
 
 import models.Vote
 import scala.util.Random
@@ -10,13 +10,13 @@ import net.liftweb.json.JsonDSL._
 import scala.collection.JavaConversions._
 import java.lang.{ Integer => JInt }
 
-object Poll extends Templates with ny.Entries {
+object Poll extends Templates with nyc.Entries {
   val VOTES = 10
   def intent: unfiltered.filter.Plan.Intent = {
-    case POST(Params(params) & CookieToken(ClientToken(v, s, Some(c)))) =>
+    case POST(Params(params) & CookieToken(ClientToken(v, s, Some(c), Some(m)))) =>
       JsonContent ~> ResponseString(compact(render(Nil)))
 
-    case GET(CookieToken(ClientToken(v, s, Some(c)))) =>
+    case GET(CookieToken(ClientToken(v, s, Some(c), Some(m)))) =>
       page(
         <div id="countdown"><span id="remaining">... votes</span> left</div> ++ {
         Random.shuffle(entries.zipWithIndex).map { case (entry, index) =>

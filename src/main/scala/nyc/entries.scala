@@ -1,4 +1,4 @@
-package com.meetup.ny
+package nescala.nyc
 
 trait Entries {
   val entries =

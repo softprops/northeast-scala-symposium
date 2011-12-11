@@ -1,4 +1,4 @@
-package com.meetup
+package nescala
 
 trait Config {
   private lazy val props = {

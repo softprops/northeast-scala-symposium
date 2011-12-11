@@ -1,4 +1,4 @@
-package com.meetup
+package nescala
 
 import unfiltered.response.Html
 

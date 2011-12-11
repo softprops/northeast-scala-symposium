@@ -1,4 +1,4 @@
-package com.meetup.models
+package nescala.models
 
 //import javax.jdo.annotations._
 

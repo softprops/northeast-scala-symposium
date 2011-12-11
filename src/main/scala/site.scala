@@ -1,4 +1,4 @@
-package com.meetup
+package nescala
 
 object NESS extends Config {
   import unfiltered.request._
@@ -7,7 +7,7 @@ object NESS extends Config {
   import QParams._
   import dispatch.meetup._
   import dispatch.oauth.Token
-  import com.meetup.Meetup.Cities
+  import nescala.Meetup.Cities
 
   def site: unfiltered.Cycle.Intent[Any, Any] = {
     //case GET(Path("/")) => Redirect("/2011")
@@ -16,7 +16,7 @@ object NESS extends Config {
       val callback = "%s/authenticated" format(property("host"))
       val t = http(Auth.request_token(Meetup.consumer, callback))
       ResponseCookies(
-        Cookie("token", ClientToken(t.value, t.secret, None).toCookieString)) ~>
+        Cookie("token", ClientToken(t.value, t.secret, None, None).toCookieString)) ~>
           Redirect(Auth.authenticate_url(t).to_uri.toString)
 
     case GET(Path("/disconnect")) =>
@@ -37,7 +37,7 @@ object NESS extends Config {
             if (Meetup.has_rsvp(Cities.boston, at))
               ResponseCookies(
                 Cookie("token",
-                       ClientToken(at.value, at.secret, verifier)
+                       ClientToken(at.value, at.secret, verifier, Some(Meetup.member_id(at).toString))
                        .toCookieString)) ~> Redirect("/vote")
             else Redirect("/vote?norsvp")
           case _ => sys.error("could not find request token")

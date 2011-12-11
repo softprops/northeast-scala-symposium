@@ -1,4 +1,4 @@
-package com.meetup.nyc
+package nescala.nyc
 
 import unfiltered.request._
 import unfiltered.response._
@@ -6,9 +6,9 @@ import unfiltered.response._
 import unfiltered.Cookie
 import dispatch.meetup.Auth
 import dispatch.oauth.{ Consumer, Token }
-import com.meetup.Meetup.Cities
+import nescala.Meetup.Cities
 
-import com.meetup.{ ClientToken, CookieToken, Config, Meetup, PollOver, Tally }
+import nescala.{ ClientToken, CookieToken, Config, Meetup, PollOver, Tally }
 
 object Nyc extends Config {
   import net.liftweb.json.compact
