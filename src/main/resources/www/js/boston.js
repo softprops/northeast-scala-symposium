@@ -8,7 +8,7 @@
         , v = ta.val()
         , n = v.length;
         if(n > l) {
-          ta.text(v.substring(0, n));
+          ta.val(v.substring(0, l));
           n = l;
         }
         ta.parent().find(".limit-label").text(
