@@ -11,7 +11,7 @@ object MyApp extends sbt.Build {
   // git submodule init
   // git submodule update
 
-  lazy val dispatchLiftJson = file("lib/dispatch-meetup")
+  lazy val dispatchLiftJson = file("lib/dispatch-lift-json")
 
   lazy val dispatchMeetup = Project(
     "dispatch-meetup",
