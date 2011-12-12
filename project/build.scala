@@ -3,12 +3,7 @@ object MyApp extends sbt.Build {
   import sbt.Keys._
   lazy val root =
     Project("", file("."),
-      settings = sbt.Defaults.defaultSettings ++ Seq(
-        scalacOptions += "-deprecation",
-        libraryDependencies ++= Seq(
-          "net.debasishg" %% "redisclient" % "2.4.2"
-        )
-      ) ++ Heroku.herokuSettings /*++ heroic.Plugin.heroicSettings*/
+      settings = sbt.Defaults.defaultSettings ++ Heroku.herokuSettings /*++ heroic.Plugin.heroicSettings*/
     ) dependsOn(dispatchMeetup)
 
   lazy val dispatchMeetup =
