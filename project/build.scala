@@ -3,7 +3,7 @@ object MyApp extends sbt.Build {
   import sbt.Keys._
   lazy val root =
     Project("", file("."),
-      settings = sbt.Defaults.defaultSettings /*++ Heroku.herokuSettings */ ++ heroic.Plugin.heroicSettings
+      settings = sbt.Defaults.defaultSettings ++ Heroku.herokuSettings /*++ heroic.Plugin.heroicSettings*/
     ) dependsOn(dispatchMeetup)
 
   // git-dependencies don't work on Heroku so we use submodules
