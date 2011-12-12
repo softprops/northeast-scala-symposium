@@ -68,7 +68,7 @@ trait Templates extends nescala.Templates {
                     Please provide a single-paragraph description of your proposed talk.
                   </p>
                   <p class="instruct">
-                    Speakers may enter Twitter usernames and other biographical information in their <a target="_blank" href="http://www.meetup.com/nescala/profile/">member profile</a>.
+                    Speakers may enter Twitter usernames and other biographical information in their <a target="_blank" href="http://www.meetup.com/nescala/profile/#webLinks">member profile</a>.
                   </p>
                 </div>
               } else <div class="l">Talks</div>
