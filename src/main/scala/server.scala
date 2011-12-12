@@ -9,6 +9,9 @@ object Server {
     .resources(getClass().getResource("/www"))
     .filter(Planify {
       NESS.site orElse boston.Boston.site orElse nyc.Nyc.site
-    }).run
+    }).run(
+      _ => (),
+      _ => dispatch.Http.shutdown
+    )
   }
 }

@@ -48,5 +48,5 @@ object NESS extends Config {
       }
   }
 
-  implicit def http = new dispatch.Http
+  def http = dispatch.Http
 }
