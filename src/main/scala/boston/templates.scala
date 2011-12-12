@@ -118,7 +118,7 @@ trait Templates extends nescala.Templates {
                 </ul>
                 }
                 
-              } else { <span><a href="/connect?then=/#propose-talk">Log into Meetup</a> to submit a talk.</span> }
+              } else { <span><a href="/connect?then=/#propose-talk">Log in with Meetup</a> to submit a talk.</span> }
 
             }
           </div>
