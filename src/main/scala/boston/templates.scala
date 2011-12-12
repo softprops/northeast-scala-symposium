@@ -18,7 +18,7 @@ trait Templates extends nescala.Templates {
       <body>
         { body }
         <div id="footer">
-          made possible with <span class="love">&#10084;</span> from the <a href="http://groups.google.com/group/boston-scala">Boston</a>, <a href="http://www.meetup.com/scala-phase/">Philadelphia</a>, and <a href="http://www.meetup.com/ny-scala">New York</a> scala enthusiasts
+          made possible with <span class="love">&#10084;</span> from the <a href="http://www.meetup.com/boston-scala/">Boston</a>, <a href="http://www.meetup.com/scala-phase/">Philadelphia</a>, and <a href="http://www.meetup.com/ny-scala/">New York</a> scala enthusiasts
           <div id="lets">2012 let's make more awesome</div>
         </div>
       <script type="text/javascript" src="/facebox/facebox.js"></script>
