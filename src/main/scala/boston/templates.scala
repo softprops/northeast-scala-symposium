@@ -76,7 +76,7 @@ trait Templates extends nescala.Templates {
             <div class="r" id="propose-talk">
             {
               if(authed) {
-                if(proposals.size < 3) {
+                if(proposals.size < Boston.maxProposals) {
                 <h4>Propose a talk</h4>
                 <div id="propose-form">
                   <form action="POST">
