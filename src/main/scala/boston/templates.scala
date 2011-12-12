@@ -70,7 +70,7 @@ trait Templates extends nescala.Templates {
         <div id="talk-submissions">
           <div class="l">
             <h1>Day 01</h1>
-            <h2>3.09.11</h2>
+            <h2>3.09.12</h2>
             <h3>
               <span>9am @<a href="http://www.meetup.com/nescala/events/37637442/">NERD</a></span>
             </h3>
@@ -128,7 +128,7 @@ trait Templates extends nescala.Templates {
       <div class="contained">
         <div class="l">
           <h1>Day 02</h1>
-          <h2>3.10.11</h2>
+          <h2>3.10.12</h2>
           <h3>
             <span>10am @<a href="http://www.meetup.com/nescala/events/44042982/">Stata Center</a></span>
           </h3>
@@ -143,7 +143,7 @@ trait Templates extends nescala.Templates {
       <div class="contained">
         <div class="l">
           <h1>Day 03</h1>
-          <h2>3.11.11</h2>
+          <h2>3.11.12</h2>
           <h3>
             <span>10am @<a href="http://www.meetup.com/nescala/events/44049692/">Stata Center</a></span>
           </h3>
