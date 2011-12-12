@@ -6,6 +6,15 @@ object MyApp extends sbt.Build {
       settings = sbt.Defaults.defaultSettings ++ Heroku.herokuSettings /*++ heroic.Plugin.heroicSettings*/
     ) dependsOn(dispatchMeetup)
 
-  lazy val dispatchMeetup =
-    uri("git://github.com/n8han/dispatch-meetup#0.1.2")
+  // git-dependencies don't work on Heroku so we use submodules
+  // don't forget:
+  // git submodule init
+  // git submodule update
+
+  lazy val dispatchLiftJson = file("lib/dispatch-meetup")
+
+  lazy val dispatchMeetup = Project(
+    "dispatch-meetup",
+    file("lib/dispatch-meetup")
+  ) dependsOn (dispatchLiftJson)
 }
