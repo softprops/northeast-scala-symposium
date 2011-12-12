@@ -29,7 +29,7 @@ object Meetup extends JsonCached with Config {
 
   val client: Client = APIKeyClient(property("api_key"))
 
-  implicit def http = new Http
+  def http = Http
 
   def has_rsvp(city: String, tok: oauth.Token) = {
     val mu = OAuthClient(consumer, tok)
