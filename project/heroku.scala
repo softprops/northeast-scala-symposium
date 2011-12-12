@@ -1,4 +1,4 @@
-object Heroku {
+object Heroku extends sbt.Plugin {
   import java.io.File
   import sbt._
   import sbt.Keys._
