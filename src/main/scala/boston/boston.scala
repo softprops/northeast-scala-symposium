@@ -20,13 +20,46 @@ object Boston extends Templates {
           case Some(keys) =>
             (Seq.empty[Map[String, String]] /: keys.filter(_.isDefined))(
               (a, e) => a ++
-                s.hmget[String, String](e.get, "name").map(_ + ("id" -> e.get))
+                s.hmget[String, String](e.get, "name", "desc").map(_ + ("id" -> e.get))
             )
         }
       }
       indexWithAuth(proposals)
     case GET(Path("/")) =>
       indexNoAuth
+
+    case POST(Path("/boston/proposals/withdraw")) & CookieToken(ClientToken(v, s, Some(c), Some(mid))) & Params(p) =>
+      val expected = for {
+        id <- lookup("id") is required("name is required")
+      } yield {
+        val key = id.get
+        val Withdrawing = """boston:proposals:(.*):(.*)""".r
+        (Store { s =>
+          if(s.exists(key)) {
+            key match {
+              case Withdrawing(who, id) =>
+                if(mid.equals(who)) {
+                  s.del(key).map( stat => if(stat > 0) s.decr(
+                    "count:boston:proposals:%s" format who
+                  ))
+                  Right(key)
+                } else Left("not authorized to withdraw this proposal")
+              case bk =>
+                Left("invalid proposal")
+            }
+          } else Left("proposal did not exist")
+        }).fold({ fail =>
+          JsonContent ~> ResponseString("""{"status":400,"msg":"%s"}""" format fail)
+        }, { ok =>
+          JsonContent ~> ResponseString("""{"status":200,"proposal":"%s"}""" format(ok))
+        })
+      }
+      expected(p) orFail { errors =>
+        JsonContent ~> ResponseString("""{"status":400,"msg":"%s"}""" format(
+          errors.map { _.error } mkString(". ")
+        ))
+      }
+
     case POST(Path("/boston/proposals")) & CookieToken(ClientToken(v, s, Some(c), Some(mid))) & Params(p) =>
       val expected = for {
         name <- lookup("name") is required("name is required")

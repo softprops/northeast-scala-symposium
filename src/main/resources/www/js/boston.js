@@ -16,16 +16,49 @@
         );
     });
 
-    $("#propose-form form").submit(function(e){
+    $("#proposal-list .preview").hide();
+    $("#proposal-list .toggle").live('click', function(e){
       e.preventDefault();
-      var frm = $(this), fields = $("input,textarea", frm), data = frm.serialize();
+      $(this).parent().parent().find(".preview").slideToggle(100);
+      return false;
+    });
+    $("#proposal-list .withdraw-proposal").live('click', function(e) {
+      e.preventDefault();
+      var self = $(this), pid = self.data().proposal, href = self.attr('href');
+      if(confirm("Are you sure you want to withdraw this talk?")) {        
+        $.post(href, { id:pid }, function(e){
+          switch(e.status) {
+          case 200:
+            self.parent().parent().parent().fadeOut('fast', function(){
+             $(this).remove();
+              $('#propose-form').fadeIn('slow');
+            });
+            break;
+          case 400:
+            alert(e.msg);
+            break;
+          }
+        });
+      }
+      return false;
+    });
+
+    $("#propose-form").submit(function(e){
+      e.preventDefault();
+      var frm = $(this)
+        , fields = $("input,textarea", frm)
+        , data = frm.serialize()
+        , name = $('input[name="name"]', frm)
+        , desc = $('textarea', frm);
+      if(!name.val().length || !desc.val().length) { alert('Please enter a name and talk description'); }
+      else {
       fields.attr('disabled', 'disabled');
       $.post("/boston/proposals", data, function(e) {
         fields.removeAttr('disabled');
         switch(e.status) {
         case 200:
           $("#proposal-list").append(
-            '<li id="'+e.id+'">'+$("input[name='name']",frm).val()+'</li>'
+             '<li id="'+e.id+'"><div><a href="#" class="toggle">'+$("input[name='name']",frm).val()+'</a> <div class="controls"><a href="/boston/proposals/withdraw" class="withdraw-proposal" data-proposal="'+e.id+'">withdraw</a></div></div><div class="preview linkify">'+$('textarea', frm).val()+'</div></li>'
           );
           $('input[type="text"],textarea').val('');
           switch(e.proposals) {
@@ -33,7 +66,12 @@
             alert("Sweet! Now you have a proposal.");
             break;
           default:
-            alert('Sweet! Now you now have ' + e.proposals + ' talks');
+            alert('Sweet! Now you now have ' + e.proposals + ' proposals');
+            if(e.proposals === 3) {
+              $('#propose-form').fadeOut('slow');
+            } else {
+              $('#propose-form').fadeIn('slow');
+            }
             break;
           }
           break;
@@ -42,6 +80,7 @@
           break;
         }
       });
+      }
       return false;
     });
   });

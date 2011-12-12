@@ -32,6 +32,26 @@ trait Templates extends nescala.Templates {
 
   def indexWithAuth(proposals: Seq[Map[String, String]]) = index(true, proposals)
 
+  def proposalList(props: Seq[Map[String, String]]) =
+    <div id="proposals">
+      <h5 id="proposal-header">Your proposals</h5>
+       <ul id="proposal-list">
+       {
+         props.map { p =>
+         <li id={ p("id") }>
+          <div>
+            <a href="#" class="toggle">{ p("name") }</a>
+            <div class="controls">
+              <a href="/boston/proposals/withdraw" class="withdraw-proposal" data-proposal={ p("id") }>withdraw</a>
+            </div>
+          </div>
+          <div class="preview linkify">{ p("desc") }</div>
+         </li>
+         }
+       }
+     </ul>
+    </div>
+
   private def index(authed: Boolean, proposals: Seq[Map[String, String]] = Nil) = bostonLayout(Nil)(
     <script type="text/javascript" src="/js/boston.js"></script>)(
     <div id="head" class="clearfix">
@@ -49,7 +69,7 @@ trait Templates extends nescala.Templates {
       <div class="contained">
         <div id="talk-submissions">
           <div class="l">
-            <h1>Day One</h1>
+            <h1>Day 01</h1>
             <h2>3.09.11</h2>
             <h3>
               <span>9am @<a href="http://www.meetup.com/nescala/events/37637442/">NERD</a></span>
@@ -63,23 +83,22 @@ trait Templates extends nescala.Templates {
           </div>
             {
               if(authed) {
-                <div class="l">
+                <div class="l divy">
                   <p class="instruct">
                     Please provide a single-paragraph description of your proposed talk.
                   </p>
                   <p class="instruct">
-                    Speakers may enter Twitter usernames and other biographical information in their <a target="_blank" href="http://www.meetup.com/nescala/profile/#webLinks">member profile</a>.
+                    Speakers may enter Twitter usernames and other biographical information in their <a target="_blank" href="http://www.meetup.com/nescala/profile/">member profile</a>.
                   </p>
                 </div>
-              } else <div class="l">Talks</div>
+              } else <div class="l divy">Talks</div>
             }
-            <div class="r" id="propose-talk">
+            <div class="r divy" id="propose-talk">
             {
               if(authed) {
-                if(proposals.size < Boston.maxProposals) {
-                <h4>Propose a talk</h4>
-                <div id="propose-form">
-                  <form action="POST">
+                <div id="propose-container">
+                  <form action="POST" id="propose-form" style={ "display:%s" format(if(proposals.size < Boston.maxProposals) "visible" else "none")}>
+                    <h4>Propose a talk</h4>
                     <div>
                       <label for="name">What's your talk called?</label>
                       <input type="text" name="name" maxlength="200"
@@ -95,28 +114,8 @@ trait Templates extends nescala.Templates {
                       </div>
                     </div>
                   </form>
-                  <h5>Your proposals</h5>
-                <ul id="proposal-list">
-                {
-                  proposals.map { p =>
-                    <li id={ p("id") }>{ p("name") }</li>
-                  }
-                }
-                </ul>
+                  { proposalList(proposals) } 
                 </div>
-                } else {
-                  <div id="propose-form">
-                    <h5>Your proposal list is full</h5>
-                  </div>
-                  <h5>Your proposals</h5>
-                <ul id="proposal-list">
-                {
-                  proposals.map { p =>
-                    <li id={ p("id") }>{ p("name") }</li>
-                  }
-                }
-                </ul>
-                }
                 
               } else { <span><a href="/connect?then=/#propose-talk">Log in with Meetup</a> to submit a talk.</span> }
 
@@ -128,7 +127,7 @@ trait Templates extends nescala.Templates {
     <div id="day-two" class="day clearfix">
       <div class="contained">
         <div class="l">
-          <h1>Day Two</h1>
+          <h1>Day 02</h1>
           <h2>3.10.11</h2>
           <h3>
             <span>10am @<a href="http://www.meetup.com/nescala/events/44042982/">Stata Center</a></span>
@@ -143,7 +142,7 @@ trait Templates extends nescala.Templates {
     <div id="day-three" class="day clearfix">
       <div class="contained">
         <div class="l">
-          <h1>Day Three</h1>
+          <h1>Day 03</h1>
           <h2>3.11.11</h2>
           <h3>
             <span>10am @<a href="http://www.meetup.com/nescala/events/44049692/">Stata Center</a></span>
