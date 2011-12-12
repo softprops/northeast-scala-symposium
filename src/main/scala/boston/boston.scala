@@ -10,6 +10,8 @@ object Boston extends Templates {
   //import net.liftweb.json._
   //import net.liftweb.json.JsonDSL._
 
+  val maxProposals = 3
+
   def site: unfiltered.Cycle.Intent[Any, Any]  = {
     case GET(Path("/") & CookieToken(ClientToken(v, s, Some(c), Some(mid)))) =>
       val proposals = Store { s =>
@@ -42,7 +44,7 @@ object Boston extends Templates {
             val mkey = "boston:proposals:%s" format mid
             val ckey = "count:%s" format mkey
             val proposed = s.get(ckey).getOrElse("0").toInt
-            if(proposed > 2) Left("Exceeded max proposals")
+            if(proposed + 1 > maxProposals) Left("Exceeded max proposals")
             else {
               val nextId = s.incr("boston:proposals:ids").get
               val nextKey = "%s:%s" format(mkey, nextId)
