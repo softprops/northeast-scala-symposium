@@ -58,8 +58,8 @@ trait Templates extends nescala.Templates {
           </div>
           <div class="r">
             <h1>Submit a Talk</h1>
-            <p>The Northeast Scala Symposium features talks by members of the Boston, New York, and Philadelphia Scala Meetups, and by guests from far afield. All talks are selected in advance by attendees.</p>
-            <p>We have space for 16 talks of 30 minutes, and one keynote talk. Speakers may propose one talk on the topic of their choice. Whichever talk accrues the most votes will be the keynote, and this speaker will receive 45 minutes to talk as well as $1000 to offset travel expenses.</p>
+            <p>This year's symposium will feature 16 talks of 30 minutes, and one keynote talk.</p>
+            <p>Hopeful speakers may propose one talk on the topic of their choice. The talk that accrues the most votes will be the keynote, and its presenter will receive 45 minutes to talk and $1000 travel offset.</p>
           </div>
             {
               if(authed) {
@@ -68,7 +68,7 @@ trait Templates extends nescala.Templates {
                     Please provide a single-paragraph description of your proposed talk.
                   </p>
                   <p class="instruct">
-                    All submissions will be presented for voting; the only requirement is that you authenticate with a Meetup account. Speakers may enter Twitter usernames and other biographical information in their <a target="_blank" href="http://www.meetup.com/nescala/profile/">member profile page</a>.
+                    Speakers may enter Twitter usernames and other biographical information in their <a target="_blank" href="http://www.meetup.com/nescala/profile/">member profile</a>.
                   </p>
                 </div>
               } else <div class="l">Talks</div>
