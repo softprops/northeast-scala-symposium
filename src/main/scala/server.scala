@@ -11,7 +11,7 @@ object Server {
       NESS.site orElse boston.Boston.site orElse nyc.Nyc.site
     }).run(
       _ => (),
-      _ => dispatch.Http.shutdown
+      _ => dispatch.Http.shutdown()
     )
   }
 }
