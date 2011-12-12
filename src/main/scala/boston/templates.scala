@@ -59,7 +59,7 @@ trait Templates extends nescala.Templates {
           <div class="r">
             <h1>Submit a Talk</h1>
             <p>This year's symposium will feature 16 talks of 30 minutes, and one keynote talk.</p>
-            <p>Hopeful speakers may propose one talk on the topic of their choice. The talk that accrues the most votes will be the keynote, and its presenter will receive 45 minutes to talk and $1000 travel offset.</p>
+            <p>Hopeful speakers may propose talks on topics of their choosing. The schedule will be filled with talks that accrue the most voles, with the keynote spot (and $1000 travel offset) going to whichever receives the most votes of all.</p>
           </div>
             {
               if(authed) {
