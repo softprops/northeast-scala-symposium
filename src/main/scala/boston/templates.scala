@@ -19,6 +19,11 @@ trait Templates extends nescala.Templates {
         { body }
         <div id="footer">
           made possible with <span class="love">&#10084;</span> from the <a href="http://www.meetup.com/boston-scala/">Boston</a>, <a href="http://www.meetup.com/scala-phase/">Philadelphia</a>, and <a href="http://www.meetup.com/ny-scala/">New York</a> scala enthusiasts
+          <div id="last-year">
+            <div>What happen to last year? It ended.</div>
+            <div>But you can still find it <a href="/2011">here</a>.</div>
+            <a href="/2011"><img src="/images/ne.png"/></a>
+          </div>
           <div id="lets">2012 let's make more awesome</div>
         </div>
       <script type="text/javascript" src="/facebox/facebox.js"></script>
@@ -52,20 +57,39 @@ trait Templates extends nescala.Templates {
      </ul>
     </div>
 
-  private def index(authed: Boolean, proposals: Seq[Map[String, String]] = Nil) = bostonLayout(Nil)(
-    <script type="text/javascript" src="/js/boston.js"></script>)(
-    <div id="head" class="clearfix">
-      <div class="contained">
-        <div class="l">
-          <h1>&#8663;northeast<span>scala</span>symposium</h1>
-        </div>
-        <div class="r">
-          <h2>Boston</h2>
-          <h4>functionally typed party</h4>
-        </div>
+  val head =
+   <div id="head" class="clearfix">
+    <div class="contained">
+      <div class="l">
+        <a href="/"><h1>&#8663;northeast<span>scala</span>symposium</h1></a>
+      </div>
+      <div class="r">
+        <h2>Boston</h2>
+        <h4>functionally typed party</h4>
       </div>
     </div>
-    <div id="day-one" class="day clearfix">
+   </div>
+
+  def admin(proposals: Seq[Map[String, String]]) = bostonLayout(Nil)(Nil)({
+      head
+    } ++ <div class="contained">
+      <h1>Look who's talking</h1>
+      <h2>{ proposals.size } campfire stories</h2>
+      <ul>{
+        proposals.map { p =>
+        <li id={ p("id") }>
+          <h1>{ p("name") }</h1>
+          <p>{ p("desc") }</p>
+        </li>
+        }
+      }</ul>
+    </div>
+  )
+
+  private def index(authed: Boolean, proposals: Seq[Map[String, String]] = Nil) = bostonLayout(Nil)(
+    <script type="text/javascript" src="/js/boston.js"></script>)({
+      head
+    } ++ <div id="day-one" class="day clearfix">
       <div class="contained">
         <div id="talk-submissions">
           <div class="l">

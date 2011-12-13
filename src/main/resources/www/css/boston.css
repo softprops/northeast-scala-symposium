@@ -211,6 +211,14 @@ input[type='text'], textarea {
   white-space:pre-wrap;
 }
 
+#head a:link h1, #head a:visited {
+  color:#385A7A;
+}
+
+#head a:hover h1 {
+  color:#B9DDFF;
+}
+
 #head h2 {
   margin-top:.45em;
   line-height:1em;
@@ -233,7 +241,11 @@ input[type='text'], textarea {
 }
 
 #footer {
-  background:#003950 url("/images/ne.png") no-repeat 100% 20%;
+  background:#003950;
+}
+
+#footer #last-year {
+
 }
 
 #talk-submissions {

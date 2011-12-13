@@ -8,7 +8,7 @@ object Server {
     Http(Option(System.getenv("PORT")).getOrElse("8080").toInt)
     .resources(getClass().getResource("/www"))
     .filter(Planify {
-      NESS.site orElse boston.Boston.site orElse nyc.Nyc.site
+      NESS.site orElse boston.Boston.site orElse nyc.Nyc.site orElse boston.Boston.admin
     }).run(
       _ => (),
       _ => dispatch.Http.shutdown()

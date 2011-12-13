@@ -12,6 +12,23 @@ object Boston extends Templates {
 
   val maxProposals = 3
 
+  val Admins = Seq(8157820)
+
+  def admin: unfiltered.Cycle.Intent[Any, Any] = {
+    case GET(Path("/admin/boston")) & CookieToken(ClientToken(v, s, Some(c), Some(mid))) if(Admins.contains(mid.toInt)) =>
+      val proposals = Store { s =>
+        s.keys("boston:proposals:*:*") match {
+          case None => Seq.empty[Map[String, String]]
+          case Some(keys) =>
+            (Seq.empty[Map[String, String]] /: keys.filter(_.isDefined)){
+              (a, e) => a ++
+                s.hmget[String, String](e.get, "name", "desc").map(_ + ("id" -> e.get))
+            }
+        }
+      }
+      admin(proposals)
+  }
+
   def site: unfiltered.Cycle.Intent[Any, Any]  = {
     case GET(Path("/") & CookieToken(ClientToken(v, s, Some(c), Some(mid)))) =>
       val proposals = Store { s =>
