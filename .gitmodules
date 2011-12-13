@@ -4,3 +4,6 @@
 [submodule "lib/dispatch-lift-json"]
 	path = lib/dispatch-lift-json
 	url = git://github.com/dispatch/dispatch-lift-json
+[submodule "lib/heroic"]
+	path = lib/heroic
+	url = git://github.com/softprops/heroic.git
