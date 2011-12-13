@@ -12,7 +12,7 @@ object Boston extends Templates {
 
   val maxProposals = 3
 
-  val Admins = Seq(8157820)
+  val Admins = Seq(8157820,7230113)
 
   def admin: unfiltered.Cycle.Intent[Any, Any] = {
     case GET(Path("/admin/boston")) & CookieToken(ClientToken(v, s, Some(c), Some(mid))) if(Admins.contains(mid.toInt)) =>
