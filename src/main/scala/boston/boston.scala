@@ -15,7 +15,7 @@ object Boston extends Templates {
   val Admins = Seq(8157820,7230113)
 
   def admin: unfiltered.Cycle.Intent[Any, Any] = {
-    case GET(Path("/admin/boston")) & CookieToken(ClientToken(v, s, Some(c), Some(mid))) if(Admins.contains(mid.toInt)) =>
+    case GET(Path("/admin/boston")) & CookieToken(ClientToken(_, _, Some(_), Some(mid))) if(Admins.contains(mid.toInt)) =>
       val proposals = Store { s =>
         s.keys("boston:proposals:*:*") match {
           case None => Seq.empty[Map[String, String]]
@@ -30,7 +30,7 @@ object Boston extends Templates {
   }
 
   def site: unfiltered.Cycle.Intent[Any, Any]  = {
-    case GET(Path("/") & CookieToken(ClientToken(v, s, Some(c), Some(mid)))) =>
+    case GET(Path("/") & CookieToken(ClientToken(_, _, Some(_), Some(mid)))) =>
       val proposals = Store { s =>
         s.keys("boston:proposals:%s:*" format mid) match {
           case None => Seq.empty[Map[String, String]]
@@ -45,7 +45,7 @@ object Boston extends Templates {
     case GET(Path("/")) =>
       indexNoAuth
 
-    case POST(Path("/boston/proposals/withdraw")) & CookieToken(ClientToken(v, s, Some(c), Some(mid))) & Params(p) =>
+    case POST(Path("/boston/proposals/withdraw")) & CookieToken(ClientToken(_, _, Some(_), Some(mid))) & Params(p) =>
       val expected = for {
         id <- lookup("id") is required("name is required")
       } yield {
@@ -77,7 +77,7 @@ object Boston extends Templates {
         ))
       }
 
-    case POST(Path("/boston/proposals")) & CookieToken(ClientToken(v, s, Some(c), Some(mid))) & Params(p) =>
+    case POST(Path("/boston/proposals")) & CookieToken(ClientToken(_, _, Some(_), Some(mid))) & Params(p) =>
       val expected = for {
         name <- lookup("name") is required("name is required")
         desc <- lookup("desc") is required("desc is required")
@@ -117,7 +117,7 @@ object Boston extends Templates {
           errors.map { _.error } mkString(". ")
         ))
       }
-    case req @Path("/vote") => PollOver.intent(req)
+    //case req @Path("/vote") => PollOver.intent(req)
     //case req @Path("/tally") => Tally.intent(req)
   }
 }
