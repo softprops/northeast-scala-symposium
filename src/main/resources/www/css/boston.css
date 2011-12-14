@@ -148,7 +148,7 @@ textarea {
 }
 
 #head {
-  padding:1em 0;
+  padding:1em 0 .25em 0;
   text-shadow:0 1px #000;
   background:#003950;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#003950', endColorstr='#0F3036');

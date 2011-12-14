@@ -59,6 +59,15 @@ trait Templates extends nescala.Templates {
      </ul>
     </div>
 
+
+  val twttrHashtag = {
+    <a href="https://twitter.com/intent/tweet?button_hashtag=nescala" class="twitter-hashtag-button" data-lang="en" data-size="large" data-related="nescalas">Tweet #nescala</a>
+  }
+  
+  val twttrFollow = {
+    <a href="https://twitter.com/nescalas" class="twitter-follow-button" data-show-count="false" data-lang="en" data-size="large">Follow @nescalas</a>
+  }
+
   val head =
    <div id="head" class="clearfix">
     <div class="contained">
@@ -68,6 +77,7 @@ trait Templates extends nescala.Templates {
       <div class="r">
         <h2>Boston</h2>
         <h4>functionally typed party</h4>
+        { twttrFollow }
       </div>
     </div>
    </div>
