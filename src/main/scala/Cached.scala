@@ -7,8 +7,12 @@ object Cached extends Config {
     new MemcachedPool(property("MEMCACHE_SERVERS"))
   }
 
-  def getOr(k: String)(f: => (String, Option[Int])): String =
-    pool { c =>
+  def getOr(k: String)(f: => (String, Option[Int])): String = {
+    val (value, ttl) = f
+    value
+  }
+    
+    /*pool { c =>
       c.get(k.getBytes("utf8")) match {
         case None =>
           val (value, expires) = f
@@ -17,5 +21,5 @@ object Cached extends Config {
         case Some(value) =>
           new String(value, "utf8")
       }
-    }
+    }*/
 }
