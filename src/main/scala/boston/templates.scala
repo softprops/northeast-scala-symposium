@@ -133,7 +133,7 @@ trait Templates extends nescala.Templates {
                   </p>
                    { rsvps }
                 </div>
-              } else <div class="l divy">Talks</div> ++ { rsvps }
+              } else <div class="l divy">{ rsvps }</div>
             }
             <div class="r divy" id="propose-talk">
             {
