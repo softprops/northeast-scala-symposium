@@ -6,9 +6,9 @@ import unfiltered.response._
 import unfiltered.Cookie
 import dispatch.meetup.Auth
 import dispatch.oauth.{ Consumer, Token }
-import nescala.Meetup.Cities
+import nescala.Meetup
 
-import nescala.{ ClientToken, CookieToken, Config, Meetup, PollOver, Tally }
+import nescala.{ Cached, ClientToken, CookieToken, Config, Meetup, PollOver, Tally }
 
 object Nyc extends Config {
   import net.liftweb.json.compact
@@ -18,9 +18,13 @@ object Nyc extends Config {
   def site: unfiltered.Cycle.Intent[Any, Any] = {      
     case GET(Path("/nyc/rsvps") & Jsonp.Optional(jsonp)) =>
       JsonContent ~> ResponseString(
-        jsonp.wrap(compact(render(Meetup.rsvps(Cities.nyc)))))
+        jsonp.wrap(Cached.getOr("meetup:event:%s:rsvps" format Meetup.Nyc.event_id) {
+          (compact(render(Meetup.rsvps(Meetup.Nyc.event_id))), None)
+        }))
     case GET(Path("/nyc/photos") & Jsonp.Optional(jsonp)) =>
       JsonContent ~> ResponseString(
-        jsonp.wrap(compact(render(Meetup.photos(Cities.nyc)))))
+        jsonp.wrap(Cached.getOr("meetup:event:%s" format Meetup.Nyc.event_id){
+          (compact(render(Meetup.photos(Meetup.Nyc.event_id))), None)
+        }))
   }
 }

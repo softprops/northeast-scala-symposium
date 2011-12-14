@@ -1,14 +1,15 @@
 package nescala.boston
 
-import nescala.{ CookieToken, ClientToken, PollOver, Store, Tally }
+import nescala.{ Cached, CookieToken, ClientToken,
+                Meetup, PollOver, Store, Tally }
 
 object Boston extends Templates {
   import unfiltered.request._
   import unfiltered.response._
   import QParams._
 
-  //import net.liftweb.json._
-  //import net.liftweb.json.JsonDSL._
+  import net.liftweb.json._
+  import net.liftweb.json.JsonDSL._
 
   val maxProposals = 3
 
@@ -29,7 +30,16 @@ object Boston extends Templates {
       admin(proposals)
   }
 
+  def api: unfiltered.Cycle.Intent[Any, Any] = {
+    case GET(Path(Seg("boston" :: "rsvps" :: event :: Nil))) =>
+      JsonContent ~> ResponseString(
+        Cached.getOr("meetup:event:%s:rsvps" format event) {
+          (compact(render(Meetup.rsvps(event))), Some(60 * 15))
+        })
+  }
+
   def site: unfiltered.Cycle.Intent[Any, Any]  = {
+
     case GET(Path("/") & CookieToken(ClientToken(_, _, Some(_), Some(mid)))) =>
       val proposals = Store { s =>
         s.keys("boston:proposals:%s:*" format mid) match {
@@ -42,6 +52,7 @@ object Boston extends Templates {
         }
       }
       indexWithAuth(proposals)
+
     case GET(Path("/")) =>
       indexNoAuth
 

@@ -1,5 +1,7 @@
 package nescala.boston
 
+import nescala.Meetup
+
 trait Templates extends nescala.Templates {
   def bostonLayout(head: xml.NodeSeq)
     (bodyScripts: xml.NodeSeq)
@@ -86,10 +88,15 @@ trait Templates extends nescala.Templates {
     </div>
   )
 
+  val rsvps =
+    <div class="attending">
+      <h4 class="tban"/><ul class="rsvps"/><p class="extra-rsvps"/>
+    </div>
+
   private def index(authed: Boolean, proposals: Seq[Map[String, String]] = Nil) = bostonLayout(Nil)(
     <script type="text/javascript" src="/js/boston.js"></script>)({
       head
-    } ++ <div id="day-one" class="day clearfix">
+    } ++ <div id="day-one" data-event={ Meetup.Boston.dayone_event_id } class="day clearfix">
       <div class="contained">
         <div id="talk-submissions">
           <div class="l">
@@ -114,8 +121,9 @@ trait Templates extends nescala.Templates {
                   <p class="instruct">
                     Speakers may enter Twitter usernames and other biographical information in their <a target="_blank" href="http://www.meetup.com/nescala/profile/">member profile</a>.
                   </p>
+                   { rsvps }
                 </div>
-              } else <div class="l divy">Talks</div>
+              } else <div class="l divy">Talks</div> ++ { rsvps }
             }
             <div class="r divy" id="propose-talk">
             {
@@ -148,7 +156,7 @@ trait Templates extends nescala.Templates {
         </div>
       </div>
     </div>
-    <div id="day-two" class="day clearfix">
+    <div id="day-two" data-event={ Meetup.Boston.daytwo_event_id } class="day clearfix">
       <div class="contained">
         <div class="l">
           <h1>Day 02</h1>
@@ -157,13 +165,14 @@ trait Templates extends nescala.Templates {
             <span>10am @<a href="http://www.meetup.com/nescala/events/44042982/">Stata Center</a></span>
           </h3>
           <p>Scala Workshops</p>
+          { rsvps }
         </div>
         <div class="r">
           <p>The second day of the symposium is hands-on Scala hacking and workshops hosted at MIT.</p>
         </div>
       </div>
     </div>
-    <div id="day-three" class="day clearfix">
+    <div id="day-three" data-event={ Meetup.Boston.daythree_event_id } class="day clearfix">
       <div class="contained">
         <div class="l">
           <h1>Day 03</h1>
@@ -171,6 +180,7 @@ trait Templates extends nescala.Templates {
           <h3>
             <span>10am @<a href="http://www.meetup.com/nescala/events/44049692/">Stata Center</a></span>
           </h3>
+          { rsvps }
         </div>
         <div class="r">No details yet</div>
       </div>

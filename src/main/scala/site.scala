@@ -7,10 +7,8 @@ object NESS extends Config {
   import QParams._
   import dispatch.meetup._
   import dispatch.oauth.Token
-  import nescala.Meetup.Cities
 
   def site: unfiltered.Cycle.Intent[Any, Any] = {
-    //case GET(Path("/")) => Redirect("/2011")
     
     case GET(Path("/connect")) & Params(p) =>
       val callback = "%s/authenticated" format property("host")
