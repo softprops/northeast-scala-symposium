@@ -7,3 +7,6 @@
 [submodule "lib/heroic"]
 	path = lib/heroic
 	url = git://github.com/softprops/heroic.git
+[submodule "lib/memcached"]
+	path = lib/memcached
+	url = git://github.com/jakedouglas/memcached.scala.git
