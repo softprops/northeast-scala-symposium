@@ -24,6 +24,52 @@ q { content:none; }
   margin-top:1em;
 }
 
+.avatar {
+  width: 48px;
+  height: 48px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+}
+
+#maybe-talks {
+  line-height:1em;
+  margin:.25em 0;
+}
+
+#maybe-talks .smaller {
+  font-size:60%;
+}
+
+.who-box {
+
+}
+
+.who-box .avatar, .who-box .links {
+  float:left;
+}
+
+.who-box .avatar {
+  margin-top:.15em;
+}
+
+.who-box .links {
+  margin-left:.5em;
+}
+.who-box .links a {
+  display:block;
+}
+
+.who-box .links a.twttr {
+  font-size:70%;
+}
+
+.talk .desc {
+  clear:both;
+  margin-top:.5em;
+  white-space:pre-wrap;
+}
+
 .rsvps li, .photos li {
   list-style:none;
   float:left;

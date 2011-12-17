@@ -11,6 +11,8 @@ object Meetup extends Config {
   import net.liftweb.json.JsonDSL._
   import net.liftweb.json.JsonParser._
 
+  val defaultImage = "http://img1.meetupstatic.com/39194172310009655/img/noPhoto_50.gif"
+
   lazy val consumer = Consumer(
     property("mu_consumer"), property("mu_consumer_secret"))
 
@@ -28,10 +30,48 @@ object Meetup extends Config {
 
   def http = Http
 
+  object Members2 extends MembersBuilder(Map())
+  private[nescala] class MembersBuilder(params: Map[String, String]) extends QueryMethod {
+    private def param(key: String)(value: Any) = new MembersBuilder(params + (key -> value.toString))
+    val member_id = param("member_id")_
+    def complete = _ / "2" / "members" <<? params
+  }
+
   def has_rsvp(eventId: String, tok: oauth.Token) = {
     val mu = OAuthClient(consumer, tok)
     val (res, _) = http(mu.handle(Events.id(eventId)))
     res.flatMap(Event.myrsvp).contains("yes")
+  }
+
+  case class SimpleMember(id: String, name: String, photo: String, twttr: Option[String])
+
+  def members(ids: Traversable[String]) = {
+    val (res, _) = http(client.handle(Members.member_id(ids.mkString(","))))
+    val all =
+      for {
+        r <- res
+        id <- Member.id(r)
+        name <- Member.name(r)
+        photo <- Member.photo_url(r)
+      } yield {
+        id -> SimpleMember(id, name, if(photo.isEmpty) defaultImage else photo, None)
+      }
+    val twttrs =
+      for {
+        r <- res
+        id <- Member.id(r)
+        JString(twttr) <- r \ "other_services" \ "twitter" \ "identifier"
+      } yield {
+        (id, twttr)
+      }
+    val mems = (Map(all:_*) /: twttrs)((a,e) =>
+      e match {
+        case (id, twttr) =>
+          if(a isDefinedAt id) a.updated(id, a(id).copy(twttr = Some(twttr)))
+          else a
+      }
+    )
+    mems.values
   }
 
   def member_id(tok: oauth.Token) = {
@@ -59,7 +99,7 @@ object Meetup extends Config {
 
   def rsvps(eventId: String) = {
       val (res, _) = http(client.handle(Rsvps.event_id(eventId)))
-      val defaultImage = "http://img1.meetupstatic.com/39194172310009655/img/noPhoto_50.gif"
+      
       val result =
         for {
           r <- res

@@ -82,16 +82,23 @@ trait Templates extends nescala.Templates {
     </div>
    </div>
 
-  def admin(proposals: Seq[Map[String, String]]) = bostonLayout(Nil)(Nil)({
+  def maybes(proposals: Seq[Map[String, String]]) = bostonLayout(Nil)(Nil)({
       head
-    } ++ <div class="contained">
-      <h1>Look who's talking</h1>
-      <h2>{ proposals.size } campfire stories</h2>
+    } ++ <div class="contained">      
+      <h2 id="maybe-talks"><div>{ proposals.size } Scala</div><div class="smaller"> campfire stories</div></h2>
       <ul>{
         proposals.map { p =>
-        <li id={ p("id") }>
-          <h1>{ p("name") }</h1>
-          <p>{ p("desc") }</p>
+        <li class="talk" id={ p("id").split(":")(3) }>
+          <h1><a href={ "#"+p("id").split(":")(3) }>{ p("name") }</a></h1>
+          <div class="who-box clearfix">
+            <img class="avatar" src={ p("mu_photo").replace("member_", "thumb_") } />
+            <div class="links">
+              <a class="primary" href={"http://meetup.com/nescala/members/%s" format p("id").split(":")(2)} target="_blank">{ p("mu_name") } </a>{ if(p.isDefinedAt("twttr")) {
+                  <a class="twttr" href={"http://twitter.com/%s" format p("twttr").drop(1)} target="_blank">{ p("twttr")}</a>
+                } else <span/> }
+            </div>
+          </div>
+          <p class="desc">{ p("desc") }</p>
         </li>
         }
       }</ul>

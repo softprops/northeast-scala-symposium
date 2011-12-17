@@ -8,9 +8,6 @@ object Boston extends Templates {
   import unfiltered.response._
   import QParams._
 
-  import net.liftweb.json._
-  import net.liftweb.json.JsonDSL._
-
   val maxProposals = 3
 
   val Admins = Seq(8157820,7230113)
@@ -27,15 +24,68 @@ object Boston extends Templates {
             }
         }
       }
-      admin(proposals)
+      maybes(proposals)
   }
 
   def api: unfiltered.Cycle.Intent[Any, Any] = {
     case GET(Path(Seg("boston" :: "rsvps" :: event :: Nil))) =>
+      import net.liftweb.json._
+      import net.liftweb.json.JsonDSL._
+
       JsonContent ~> ResponseString(
         Cached.getOr("meetup:event:%s:rsvps" format event) {
           (compact(render(Meetup.rsvps(event))), Some(60 * 15))
         })
+  }
+
+  def talks: unfiltered.Cycle.Intent[Any, Any] = {
+    case GET(Path(Seg("2012" :: "talks" :: Nil))) =>
+      val proposals = Store { s =>
+        s.keys("boston:proposals:*:*") match {
+          case None => Seq.empty[Map[String, String]]
+          case Some(keys) =>
+            (Seq.empty[Map[String, String]] /: keys.filter(_.isDefined)){
+              (a, e) => a ++
+                s.hmget[String, String](e.get, "name", "desc").map(_ + ("id" -> e.get))
+            }
+        }
+      }
+      val Proposing = """boston:proposals:(.*):(.*)""".r
+      val pids = (proposals.map {
+        _("id") match {
+          case Proposing(who, _) =>
+            who
+        }
+      }).toSet.toSeq
+
+      def mukey(of: String) = "boston:members:%s" format of
+      val notcached = Store { s =>
+        pids.filterNot(p => s.exists(mukey(p)))
+      }
+      val members = if(!notcached.isEmpty) {
+        val ms = Meetup.members(notcached)
+        Store { s =>
+          ms.map { m =>
+            val data = Map(
+              "mu_name" -> m.name, "mu_photo" -> m.photo
+            ) ++  m.twttr.map("twttr" -> _)
+            s.hmset(mukey(m.id), data)
+            m.id -> data
+          }
+        }
+      } else {
+        Store { s =>
+          pids.map { p =>
+            p -> s.hmget[String, String](mukey(p), "mu_name", "mu_photo", "twttr").get
+          }
+        }
+      }
+      val ret = (proposals /: members)((a, e) => e match {
+        case (key, value) =>          
+          val (matching, notmatching) = a.partition(_("id").matches("""boston:proposals:%s:(.*)""".format(key)))
+          matching.map(_ ++ value) ++ notmatching
+      })
+      maybes(ret)
   }
 
   def site: unfiltered.Cycle.Intent[Any, Any]  = {
@@ -88,6 +138,10 @@ object Boston extends Templates {
         ))
       }
 
+    // edit
+    //case POST(Path(Seq("boston" :: "proposals" :: id :: Nil))) & CookieToken(ClientToken(_, _, Some(_), Some(mid))) & Params(p) =>
+      
+
     case POST(Path("/boston/proposals")) & CookieToken(ClientToken(_, _, Some(_), Some(mid))) & Params(p) =>
       val expected = for {
         name <- lookup("name") is required("name is required")
@@ -103,10 +157,22 @@ object Boston extends Templates {
             // {city}:proposals:ids stores an atomicly incremented int used to generate proposals ids
             // {city}:proposals:{memberId}:{nextId} stores a map of name, desc, and votes for a proposal
             val mkey = "boston:proposals:%s" format mid
+            val mukey = "boston:members:%s" format mid
             val ckey = "count:%s" format mkey
             val proposed = s.get(ckey).getOrElse("0").toInt
             if(proposed + 1 > maxProposals) Left("Exceeded max proposals")
             else {
+              if(!s.exists(mukey)) {
+                // cache meetup member data
+                Meetup.members(Seq(mid)).headOption match {
+                  case Some(mem) =>
+                    s.hmset(mukey, Map(
+                      "mu_name" -> mem.name,
+                      "mu_photo" -> mem.photo
+                    ) ++ mem.twttr.map("twttr" -> _))
+                }
+              }
+
               val nextId = s.incr("boston:proposals:ids").get
               val nextKey = "%s:%s" format(mkey, nextId)
               s.hmset(nextKey, Map(

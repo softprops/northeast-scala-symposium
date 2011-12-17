@@ -9,7 +9,7 @@ object Server {
     .resources(getClass().getResource("/www"))
     .filter(Planify {
       NESS.site orElse boston.Boston.site orElse nyc.Nyc.site orElse (
-        boston.Boston.admin orElse boston.Boston.api
+        boston.Boston.talks orElse boston.Boston.api
       )
     }).run(
       _ => (),
