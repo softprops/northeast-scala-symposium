@@ -20,6 +20,7 @@ q { content:none; }
 
 .attending {
   clear:both;
+  width:330px;
   margin-top:1em;
 }
 
