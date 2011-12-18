@@ -10,21 +10,15 @@ object Boston extends Templates {
 
   val maxProposals = 3
 
-  val Admins = Seq(8157820,7230113)
+  val MaxTalkName = 200
+  val MaxTalkDesc = 600
 
-  def admin: unfiltered.Cycle.Intent[Any, Any] = {
-    case GET(Path("/admin/boston")) & CookieToken(ClientToken(_, _, Some(_), Some(mid))) if(Admins.contains(mid.toInt)) =>
-      val proposals = Store { s =>
-        s.keys("boston:proposals:*:*") match {
-          case None => Seq.empty[Map[String, String]]
-          case Some(keys) =>
-            (Seq.empty[Map[String, String]] /: keys.filter(_.isDefined)){
-              (a, e) => a ++
-                s.hmget[String, String](e.get, "name", "desc").map(_ + ("id" -> e.get))
-            }
-        }
-      }
-      maybes(proposals)
+  val Admins = Seq(8157820 /*doug*/,7230113 /*n8*/)
+
+  object UrlDecoded {
+     import java.net.URLDecoder.decode
+    def unapply(raw: String) =
+      Some(decode(raw, "utf8"))
   }
 
   def api: unfiltered.Cycle.Intent[Any, Any] = {
@@ -36,6 +30,42 @@ object Boston extends Templates {
         Cached.getOr("meetup:event:%s:rsvps" format event) {
           (compact(render(Meetup.rsvps(event))), Some(60 * 15))
         })
+    case POST(Path(Seg("boston" :: "proposals" :: UrlDecoded(id) :: Nil))) & Params(p) & CookieToken(
+      ClientToken(_, _, Some(_), Some(mid))) =>
+      val expected = for {
+        name <- lookup("name") is required("name is required")
+        desc <- lookup("desc") is required("desc is required")
+      } yield {
+        val (n, d) = (name.get.trim, desc.get.trim)
+        (if(n.size > MaxTalkName || d.size > MaxTalkDesc) Left("Talk contents were too long")
+        else {
+          val Pkey = """boston:proposals:(.*):(.*)""".r
+          id match {
+            case Pkey(who, pid) =>
+              if(!who.equals(mid)) Left("Invalid id")
+              else {
+                Store { s =>
+                  if(!s.exists(id)) Left("Invalid proposal %s" format id)
+                  else {
+                    s.hset(id, "name", n)
+                    s.hset(id, "desc", d)
+                    Right(id)
+                  }
+                }
+              }
+           case invalid => Left("Invalid id")
+          }
+        }) fold({ fail =>
+          JsonContent ~> ResponseString("""{"status":400,"msg":"%s"}""" format fail)
+        }, { ok =>
+          JsonContent ~> ResponseString("""{"status":200, "id":"%s"}""" format ok)
+        })
+      }
+      expected(p) orFail { errors =>
+        JsonContent ~> ResponseString("""{"status":400,"msg":"%s"}""" format(
+          errors.map { _.error } mkString(". ")
+        ))
+      }
   }
 
   def talks: unfiltered.Cycle.Intent[Any, Any] = {
@@ -113,7 +143,8 @@ object Boston extends Templates {
         val key = id.get
         val Withdrawing = """boston:proposals:(.*):(.*)""".r
         (Store { s =>
-          if(s.exists(key)) {
+          if(!s.exists(key))  Left("proposal did not exist")
+          else {
             key match {
               case Withdrawing(who, id) =>
                 if(mid.equals(who)) {
@@ -125,7 +156,7 @@ object Boston extends Templates {
               case bk =>
                 Left("invalid proposal")
             }
-          } else Left("proposal did not exist")
+          }
         }).fold({ fail =>
           JsonContent ~> ResponseString("""{"status":400,"msg":"%s"}""" format fail)
         }, { ok =>
@@ -138,9 +169,6 @@ object Boston extends Templates {
         ))
       }
 
-    // edit
-    //case POST(Path(Seq("boston" :: "proposals" :: id :: Nil))) & CookieToken(ClientToken(_, _, Some(_), Some(mid))) & Params(p) =>
-      
 
     case POST(Path("/boston/proposals")) & CookieToken(ClientToken(_, _, Some(_), Some(mid))) & Params(p) =>
       val expected = for {
@@ -149,7 +177,7 @@ object Boston extends Templates {
       } yield {
         val (n, d) = (name.get.trim, desc.get.trim)
         (Store { s =>
-          if(n.size > 200 || d.size > 600) Left("Talk contents were too long")
+          if(n.size > MaxTalkName || d.size > MaxTalkDesc) Left("Talk contents were too long")
           else {
             // `key` notes :)
             // talks are persisted as keys and values

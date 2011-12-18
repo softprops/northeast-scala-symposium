@@ -21,7 +21,6 @@ q { content:none; }
 .attending {
   clear:both;
   width:330px;
-  margin-top:1em;
 }
 
 .avatar {
@@ -83,8 +82,21 @@ q { content:none; }
   border-radius: 5px;
 }
 
+.propose-edit-form input[type='text'], .propose-edit-form .edit-desc {
+  display:none;
+}
+
+.propose-edit-form .form-extras, .propose-edit-form .edit-controls {
+  margin-top:.5em;
+
+}
+
+.propose-edit-form .edit-controls input {
+  float:right;
+  margin-left:.5em;
+}
+
 #propose-form input[type="text"], #propose-form textarea {
-  width:100%;
   margin:.5em 0;
   padding:.25em;
   font-size:24px;
@@ -141,6 +153,30 @@ q { content:none; }
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#F0F0F0', endColorstr='#D8D8D8');
   -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#F0F0F0', endColorstr='#D8D8D8')";
   background-image: linear-gradient(top, #F0F0F0, #D8D8D8);
+}
+
+
+.btn.cancel {
+  border-color:#9FA1A2;
+  text-shadow:0 1px #9FA1A2;
+  background:#DBDBDB;
+  background-image: -moz-linear-gradient(top, #DBDBDB, #BDC1C4);
+  background-image: -webkit-gradient(linear, center top, center bottom, from(#DBDBDB), to(#BDC1C4));
+  background-image: -o-linear-gradient(top, #DBDBDB, #3699ff);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#DBDBDB', endColorstr='#BDC1C4');
+  -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#DBDBDB', endColorstr='#BDC1C4')";
+  background-image: linear-gradient(top, #DBDBDB, #BDC1C4);
+}
+
+.btn.cancel:hover {
+  border-color:#9FA1A2;
+  background:#DBDBDB;
+  background-image: -moz-linear-gradient(top, #DBDBDB, #9FA1A2);
+  background-image: -webkit-gradient(linear, center top, center bottom, from(#DBDBDB), to(#9FA1A2));
+  background-image: -o-linear-gradient(top, #DBDBDB, #9FA1A2);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#DBDBDB', endColorstr='#9FA1A2');
+  -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#DBDBDB', endColorstr='#9FA1A2')";
+  background-image: linear-gradient(top, #DBDBDB, #9FA1A2);
 }
 
 .rsvps li:hover {
@@ -234,6 +270,11 @@ textarea {
   margin:.5em 0;
 }
 
+#proposal-list .controls li {
+  float: left;
+  padding:0 1em 0 0;
+}
+
 input[type='text'], textarea {
   -webkit-transition: box-shadow 0.2s linear;
   -moz-transition: box-shadow 0.2s linear;
@@ -253,11 +294,11 @@ input[type='text'], textarea {
   border: 1px solid #CCC;
   font-size: 26px;
   padding: .25em;
-  width: 80%;
+  width: 97.5%;
   margin: 0 auto;
 }
 
-#proposal-list .preview {
+#proposal-list .preview .desc {
   clear:both;
   font-size:16px;
   white-space:pre-wrap;
@@ -331,6 +372,7 @@ a:hover {
 .l {
   width:330px;
   text-align:right;
+  clear:left;
 }
 
 .divy {

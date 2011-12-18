@@ -83,6 +83,69 @@
       return false;
     });
 
+    $("form.propose-edit-form").live('submit', function(e){
+      e.preventDefault();
+      var self = $(this)
+        , controls = $('.controls', self)
+        , preview = $('.preview', self)
+        , name = $.trim($('input[name="name"]', self).val())
+        , desc = $.trim($('textarea[name="desc"]', self).val())
+        , data = self.serialize();
+
+      if(!name.length || !desc.length) {
+          alert('Name and description are required for talk proposals');
+      } else if(name.length > 200 || desc.length > 600) {
+          alert("Talk contents are too long");
+      } else {
+        $.post('/boston/proposals/' + encodeURIComponent($('input[name="id"]', self).val()), data, function(r) {
+          console.log(r);
+          switch(r.status) {
+          case 200:
+              $('input[name="name"], .edit-desc', self).hide();
+              $('.name, .desc', self).show();
+              break;
+          case 400:
+              alert(r.msg);
+              break;
+          };
+        });
+      }
+      return false;
+    });
+
+    $("form.propose-edit-form .edit-proposal").live('click', function(e){
+      e.preventDefault();
+      var self = $(this)
+        , controls = self.parent().parent().parent()
+        , preview = controls.parent()
+        , frm = preview.parent()
+        , name = $('.name', frm)
+        , orgName = name.data().val
+        , nameIn = $('input[name="name"]', frm)
+        , desc = $('.desc', preview)
+        , orgDesc = desc.data().val
+        , editDesc = $('.edit-desc', frm)
+        , descIn = $('textarea[name="desc"]', frm)
+        , cancel = $('.cancel', frm);
+
+      name.hide();
+      desc.hide();
+      editDesc.show();
+      nameIn.show();
+      descIn.show();
+
+      cancel.click(function(e) {
+        e.preventDefault();
+        name.show();
+        desc.show();
+        editDesc.hide()
+        nameIn.val(orgName).hide();
+        descIn.val(orgDesc).hide();
+        return false;
+      });
+      return false;
+    });
+
     $("#propose-form").submit(function(e){
       e.preventDefault();
       var frm = $(this)

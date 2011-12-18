@@ -46,19 +46,40 @@ trait Templates extends nescala.Templates {
        {
          props.map { p =>
          <li id={ p("id") }>
-          <div>
-            <a href="#" class="toggle">{ p("name") }</a>
-            <div class="controls">
-              <a href="/boston/proposals/withdraw" class="withdraw-proposal" data-proposal={ p("id") }>withdraw</a>
-            </div>
-          </div>
-          <div class="preview linkify">{ p("desc") }</div>
+           <form action="#" method="POST" class="propose-edit-form">
+             <input type="hidden" name="id" value={ p("id") }/>
+             <div>
+               <a href="#" class="toggle name" data-val={ p("name")}>{ p("name") }</a>
+               <input type="text" name="name" maxlength="200" value={ p("name") } />
+             </div>
+             <div class="preview">
+               <div class="controls clearfix">
+                 <ul>
+                   <li>
+                    <a href="/boston/proposals/withdraw" class="withdraw-proposal"
+                      data-proposal={ p("id") }>withdraw</a>
+                   </li>
+                   <li><a href="#" class="edit-proposal" data-proposal={ p("id") }>edit</a></li>
+                 </ul>
+               </div>
+               <div class="linkify desc" data-val={ p("desc") }>{ p("desc") }</div>
+               <div class="edit-desc limited">
+                  <textarea data-limit="600" name="desc">{ p("desc") }</textarea>
+                  <div class="form-extras">
+                    <div class="limit-label"/>
+                    <div class="edit-controls clearfix">
+                      <input type="submit" value="Edit Talk" class="btn" />
+                      <input type="button" value="Cancel" class="btn cancel" />
+                    </div>
+                  </div>
+                </div>
+             </div>
+           </form>
          </li>
          }
        }
      </ul>
     </div>
-
 
   val twttrHashtag = {
     <a href="https://twitter.com/intent/tweet?button_hashtag=nescala" class="twitter-hashtag-button" data-lang="en" data-size="large" data-related="nescalas">Tweet #nescala</a>
@@ -94,7 +115,7 @@ trait Templates extends nescala.Templates {
             <img class="avatar" src={ p("mu_photo").replace("member_", "thumb_") } />
             <div class="links">
               <a class="primary" href={"http://meetup.com/nescala/members/%s" format p("id").split(":")(2)} target="_blank">{ p("mu_name") } </a>{ if(p.isDefinedAt("twttr")) {
-                  <a class="twttr" href={"http://twitter.com/%s" format p("twttr").drop(1)} target="_blank">{ p("twttr")}</a>
+                  <a class="twttr" href={"http://twitter.com/%s" format p("twttr").drop(1)} target="_blank">{ p("twttr") }</a>
                 } else <span/> }
             </div>
           </div>
@@ -122,12 +143,16 @@ trait Templates extends nescala.Templates {
             <h3>
               <span>9am @<a href="http://www.meetup.com/nescala/events/37637442/">NERD</a></span>
             </h3>
-            <p>Scala Talks</p>
+            <p>Scala Talks</p>{
+              rsvps
+            }
           </div>
           <div class="r">
             <h1>Submit a Talk</h1>
             <p>This year's symposium features 16 talks of 30 minutes, and one keynote talk.</p>
             <p>Hopeful speakers may propose talks on topics of their choosing. The schedule will be filled by talks that accrue the most votes, with the keynote spot (and $1000 travel offset) going to whichever receives the most votes of all.</p>
+            <p>The voting polls aren't open yet, but feel free to <a href="/2012/talks">peruse the current proposals</a>.</p>                                              <p>What would make this year even more awesome that last year is hearing even more people talk about anything Scala. If you have an awesome project you want to get out in the open, solved a hard problem, made a brilliant discovery, or just have fun programming an Scala and want to talk about it, post a talk below.</p>
+
           </div>
             {
               if(authed) {
@@ -138,9 +163,11 @@ trait Templates extends nescala.Templates {
                   <p class="instruct">
                     Speakers may enter Twitter usernames and other biographical information in their <a target="_blank" href="http://www.meetup.com/nescala/profile/">member profile</a>.
                   </p>
-                   { rsvps }
+                  <p class="instruct">
+                    Each person can post at most <strong>three</strong> talk proposals.
+                  </p>
                 </div>
-              } else <div class="l divy">Talks</div> ++ { rsvps }
+              } else <div class="l divy"/>
             }
             <div class="r divy" id="propose-talk">
             {
