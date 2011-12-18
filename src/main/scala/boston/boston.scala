@@ -1,6 +1,6 @@
 package nescala.boston
 
-import nescala.{ Cached, CookieToken, ClientToken,
+import nescala.{ Cached, Clock, CookieToken, ClientToken,
                 Meetup, PollOver, Store, Tally }
 
 object Boston extends Templates {
@@ -22,7 +22,7 @@ object Boston extends Templates {
   }
 
   def api: unfiltered.Cycle.Intent[Any, Any] = {
-    case GET(Path(Seg("boston" :: "rsvps" :: event :: Nil))) =>
+    case GET(Path(Seg("boston" :: "rsvps" :: event :: Nil))) => Clock("fetching rsvp list for %s" format event) {
       import net.liftweb.json._
       import net.liftweb.json.JsonDSL._
 
@@ -30,8 +30,10 @@ object Boston extends Templates {
         Cached.getOr("meetup:event:%s:rsvps" format event) {
           (compact(render(Meetup.rsvps(event))), Some(60 * 15))
         })
+    }
+
     case POST(Path(Seg("boston" :: "proposals" :: UrlDecoded(id) :: Nil))) & Params(p) & CookieToken(
-      ClientToken(_, _, Some(_), Some(mid))) =>
+      ClientToken(_, _, Some(_), Some(mid))) => Clock("editing proposal %s" format id) {
       val expected = for {
         name <- lookup("name") is required("name is required")
         desc <- lookup("desc") is required("desc is required")
@@ -66,10 +68,11 @@ object Boston extends Templates {
           errors.map { _.error } mkString(". ")
         ))
       }
+    }
   }
 
   def talks: unfiltered.Cycle.Intent[Any, Any] = {
-    case GET(Path(Seg("2012" :: "talks" :: Nil))) =>
+    case GET(Path(Seg("2012" :: "talks" :: Nil))) => Clock("fetching 2012 talks") {
       val proposals = Store { s =>
         s.keys("boston:proposals:*:*") match {
           case None => Seq.empty[Map[String, String]]
@@ -116,6 +119,7 @@ object Boston extends Templates {
           matching.map(_ ++ value) ++ notmatching
       })
       maybes(ret)
+    }
   }
 
   def site: unfiltered.Cycle.Intent[Any, Any]  = {
@@ -136,7 +140,7 @@ object Boston extends Templates {
     case GET(Path("/")) =>
       indexNoAuth
 
-    case POST(Path("/boston/proposals/withdraw")) & CookieToken(ClientToken(_, _, Some(_), Some(mid))) & Params(p) =>
+    case POST(Path("/boston/proposals/withdraw")) & CookieToken(ClientToken(_, _, Some(_), Some(mid))) & Params(p) => Clock("withdrawing proposal") {
       val expected = for {
         id <- lookup("id") is required("name is required")
       } yield {
@@ -168,9 +172,10 @@ object Boston extends Templates {
           errors.map { _.error } mkString(". ")
         ))
       }
+    }
 
 
-    case POST(Path("/boston/proposals")) & CookieToken(ClientToken(_, _, Some(_), Some(mid))) & Params(p) =>
+    case POST(Path("/boston/proposals")) & CookieToken(ClientToken(_, _, Some(_), Some(mid))) & Params(p) => Clock("fetching boston proposals") {
       val expected = for {
         name <- lookup("name") is required("name is required")
         desc <- lookup("desc") is required("desc is required")
@@ -198,6 +203,7 @@ object Boston extends Templates {
                       "mu_name" -> mem.name,
                       "mu_photo" -> mem.photo
                     ) ++ mem.twttr.map("twttr" -> _))
+                  case _ => () // not very likely
                 }
               }
 
@@ -222,6 +228,7 @@ object Boston extends Templates {
           errors.map { _.error } mkString(". ")
         ))
       }
+    }
     //case req @Path("/vote") => PollOver.intent(req)
     //case req @Path("/tally") => Tally.intent(req)
   }
