@@ -152,7 +152,7 @@ trait Templates extends nescala.Templates {
             <p>This year's symposium features 16 talks of 30 minutes, and one keynote talk.</p>
             <p>Hopeful speakers may propose talks on topics of their choosing. The schedule will be filled by talks that accrue the most votes, with the keynote spot (and $1000 travel offset) going to whichever receives the most votes of all.</p>
             <p>The voting polls open <strong>1/10</strong> and close <strong>1/24</strong>, but feel free to <a href="/2012/talks">peruse the current proposals</a>.</p>
-            <p>What would make this year even more awesome that last year is hearing even more people talk about anything Scala. If you have an awesome project you want to get out in the open, solved a hard problem, made a brilliant discovery, or just have fun programming an Scala and want to talk about it, post a talk proposal below.</p>
+            <p>What would make this year even more awesome than last year is hearing even more people talk about anything Scala. If you have an awesome project you want to get out in the open, solved a hard problem, made a brilliant discovery, or just have fun programming an Scala and want to talk about it, post a talk proposal below.</p>
           </div>
             {
               if(authed) {
