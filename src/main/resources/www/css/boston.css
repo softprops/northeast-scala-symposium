@@ -1,18 +1,16 @@
 * { margin:0; }
 
 .clearfix:after {
-     visibility: hidden;
-     display: block;
-     font-size: 0;
-     content: " ";
-     clear: both;
-     height: 0;
-     }
+  visibility: hidden;
+  display: block;
+  font-size: 0;
+  content: " ";
+  clear: both;
+  height: 0;
+}
 .clearfix { display: inline-block; }
-/* start commented backslash hack \*/
 * html .clearfix { height: 1%; }
 .clearfix { display: block; }
-/* close commented backslash hack */
 
 cite { font-style:normal; }
 
@@ -38,10 +36,6 @@ q { content:none; }
 
 #maybe-talks .smaller {
   font-size:60%;
-}
-
-.who-box {
-
 }
 
 .who-box .avatar, .who-box .links {
@@ -82,13 +76,19 @@ q { content:none; }
   border-radius: 5px;
 }
 
-.propose-edit-form input[type='text'], .propose-edit-form .edit-desc {
+#propose-panel-container,
+#propose-container {
+  margin:.5em 0;
+}
+
+.propose-edit-form input[type='text'],
+.propose-edit-form .edit-desc {
   display:none;
 }
 
-.propose-edit-form .form-extras, .propose-edit-form .edit-controls {
+.propose-edit-form .form-extras,
+.propose-edit-form .edit-controls {
   margin-top:.5em;
-
 }
 
 .propose-edit-form .edit-controls input {
@@ -96,14 +96,15 @@ q { content:none; }
   margin-left:.5em;
 }
 
-#propose-form input[type="text"], #propose-form textarea {
+.proposing input[type="text"],
+.proposing textarea {
   margin:.5em 0;
   padding:.25em;
   font-size:24px;
   color:#333;
 }
 
-#propose-form input[type="submit"] {
+.proposing input[type="submit"] {
   float:right;
 }
 
@@ -196,7 +197,10 @@ q { content:none; }
   overflow:hidden;
 }
 
-.rsvps li a:link, .rsvps li a:visited, .photos li a:link, .photos li a:visited {
+.rsvps li a:link,
+.rsvps li a:visited,
+.photos li a:link,
+.photos li a:visited {
   color:transparent;
 }
 
@@ -243,7 +247,8 @@ textarea {
   font-size:16px;
 }
 
-#proposals {
+#proposals,
+#panel_proposals {
   clear:both;
 }
 
@@ -253,8 +258,8 @@ textarea {
   padding:0;
 }
 
-#proposal-list li {
-  
+#proposals-list li,
+#panel_proposals-list li {
   padding:.5em;
   margin:.25em 0;
   background:#E7FBFF;
@@ -264,15 +269,23 @@ textarea {
   border-radius: 10px;
 }
 
-#proposal-list .controls {
+.preview .controls {
   display:block;
   font-size:16px;
   margin:.5em 0;
+  background:#003950;
+  -moz-border-radius: 4px 4px 4px 4px;
+  -webkit-border-radius: 4px 4px 4px 4px;
+  border-radius: 4px 4px 4px 4px;
+  padding:.5em;
 }
 
-#proposal-list .controls li {
+
+#proposals-list .preview .controls li,
+#panel_proposals-list .preview .controls li {
   float: left;
   padding:0 1em 0 0;
+  background:#003950;
 }
 
 input[type='text'], textarea {
@@ -449,7 +462,9 @@ div.entry {
   padding-top: 1em;
 }
 
-a.voted, a.voted:link, a.voted:visited {
+a.voted,
+a.voted:link,
+a.voted:visited {
   color:#AEFF00;
   text-decoration:line-through;
 }

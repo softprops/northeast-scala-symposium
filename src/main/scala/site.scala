@@ -11,7 +11,11 @@ object NESS extends Config {
   def site: unfiltered.Cycle.Intent[Any, Any] = {
     
     case GET(Path("/connect")) & Params(p) =>
-      val callback = "%s/authenticated" format property("host")
+      val callbackbase = "%s/authenticated" format property("host")
+      val callback = p("then") match {
+        case Seq(then) => "%s?then=%s" format(callbackbase, then)
+        case _ => callbackbase
+      }
       val t = http(Auth.request_token(Meetup.consumer, callback))
       ResponseCookies(
         Cookie("token", ClientToken(t.value, t.secret, None, None).toCookieString)) ~>
@@ -36,7 +40,7 @@ object NESS extends Config {
             ResponseCookies(
                 Cookie("token",
                        ClientToken(at.value, at.secret, verifier, Some(Meetup.member_id(at).toString))
-                       .toCookieString)) ~> Redirect("/#propose-talk")
+                       .toCookieString)) ~> Redirect("/#%s" format then.get.getOrElse("propose-talk"))
           case _ => sys.error("could not find request token")
         }
       }

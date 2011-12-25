@@ -16,6 +16,7 @@
       return a;
     };
 
+    // sprinkle on extra info about each day
     $("div.day").each(function(){
       var day = $(this), event = day.data().event;
       $.get("/boston/rsvps/" + event, function(typers) {
@@ -43,7 +44,10 @@
 
     // fancy pants character counting
     $("div.limited textarea").live('focus', function(){
-      $(this).animate({"height":"9em"});
+      var self = $(this);
+      $(this).animate({"height":"9em"}, function(){
+          $.scrollTo('#'+self.parent().parent().parent().parent().attr("id"),500);
+      });
     });
     $('div.limited textarea').live('keyup', function() {
       var ta = $(this)
@@ -59,24 +63,27 @@
       );
     });
 
-    $("#proposal-list .preview").hide();
-    $("#proposal-list .toggle").live('click', function(e){
+    $("div.preview").hide();
+    $("a.toggle").live('click', function(e){
       e.preventDefault();
       $(this).parent().parent().find(".preview").slideToggle(100);
       return false;
     });
 
     // for wuses
-    $("#proposal-list .withdraw-proposal").live('click', function(e) {
+    $("a.withdraw").live('click',
+      function(e) {
       e.preventDefault();
-      var self = $(this), pid = self.data().proposal, href = self.attr('href');
-      if(confirm("Are you sure you want to withdraw this talk?")) {        
-        $.post(href, { id:pid }, function(e){
+      var self = $(this), href = self.attr('href');
+      if(confirm("Are you sure you want to withdraw this?")) {        
+          $.post(href, {}, function(e){
           switch(e.status) {
           case 200:
-            self.parent().parent().parent().parent().parent().parent().fadeOut('fast', function(){
+            // surely there is a better way to peek up the family chain
+            self.parent().parent().parent().parent()
+              .parent().parent().fadeOut('fast', function(){
               $(this).remove();
-              $('#propose-form').fadeIn('slow');
+              $(self.data().sourceform).fadeIn('slow');
             });
             break;
           case 400:
@@ -91,6 +98,7 @@
     $("form.propose-edit-form").live('submit', function(e){
       e.preventDefault();
       var self = $(this)
+        , action = self.attr('action')
         , controls = $('.controls', self)
         , preview = $('.preview', self)
         , name = $.trim($('input[name="name"]', self).val())
@@ -99,16 +107,18 @@
         , fields = $('input, textarea', self);
 
       if(!name.length || !desc.length) {
-          alert('Name and description are required for talk proposals');
+          alert('Name and description are required');
       } else if(name.length > 200 || desc.length > 600) {
-          alert("Talk contents are too long");
+          alert("Contents are too long");
       } else {
-          fields.attr('disabled', 'disabled');
-        $.post('/boston/proposals/' + encodeURIComponent($('input[name="id"]', self).val()), data, function(r) {
+        fields.attr('disabled', 'disabled');
+        $.post(action, data, function(r) {
           fields.removeAttr('disabled');
           switch(r.status) {
           case 200:
               $('input[name="name"], .edit-desc', self).hide();
+              $('.name', self).html(name).data().name = name;
+              $('.desc', self).html(desc).data().desc = desc;
               $('.name, .desc', self).show();
               break;
           case 400:
@@ -120,7 +130,7 @@
       return false;
     });
 
-    $("form.propose-edit-form .edit-proposal").live('click', function(e){
+    $("a.edit-proposal").live('click', function(e){
       e.preventDefault();
       var self = $(this)
         , controls = self.parent().parent().parent()
@@ -153,34 +163,39 @@
       return false;
     });
 
-    $("#propose-form").submit(function(e){
+    $("#propose-form,#propose-panel-form").submit(function(e){
       e.preventDefault();
       var frm = $(this)
+        , isPanel =  frm.attr("id") === 'propose-panel-form'
+        , lid = isPanel ? '#panel_proposals-list' : '#proposals-list' 
+        , action = frm.attr("action")
         , fields = $("input,textarea", frm)
         , data = frm.serialize()
         , name = $('input[name="name"]', frm)
         , desc = $('textarea', frm);
-      if(!name.val().length || !desc.val().length) { alert('Please enter a name and talk description'); }
+      if(!name.val().length || !desc.val().length) { alert('Please enter a name and description'); }
       else {
         var descTxt = desc.val(), nameTxt = name.val();
         fields.attr('disabled', 'disabled');
-        $.post("/boston/proposals", data, function(e) {
+        $.post(action, data, function(e) {
           fields.removeAttr('disabled');
           switch(e.status) {
           case 200:
-            $("#proposal-list").append(
+            $(lid).append(
               ['<li id="', e.id,'">'
-               ,'<form action="#" method="POST" class="propose-edit-form">'
-               , '<input type="hidden" name="id" value="', e.id,'"/>',
+               ,'<form action="',action,'/',encodeURIComponent(e.id)
+               ,'" method="POST" class="propose-edit-form">'
                , '<div>'
-               , '<a href="#" class="toggle name" data-val="', nameTxt,'">', nameTxt, '</a>'
+               , '<a href="#" class="toggle name" data-val="', nameTxt,'">'
+               , nameTxt, '</a>'
                ,'<input type="text" name="name" maxlength="200" value="', nameTxt,'" />'
                ,'</div>'
                ,'<div class="preview">'
                , '<div class="controls clearfix">'
                , '<ul>'
                , '<li>'
-               ,    '<a href="/boston/proposals/withdraw" class="withdraw-proposal" data-proposal="',e.id,'">withdraw</a>'
+               ,    '<a href="',action,'/withdraw?id="'
+               , encodeURIComponent(e.id), ' class="withdraw" data-sourceform="',lid,'">withdraw</a>'
                , '</li>'
                , '<li><a href="#" class="edit-proposal" data-proposal="',e.id,'">edit</a></li>'
                , '</ul>'
@@ -191,7 +206,7 @@
                ,   '<div class="form-extras">'
                ,     '<div class="limit-label"/>'
                ,     '<div class="edit-controls clearfix">'
-               ,       '<input type="submit" value="Edit Talk" class="btn" />'
+               ,       '<input type="submit" value="', (isPanel ? 'Edit Panel' : 'Edit Talk'),'" class="btn" />'
                ,       '<input type="button" value="Cancel" class="btn cancel" />'
                ,     '</div>'
                ,   '</div>'
@@ -201,7 +216,7 @@
                ,'</li>'].join('')
             );
             name.val(''); desc.val('');
-            $("#proposal-list .preview").hide();
+            $(lid +" .preview").hide();
             switch(e.proposals) {
             case 1:
               alert("Sweet! Now you have a proposal.");
@@ -209,9 +224,9 @@
             default:
               alert('Sweet! Now you now have ' + e.proposals + ' proposals');
               if(e.proposals === 3) {
-                $('#propose-form').fadeOut('slow');
+                $(frm).fadeOut('slow');
               } else {
-                $('#propose-form').fadeIn('slow');
+                $(frm).fadeIn('slow');
               }
               break;
             }
