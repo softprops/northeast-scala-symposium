@@ -194,8 +194,8 @@
                , '<div class="controls clearfix">'
                , '<ul>'
                , '<li>'
-               ,    '<a href="',action,'/withdraw?id="'
-               , encodeURIComponent(e.id), ' class="withdraw" data-sourceform="',lid,'">withdraw</a>'
+               ,    '<a href="',action,'/withdraw?id=', encodeURIComponent(e.id)
+               ," ' class="withdraw" data-sourceform="',lid,'">withdraw</a>'
                , '</li>'
                , '<li><a href="#" class="edit-proposal" data-proposal="',e.id,'">edit</a></li>'
                , '</ul>'
