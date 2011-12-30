@@ -218,7 +218,7 @@ trait Templates extends nescala.Templates {
               } else {
                 <span>
                   <a href="/connect?then=propose-talk">Log in with Meetup</a>
-                  to submit a talk.
+                  to submit a talk or panel.
                 </span>
               }
             }
@@ -272,10 +272,7 @@ trait Templates extends nescala.Templates {
                   { panelList(panels) } 
                 </div>
               } else {
-                <span>
-                  <a href="/connect?then=propose-panel">Log in with Meetup</a>
-                  to submit a proposal.
-                </span>
+                <span/>
               }
             }
           </div>
