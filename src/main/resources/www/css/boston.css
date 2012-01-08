@@ -12,6 +12,7 @@
 * html .clearfix { height: 1%; }
 .clearfix { display: block; }
 
+
 cite { font-style:normal; }
 
 q { content:none; }
@@ -29,13 +30,23 @@ q { content:none; }
   border-radius: 5px;
 }
 
-#maybe-talks {
-  line-height:1em;
+#maybe-talks-header {
   margin:.25em 0;
 }
 
-#maybe-talks .smaller {
-  font-size:60%;
+#maybe-talks-header h2 {
+  font-size: 48px;
+  line-height:1.5em;
+}
+
+li.talk {
+  border-top: 1px solid #ccc;
+  padding:.5em 0;
+}
+
+li.talk h2 {
+  font-size: 32px;
+  line-height:1.5em;
 }
 
 .who-box .avatar, .who-box .links {
@@ -350,10 +361,6 @@ input[type='text'], textarea {
   background:#003950;
 }
 
-#footer #last-year {
-
-}
-
 #talk-submissions {
   clear:both;
 }
@@ -399,7 +406,7 @@ a:hover {
 
 ul { list-style:none; margin:0; padding:0; }
 
-.i { position:absolute; display:block; z-index:-1;}
+.i { position:absolute; display:block; z-index:-1; }
 
 #footer {
   clear:both;

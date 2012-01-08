@@ -32,6 +32,7 @@ trait Templates extends nescala.Templates {
         </div>
       <script type="text/javascript" src="/facebox/facebox.js"></script>
       <script type="text/javascript" src="/js/jquery.tipsy.js"></script>
+      <script type="text/javascript" src="/js/boston/boston.js"></script>
       { bodyScripts }
       </body>
     </html>
@@ -116,15 +117,19 @@ trait Templates extends nescala.Templates {
     </div>
    </div>
 
-  // listing of talk proposals
-  def maybes(proposals: Seq[Map[String, String]]) = bostonLayout(Nil)(Nil)({
+  // listing of talk proposals (refactor plz)
+  def talkListing(proposals: Seq[Map[String, String]], canVote: Boolean = false) = bostonLayout(
+    <script type="text/javascript" src="/js/vote.js"></script>)(Nil)({
       head
-    } ++ <div class="contained">      
-      <h2 id="maybe-talks"><div>{ proposals.size } Scala</div><div class="smaller"> campfire stories</div></h2>
+    } ++ <div class="contained">
+     <div id="maybe-talks-header">
+        <h2>{ proposals.size } Scala campfire stories</h2>
+        <div>This year's symposium will feature 16 talks and one <a href="/2012/panels">panel</a> from members of the Scala community. Below is a list of current talk proposals.</div>
+      </div>
       <ul>{
         proposals.map { p =>
         <li class="talk" id={ p("id").split(":")(3) }>
-          <h1><a href={ "#"+p("id").split(":")(3) }>{ p("name") }</a></h1>
+          <h2><a href={ "#"+p("id").split(":")(3) }>{ p("name") }</a></h2>
           <div class="who-box clearfix">
             <img class="avatar" src={ p("mu_photo").replace("member_", "thumb_") } />
             <div class="links">
@@ -140,6 +145,34 @@ trait Templates extends nescala.Templates {
     </div>
   )
 
+  // listing of panel proposals (refactor plz)
+  def panelListing(proposals: Seq[Map[String, String]], canVote: Boolean = false) = bostonLayout(Nil)(Nil)({
+    head
+  } ++ <div class="contained">
+      <div id="maybe-talks-header">
+        <h2>{ proposals.size } Scala Panel { if(proposals.size == 1) "Discussion" else "Discussons" }</h2>
+        <div>In addition to a number of <a href="/2012/talks">talks</a>, this year's symposium will feature one panel discussion among peers. Below is a list of current panel proposals.</div>
+      </div>
+      <ul>{
+        proposals.map { p =>
+        <li class="talk" id={ p("id").split(":")(3) }>
+          <h2><a href={ "#"+p("id").split(":")(3) }>{ p("name") }</a></h2>
+          <div class="who-box clearfix">
+            <img class="avatar" src={ p("mu_photo").replace("member_", "thumb_") } />
+            <div class="links">
+              <a class="primary" href={ "http://meetup.com/nescala/members/%s" format p("id").split(":")(2) } target="_blank">{ p("mu_name") } </a>{ if(p.isDefinedAt("twttr")) {
+                  <a class="twttr" href={ "http://twitter.com/%s" format p("twttr").drop(1) } target="_blank">{ p("twttr") }</a>
+                } else <span/> }
+            </div>
+          </div>
+          <p class="desc">{ p("desc") }</p>
+        </li>
+        }
+      }</ul>
+    </div>
+  )
+
+
   val rsvps =
     <div class="attending">
       <h4 class="tban"/><ul class="rsvps"/><p class="extra-rsvps"/>
@@ -150,10 +183,10 @@ trait Templates extends nescala.Templates {
       <div class="contained">
         <div id="talk-submissions">
           <div class="l">
-            <h1>Day 01</h1>
+            <h1><a href="http://www.meetup.com/nescala/events/37637442/">Day 01</a></h1>
             <h2>3.09.12</h2>
             <h3>
-              <span>9am @<a href="http://www.meetup.com/nescala/events/37637442/">NERD</a></span>
+              <span>9am @<a href="http://maps.google.com/maps?q=One+Memorial+Drive%2C+Cambridge%2C+MA">NERD</a></span>
             </h3>
             <p>Scala Talks</p>{
               rsvps
@@ -163,7 +196,7 @@ trait Templates extends nescala.Templates {
             <h1>Submit a Talk</h1>
             <p>This year's symposium features 16 talks of 30 minutes, one keynote talk, and one 45 - 60 minute panel discussion.</p>
             <p>Hopeful speakers and panelists may propose talks or panels on topics of their choosing. The schedule will be filled by talks that accrue the most votes, with the keynote spot (and $1000 travel offset) going to whichever receives the most votes of all.</p>
-            <p>The voting polls open <strong>1/10</strong> and close <strong>1/24</strong>, but feel free to <a href="/2012/talks">peruse the current proposals</a>.</p>
+            <p>The voting polls open <strong>1/10</strong> and close <strong>1/24</strong>, but feel free to peruse the current <a href="/2012/talks">talk</a> and <a href="/2012/panels">panel</a> proposals.</p>
             <p>What would make this year even more awesome than last year is hearing even more people talk. If you have an awesome project you want to get out in the open, solved a hard problem, made a brilliant discovery, or just have fun programming an Scala and want to talk about it, post a talk proposal below.</p>
           </div>
             {
@@ -284,10 +317,10 @@ trait Templates extends nescala.Templates {
     <div id="day-two" data-event={ Meetup.Boston.daytwo_event_id } class="day clearfix">
       <div class="contained">
         <div class="l">
-          <h1>Day 02</h1>
+          <h1><a href="http://www.meetup.com/nescala/events/44042982/" target="_blank">Day 02</a></h1>
           <h2>3.10.12</h2>
           <h3>
-            <span>10am @<a href="http://www.meetup.com/nescala/events/44042982/">Stata Center</a></span>
+            <span>10am @<a href="http://maps.google.com/maps?q=32+Vassar+Street%2C+Cambridge%2C+MA">Stata Center</a></span>
           </h3>
           <p>Scala Workshops</p>
           { rsvps }
@@ -306,10 +339,10 @@ trait Templates extends nescala.Templates {
       class="day clearfix">
       <div class="contained">
         <div class="l">
-          <h1>Day 03</h1>
+          <h1><a href="http://www.meetup.com/nescala/events/44049692/">Day 03</a></h1>
           <h2>3.11.12</h2>
           <h3>
-            <span>10am @<a href="http://www.meetup.com/nescala/events/44049692/">Stata Center</a></span>
+            <span>10am @<a href="http://maps.google.com/maps?q=32+Vassar+Street%2C+Cambridge%2C+MA">Stata Center</a></span>
           </h3>
           { rsvps }
         </div>
@@ -323,7 +356,7 @@ trait Templates extends nescala.Templates {
     panels: Seq[Map[String, String]] = Nil) =
     bostonLayout(Nil)(
     <script type="text/javascript" src="/js/jquery.scrollTo-1.4.2-min.js"></script>
-    <script type="text/javascript" src="/js/boston.js"></script>)(
+    <script type="text/javascript" src="/js/boston/index.js"></script>)(
       head ++ dayOne(authed, proposals, panels) ++ dayTwo ++ dayThree
     )
 }

@@ -13,8 +13,8 @@ import java.lang.{ Integer => JInt }
 object Poll extends Templates with nyc.Entries {
   val VOTES = 10
   def intent: unfiltered.filter.Plan.Intent = {
-    case POST(Params(params) & CookieToken(ClientToken(v, s, Some(c), Some(m)))) =>
-      JsonContent ~> ResponseString(compact(render(Nil)))
+    //case POST(Params(params) & CookieToken(ClientToken(v, s, Some(c), Some(m)))) =>
+    //  JsonContent ~> ResponseString(compact(render(Nil)))
 
     case GET(CookieToken(ClientToken(v, s, Some(c), Some(m)))) =>
       page(

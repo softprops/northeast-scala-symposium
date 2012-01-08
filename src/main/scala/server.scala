@@ -10,7 +10,7 @@ object Server {
     .filter(Planify {
       NESS.site orElse boston.Boston.site orElse nyc.Nyc.site orElse (
         boston.Proposals.intent orElse boston.Panels.intent orElse(
-          boston.Boston.talks orElse boston.Boston.api
+          boston.Boston.talks orElse boston.Boston.panels orElse boston.Boston.api
         )
       )
     }).run(
