@@ -51,7 +51,7 @@ object Votes {
                   else action match {
                     case Some("vote") =>
                       if(s.sismember(vkey, votedfor)) ResponseString(errorJson("vote exists"))
-                      else if(s.exists(ckey) && s.get(ckey).map(_.toInt).get == maxvotes) ResponseString(
+                      else if(s.exists(ckey) && s.get(ckey).map(_.toInt).get >= maxvotes) ResponseString(
                         errorJson("max votes of %d exceeded" format maxvotes)
                       ) else {
                         s.hincrby(votedfor, "votes", 1)

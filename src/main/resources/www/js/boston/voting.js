@@ -17,7 +17,7 @@
           default:  $('#votes-remaining').html('You have ' + r.remaining + ' votes remaining'); break;
           }         
           var unvoted = $('.ballot input[type="submit"]:not(".voted-yes")'); console.log(unvoted);
-          if(r.remaining === 0) {
+          if(r.remaining <= 0) {
              unvoted.attr('disabled', 'disabled')
           } else {
             unvoted.removeAttr('disabled');
