@@ -21,7 +21,7 @@ object Boston extends Templates {
   }
 
   def panels: unfiltered.Cycle.Intent[Any, Any] = {
-    case GET(Path(Seg("2012" :: "panels" :: Nil))) => Clock("fetching 2012 panels") {
+    case req @ GET(Path(Seg("2012" :: "panels" :: Nil))) => Clock("fetching 2012 panels") {
       val proposals = Store { s =>
         s.keys("boston:panel_proposals:*:*") match {
           case None => Seq.empty[Map[String, String]]
@@ -72,12 +72,24 @@ object Boston extends Templates {
           val (matching, notmatching) = a.partition(_("id").matches("""boston:panel_proposals:%s:(.*)""".format(key)))
           matching.map(_ ++ value) ++ notmatching
       })
-      panelListing(scala.util.Random.shuffle(ret))
+
+      val (can, votes) = req match {
+        case CookieToken(ClientToken(token, sec, Some(_), Some(mid))) =>
+          if(Meetup.has_rsvp(Meetup.Boston.dayone_event_id, dispatch.oauth.Token(token, sec))) {
+            println("%s can vote for panels" format mid)
+            (true, Store {
+              _.smembers("boston:panel_votes:%s" format mid).map(_.filter(_.isDefined).map(_.get).toSeq).getOrElse(Nil)
+            })
+          } else (false, Nil)
+        case _ => (false, Nil)
+      }
+      println("can vote? %s, current votes %s" format(can, votes))
+      panelListing(scala.util.Random.shuffle(ret), canVote = can, votes = votes)
     }
   }
 
   def talks: unfiltered.Cycle.Intent[Any, Any] = {
-    case GET(Path(Seg("2012" :: "talks" :: Nil))) => Clock("fetching 2012 talks") {
+    case req @ GET(Path(Seg("2012" :: "talks" :: Nil))) => Clock("fetching 2012 talks") {
       val proposals = Store { s =>
         s.keys("boston:proposals:*:*") match {
           case None => Seq.empty[Map[String, String]]
@@ -123,7 +135,18 @@ object Boston extends Templates {
           val (matching, notmatching) = a.partition(_("id").matches("""boston:proposals:%s:(.*)""".format(key)))
           matching.map(_ ++ value) ++ notmatching
       })
-      talkListing(scala.util.Random.shuffle(ret))
+      val (can, votes) =  req match {
+        case CookieToken(ClientToken(token, sec, Some(_), Some(mid))) =>
+          if(Meetup.has_rsvp(Meetup.Boston.dayone_event_id, dispatch.oauth.Token(token, sec))) {
+            println("%s can vote for talks" format mid)
+            (true, Store {
+              _.smembers("boston:talk_votes:%s" format mid).map(_.filter(_.isDefined).map(_.get).toSeq).getOrElse(Nil)
+            })
+          } else (false, Nil)
+        case _ => (false, Nil)
+      }
+      println("can vote? %s, current talk votes %s" format(can, votes))
+      talkListing(scala.util.Random.shuffle(ret), canVote = can, votes = votes)
     }
   }
 

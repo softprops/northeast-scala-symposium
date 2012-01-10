@@ -18,8 +18,8 @@ object Proposals {
   val intent: unfiltered.Cycle.Intent[Any, Any] = {
     // create
     case POST(Path("/boston/proposals")) &
-      CookieToken(ClientToken(_, _, Some(_), Some(mid))) & Params(p) => Clock("creating boston talk proposal") {
-
+      CookieToken(ClientToken(token, sec, Some(_), Some(mid))) & Params(p) => Clock("creating boston talk proposal") {
+        
       val expected = for {
         name <- lookup("name") is required("name is required")
         desc <- lookup("desc") is required("desc is required")

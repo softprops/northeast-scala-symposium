@@ -69,9 +69,7 @@ trait Templates extends nescala.Templates {
                <div class="controls clearfix">
                  <ul>
                    <li>
-                    <a href={ "/boston/%s/withdraw?id=%s" format(kind, encode(p("id"), "utf8")) }
-                      data-sourceform={ sourceForm }
-                      class="withdraw">withdraw</a>
+                    <a href="mailto:doug@meetup.com">Email us</a> if you with to withdraw this.
                    </li>
                    <li>
                       <a href="#" class="edit-proposal" data-proposal={ p("id") }>
@@ -103,7 +101,10 @@ trait Templates extends nescala.Templates {
     <a href="https://twitter.com/nescalas" class="twitter-follow-button" data-show-count="false" data-lang="en" data-size="large">Follow @nescalas</a>
   }
 
-  val head =
+  def login(authed: Boolean, then: String) =
+    if(!authed) <div id="auth-bar" class="clearfix"><div class="contained"><div class="l">Voting requires authentication and an <a href="http://www.meetup.com/nescala/events/37637442/" target="_blank">RSVP</a></div><div class="r"><a href={ "/connect%s" format(if(then.isEmpty) "" else "?then=%s".format(then)) } class="btn login">Log in with Meetup</a></div></div></div> else <span/>
+
+  def head(authed: Boolean, afterlogin: String = "") =
    <div id="head" class="clearfix">
     <div class="contained">
       <div class="l">
@@ -115,16 +116,23 @@ trait Templates extends nescala.Templates {
         { twttrFollow }
       </div>
     </div>
-   </div>
+   </div> ++ { login(authed, afterlogin) }
 
   // listing of talk proposals (refactor plz)
-  def talkListing(proposals: Seq[Map[String, String]], canVote: Boolean = false) = bostonLayout(
-    <script type="text/javascript" src="/js/vote.js"></script>)(Nil)({
-      head
+  def talkListing(
+    proposals: Seq[Map[String, String]],
+    canVote: Boolean = false,
+    votes: Seq[String] = Seq.empty[String]) = bostonLayout(
+    <script type="text/javascript" src="/js/boston/voting.js"></script>)(Nil)({
+      head(canVote, "vote-for-talk")
     } ++ <div class="contained">
      <div id="maybe-talks-header">
         <h2>{ proposals.size } Scala campfire stories</h2>
-        <div>This year's symposium will feature 16 talks and one <a href="/2012/panels">panel</a> from members of the Scala community. Below is a list of current talk proposals.</div>
+        <div>This year's symposium will feature 16 talks and one <a href="/2012/panels">panel</a> from members of the Scala community. Below is a list of current talk proposals.</div>{ if(canVote) <div id="votes-remaining">You have { Votes.MaxTalkVotes - votes.size match {
+          case 0 => " no votes"
+          case 1 => " one vote"
+          case n => " %d votes" format n
+        } } remaining</div> }
       </div>
       <ul>{
         proposals.map { p =>
@@ -137,6 +145,18 @@ trait Templates extends nescala.Templates {
                   <a class="twttr" href={ "http://twitter.com/%s" format p("twttr").drop(1) } target="_blank">{ p("twttr") }</a>
                 } else <span/> }
             </div>
+            { if(canVote) {
+              <div>
+                <form class="ballot" action="/boston/votes" method="POST">
+                  <input type="hidden" name="vote" value={ p("id") }/>
+                  <input type="hidden" name="kind" value="talk"/>
+                  <input type="hidden" name="action" value={ if(votes.contains(p("id"))) "unvote" else "vote" }/>
+                  <input type="submit" class={ "voting btn%s" format(if(votes.contains(p("id"))) " voted-yes" else "") }
+                    value={ if(votes.contains(p("id"))) "Withdraw Vote" else "Vote" } disabled={
+                      if(votes.size >= Votes.MaxTalkVotes && !votes.contains(p("id"))) Some(xml.Text("disabled")) else None } />
+                </form>
+              </div>
+            } }
           </div>
           <p class="desc">{ p("desc") }</p>
         </li>
@@ -146,12 +166,17 @@ trait Templates extends nescala.Templates {
   )
 
   // listing of panel proposals (refactor plz)
-  def panelListing(proposals: Seq[Map[String, String]], canVote: Boolean = false) = bostonLayout(Nil)(Nil)({
-    head
+  def panelListing(proposals: Seq[Map[String, String]], canVote: Boolean = false,
+                   votes: Seq[String] = Seq.empty[String]) = bostonLayout(
+    <script type="text/javascript" src="/js/boston/voting.js"></script>)(Nil)({
+    head(canVote, "vote-for-panel")
   } ++ <div class="contained">
       <div id="maybe-talks-header">
         <h2>{ proposals.size } Scala Panel { if(proposals.size == 1) "Discussion" else "Discussons" }</h2>
-        <div>In addition to a number of <a href="/2012/talks">talks</a>, this year's symposium will feature one panel discussion among peers. Below is a list of current panel proposals.</div>
+        <div>In addition to a number of <a href="/2012/talks">talks</a>, this year's symposium will feature one panel discussion among peers. Below is a list of current panel proposals.</div> { if(canVote) <div id="votes-remaining">You have { votes.size match {
+          case 0 => "one vote"
+          case 1 => "no votes"
+        } } remaining</div> }
       </div>
       <ul>{
         proposals.map { p =>
@@ -164,6 +189,18 @@ trait Templates extends nescala.Templates {
                   <a class="twttr" href={ "http://twitter.com/%s" format p("twttr").drop(1) } target="_blank">{ p("twttr") }</a>
                 } else <span/> }
             </div>
+            { if(canVote) {
+              <div class="voting">
+                <form class="ballot" action="/boston/votes" method="POST">
+                  <input type="hidden" name="vote" value={ p("id") }/>
+                  <input type="hidden" name="kind" value="panel"/>
+                  <input type="hidden" name="action" value={ if(votes.contains(p("id"))) "unvote" else "vote" } />
+                  <input type="submit" class={ "voting btn%s" format(if(votes.contains(p("id"))) " voted-yes" else "") }
+                    value={ if(votes.contains(p("id"))) "Withdraw Vote" else "Vote" } disabled={
+                      if(votes.size >= Votes.MaxPanelVotes && !votes.contains(p("id"))) Some(xml.Text("disabled")) else None } />
+                </form>
+              </div>
+            } }
           </div>
           <p class="desc">{ p("desc") }</p>
         </li>
@@ -193,6 +230,7 @@ trait Templates extends nescala.Templates {
             }
           </div>
           <div class="r">
+            <h1>Polls are open</h1>
             <h1>Submit a Talk</h1>
             <p>This year's symposium features 16 talks of 30 minutes, one keynote talk, and one 45 - 60 minute panel discussion.</p>
             <p>Hopeful speakers and panelists may propose talks or panels on topics of their choosing. The schedule will be filled by talks that accrue the most votes, with the keynote spot (and $1000 travel offset) going to whichever receives the most votes of all.</p>
@@ -357,7 +395,7 @@ trait Templates extends nescala.Templates {
     bostonLayout(Nil)(
     <script type="text/javascript" src="/js/jquery.scrollTo-1.4.2-min.js"></script>
     <script type="text/javascript" src="/js/boston/index.js"></script>)(
-      head ++ dayOne(authed, proposals, panels) ++ dayTwo ++ dayThree
+      head(authed) ++ dayOne(authed, proposals, panels) ++ dayTwo ++ dayThree
     )
 }
 

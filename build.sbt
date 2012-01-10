@@ -9,6 +9,6 @@ libraryDependencies ++= Seq(
   "spy" % "spymemcached" % "2.7.3"
 )
 
-scalacOptions += "-deprecation"
+scalacOptions ++= Seq("-deprecation", "-unchecked")
 
 resolvers += "couchbase" at "http://files.couchbase.com/maven2/"

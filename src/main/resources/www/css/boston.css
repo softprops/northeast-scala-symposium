@@ -23,11 +23,29 @@ q { content:none; }
 }
 
 .avatar {
+  float:left;
   width: 48px;
   height: 48px;
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   border-radius: 5px;
+}
+
+#auth-bar {
+  padding:.5em 0;
+  background:#3E3F3D;
+  color:#fff;
+}
+
+#auth-bar .btn.login {
+  color:white;
+  margin-top:.5em;
+  display:inline-block;
+}
+
+#votes-remaining {
+  padding:.5em;
+  text-align:center;
 }
 
 #maybe-talks-header {
@@ -57,6 +75,10 @@ li.talk h2 {
   margin-top:.15em;
 }
 
+.who-box .avatar {
+
+}
+
 .who-box .links {
   margin-left:.5em;
 }
@@ -66,6 +88,10 @@ li.talk h2 {
 
 .who-box .links a.twttr {
   font-size:70%;
+}
+
+.who-box .voting {
+  float:right;
 }
 
 .talk .desc {
@@ -189,6 +215,44 @@ li.talk h2 {
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#DBDBDB', endColorstr='#9FA1A2');
   -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#DBDBDB', endColorstr='#9FA1A2')";
   background-image: linear-gradient(top, #DBDBDB, #9FA1A2);
+}
+
+.btn.voted-yes {
+  font-size:24px;
+  padding:.15em .25em;
+  color:#fff;
+  text-shadow:0 1px #g30A7DF;
+  border:1px solid #76BD19;
+  -moz-border-radius:5px;
+  -webkit-border-radius:5px;
+  border-radius:5px;
+  background-image: -moz-linear-gradient(top, #ABFC41, #89E016);
+  background-image: -webkit-gradient(linear, center top, center bottom, from(#ABFC41), to(#89E016));
+  background-image: -o-linear-gradient(top, #66efff, #3699ff);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ABFC41', endColorstr='#89E016');
+  -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#ABFC41', endColorstr='#89E016')";
+  background-image: linear-gradient(top, #ABFC41, #89E016);
+  -moz-background-clip: padding-box;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+}
+
+.btn.voted-yes:hover {
+   background-image: -moz-linear-gradient(top, #7FE000, #72BD10);
+  background-image: -webkit-gradient(linear, center top, center bottom, from(#7FE000), to(#72BD10));
+  background-image: -o-linear-gradient(top, #7FE000, #13CAEE);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#7FE000', endColorstr='#72BD10');
+  -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#7FE000', endColorstr='#72BD10')";
+  background-image: linear-gradient(top, #7FE000, #72BD10);
+}
+
+.btn.voted-yes:active {
+  background-image: -moz-linear-gradient(top, #6E9B34, #5A861F);
+  background-image: -webkit-gradient(linear, center top, center bottom, from(#6E9B34), to(#5A861F));
+  background-image: -o-linear-gradient(top, #6E9B34, #5A861F);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#6E9B34', endColorstr='#5A861F');
+  -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#6E9B34', endColorstr='#5A861F')";
+  background-image: linear-gradient(top, #6E9B34, #5A861F);
 }
 
 .rsvps li:hover {

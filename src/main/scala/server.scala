@@ -8,11 +8,9 @@ object Server {
     Http(Option(System.getenv("PORT")).getOrElse("8080").toInt)
     .resources(getClass().getResource("/www"))
     .filter(Planify {
-      NESS.site orElse boston.Boston.site orElse nyc.Nyc.site orElse (
-        boston.Proposals.intent orElse boston.Panels.intent orElse(
-          boston.Boston.talks orElse boston.Boston.panels orElse boston.Boston.api
-        )
-      )
+      (NESS.site /: Seq(boston.Boston.site, nyc.Nyc.site, boston.Proposals.intent,
+                        boston.Panels.intent, boston.Boston.talks, boston.Boston.panels,
+                        boston.Votes.intent, boston.Boston.api))(_ orElse _)
     }).run(
       _ => (),
       _ => dispatch.Http.shutdown()
