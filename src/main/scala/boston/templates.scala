@@ -225,17 +225,15 @@ trait Templates extends nescala.Templates {
             <h3>
               <span>9am @<a href="http://maps.google.com/maps?q=One+Memorial+Drive%2C+Cambridge%2C+MA">NERD</a></span>
             </h3>
-            <p>Scala Talks</p>{
+            <p>Scala <a href="/2012/talks">Talks</a> and <a href="/2012/panels">Panels</a></p>{
               rsvps
             }
           </div>
           <div class="r">
-            <h1>Polls are open</h1>
-            <h1>Submit a Talk</h1>
-            <p>This year's symposium features 16 talks of 30 minutes, one keynote talk, and one 45 - 60 minute panel discussion.</p>
-            <p>Hopeful speakers and panelists may propose talks or panels on topics of their choosing. The schedule will be filled by talks that accrue the most votes, with the keynote spot (and $1000 travel offset) going to whichever receives the most votes of all.</p>
-            <p>The voting polls open <strong>1/10</strong> and close <strong>1/24</strong>, but feel free to peruse the current <a href="/2012/talks">talk</a> and <a href="/2012/panels">panel</a> proposals.</p>
-            <p>What would make this year even more awesome than last year is hearing even more people talk. If you have an awesome project you want to get out in the open, solved a hard problem, made a brilliant discovery, or just have fun programming an Scala and want to talk about it, post a talk proposal below.</p>
+            <h1>Polls are <a href="/2012/talks">open</a></h1>
+             <p>This year's symposium features 16 talks of 30 minutes, one keynote talk, and one 45 - 60 minute panel discussion.</p>
+             <p>Hopeful speakers and panelists may propose talks or panels on topics of their choosing which will be voted on by RSVP'd attendees. The schedule will be filled by talks that accrue the most votes, with the keynote spot (and $1000 travel offset) going to whichever receives the most votes of all.</p>            
+            <p>The voting polls open <strong>1/10</strong> and close <strong>1/24</strong>. If you have <a href="http://www.meetup.com/nescala/events/37637442/" target="_blank">RSVP'd</a>, you may vote by logging in with Meetup, and choosing your favorite <a href="/2012/talks">talk</a> and <a href="/2012/panels">panel</a> proposals.</p>            
           </div>
             {
               if(authed) {
