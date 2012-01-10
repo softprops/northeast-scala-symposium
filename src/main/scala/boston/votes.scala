@@ -12,7 +12,7 @@ object Votes {
   import unfiltered.response._
   import QParams._
 
-  val MaxTalkVotes = 16
+  val MaxTalkVotes = 8
   val MaxPanelVotes = 1
 
   def errorJson(msg: String) = """{"status":400, "msg":"%s"}""" format msg
