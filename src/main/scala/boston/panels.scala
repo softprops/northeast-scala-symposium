@@ -15,6 +15,45 @@ object Panels {
   val MaxTalkName = 200
   val MaxTalkDesc = 600
 
+  val withdrawing: unfiltered.Cycle.Intent[Any, Any] = {
+     // delete
+    case POST(Path("/boston/panel_proposals/withdraw")) &
+      CookieToken(ClientToken(_, _, Some(_), Some(mid))) & Params(p) => Clock("withdrawing panel proposal") {
+
+      val expected = for {
+        id <- lookup("id") is required("id is required")
+      } yield {
+        val key = id.get
+        val Withdrawing = """boston:panel_proposals:(.*):(.*)""".r
+        (Store { s =>
+          if(!s.exists(key))  Left("panel proposal did not exist")
+          else {
+            key match {
+              case Withdrawing(who, id) =>
+                if(mid.equals(who)) {
+                  s.del(key).map( stat => if(stat > 0) s.decr(
+                    "count:boston:panel_proposals:%s" format who
+                  ))
+                  Right(key)
+                } else Left("not authorized to withdraw this panel proposal")
+              case bk =>
+                Left("invalid panel proposal")
+            }
+          }
+        }).fold({ fail =>
+          JsonContent ~> ResponseString("""{"status":400,"msg":"%s"}""" format fail)
+        }, { ok =>
+          JsonContent ~> ResponseString("""{"status":200,"proposal":"%s"}""" format(ok))
+        })
+      }
+      expected(p) orFail { errors =>
+        JsonContent ~> ResponseString("""{"status":400,"msg":"%s"}""" format(
+          errors.map { _.error } mkString(". ")
+        ))
+      }
+    }
+  }
+
   val intent: unfiltered.Cycle.Intent[Any, Any] = {
     // create
     case POST(Path("/boston/panel_proposals")) &
@@ -65,43 +104,6 @@ object Panels {
           JsonContent ~> ResponseString("""{"status":400,"msg":"%s"}""" format fail)
         },{ ok =>
           JsonContent ~> ResponseString("""{"status":200,"proposals":%s, "id":"%s"}""" format(ok._1, ok._2))
-        })
-      }
-      expected(p) orFail { errors =>
-        JsonContent ~> ResponseString("""{"status":400,"msg":"%s"}""" format(
-          errors.map { _.error } mkString(". ")
-        ))
-      }
-    }
-
-    // delete
-    case POST(Path("/boston/panel_proposals/withdraw")) &
-      CookieToken(ClientToken(_, _, Some(_), Some(mid))) & Params(p) => Clock("withdrawing panel proposal") {
-
-      val expected = for {
-        id <- lookup("id") is required("id is required")
-      } yield {
-        val key = id.get
-        val Withdrawing = """boston:panel_proposals:(.*):(.*)""".r
-        (Store { s =>
-          if(!s.exists(key))  Left("panel proposal did not exist")
-          else {
-            key match {
-              case Withdrawing(who, id) =>
-                if(mid.equals(who)) {
-                  s.del(key).map( stat => if(stat > 0) s.decr(
-                    "count:boston:panel_proposals:%s" format who
-                  ))
-                  Right(key)
-                } else Left("not authorized to withdraw this panel proposal")
-              case bk =>
-                Left("invalid panel proposal")
-            }
-          }
-        }).fold({ fail =>
-          JsonContent ~> ResponseString("""{"status":400,"msg":"%s"}""" format fail)
-        }, { ok =>
-          JsonContent ~> ResponseString("""{"status":200,"proposal":"%s"}""" format(ok))
         })
       }
       expected(p) orFail { errors =>

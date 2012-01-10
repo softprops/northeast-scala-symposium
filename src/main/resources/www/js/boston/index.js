@@ -190,10 +190,7 @@
                ,'<div class="preview">'
                , '<div class="controls clearfix">'
                , '<ul>'
-               , '<li>'
-               ,    '<a href="',action,'/withdraw?id=', encodeURIComponent(e.id)
-               ,'" class="withdraw" data-sourceform="',lid,'">withdraw</a>'
-               , '</li>'
+               , '<li><a href="mailto:doug@meetup.com">Email us</a> if you with to withdraw this.</li>'
                , '<li><a href="#" class="edit-proposal" data-proposal="',e.id,'">edit</a></li>'
                , '</ul>'
                , '</div>'
