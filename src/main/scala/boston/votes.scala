@@ -1,7 +1,7 @@
 package nescala.boston
 
 import nescala.{ Cached, Clock, CookieToken, ClientToken,
-                Meetup, PollOver, Store, Tally }
+                Meetup, Store }
 import nescala.request.UrlDecoded
 import dispatch.oauth.Token
 

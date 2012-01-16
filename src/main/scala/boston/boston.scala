@@ -1,11 +1,12 @@
 package nescala.boston
 
 import nescala.{ Cached, Clock, CookieToken, ClientToken,
-                Meetup, PollOver, Store, Tally }
+                Meetup, Store }
 
 object Boston extends Templates {
   import unfiltered.request._
   import unfiltered.response._
+  import unfiltered.Cycle
   import QParams._
 
   def api: unfiltered.Cycle.Intent[Any, Any] = {
@@ -20,7 +21,7 @@ object Boston extends Templates {
     }
   }
 
-  def panels: unfiltered.Cycle.Intent[Any, Any] = {
+  def panels: Cycle.Intent[Any, Any] = {
     case req @ GET(Path(Seg("2012" :: "panels" :: Nil))) => Clock("fetching 2012 panels") {
       val proposals = Store { s =>
         s.keys("boston:panel_proposals:*:*") match {
@@ -88,7 +89,7 @@ object Boston extends Templates {
     }
   }
 
-  def talks: unfiltered.Cycle.Intent[Any, Any] = {
+  def talks: Cycle.Intent[Any, Any] = {
     case req @ GET(Path(Seg("2012" :: "talks" :: Nil))) => Clock("fetching 2012 talks") {
       val proposals = Store { s =>
         s.keys("boston:proposals:*:*") match {
@@ -150,7 +151,7 @@ object Boston extends Templates {
     }
   }
 
-  def site: unfiltered.Cycle.Intent[Any, Any]  = {
+  def site: Cycle.Intent[Any, Any]  = {
 
     case GET(Path("/") & CookieToken(ClientToken(_, _, Some(_), Some(mid)))) =>
       // fetch the logged in user's talk proposals
@@ -179,8 +180,5 @@ object Boston extends Templates {
 
     case GET(Path("/")) =>
       indexNoAuth
-    
-    //case req @Path("/vote") => PollOver.intent(req)
-    //case req @Path("/tally") => Tally.intent(req)
   }
 }

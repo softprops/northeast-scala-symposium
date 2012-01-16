@@ -1,7 +1,7 @@
 package nescala.boston
 
 import nescala.{ Cached, Clock, CookieToken, ClientToken,
-                Meetup, PollOver, Store, Tally }
+                Meetup, Store }
 import nescala.request.UrlDecoded
 
 // talk proposals
@@ -15,7 +15,9 @@ object Proposals {
   val MaxTalkName = 200
   val MaxTalkDesc = 600
 
-  val withdrawing: unfiltered.Cycle.Intent[Any, Any] = {
+  def errorJson(msg: String) = """{"status":400,"msg":"%s"}""" format msg
+
+  val withdrawing: Cycle.Intent[Any, Any] = {
     // delete
     case POST(Path("/boston/proposals/withdraw")) &
       CookieToken(ClientToken(_, _, Some(_), Some(mid))) & Params(p) => Clock("withdrawing proposal") {
@@ -41,20 +43,20 @@ object Proposals {
             }
           }
         }).fold({ fail =>
-          JsonContent ~> ResponseString("""{"status":400,"msg":"%s"}""" format fail)
+          JsonContent ~> ResponseString(errorJson(fail))
         }, { ok =>
           JsonContent ~> ResponseString("""{"status":200,"proposal":"%s"}""" format(ok))
         })
       }
       expected(p) orFail { errors =>
-        JsonContent ~> ResponseString("""{"status":400,"msg":"%s"}""" format(
+        JsonContent ~> ResponseString(errorJson(
           errors.map { _.error } mkString(". ")
         ))
       }
     }
   }
 
-  val intent: unfiltered.Cycle.Intent[Any, Any] = {
+  val intent: Cycle.Intent[Any, Any] = {
     // create
     case POST(Path("/boston/proposals")) &
       CookieToken(ClientToken(token, sec, Some(_), Some(mid))) & Params(p) => Clock("creating boston talk proposal") {
@@ -101,13 +103,13 @@ object Proposals {
             }
           }
         }).fold({fail =>
-          JsonContent ~> ResponseString("""{"status":400,"msg":"%s"}""" format fail)
+          JsonContent ~> ResponseString(errorJson(fail))
         },{ ok =>
           JsonContent ~> ResponseString("""{"status":200,"proposals":%s, "id":"%s"}""" format(ok._1, ok._2))
         })
       }
       expected(p) orFail { errors =>
-        JsonContent ~> ResponseString("""{"status":400,"msg":"%s"}""" format(
+        JsonContent ~> ResponseString(errorJson(
           errors.map { _.error } mkString(". ")
         ))
       }
@@ -140,17 +142,16 @@ object Proposals {
            case invalid => Left("Invalid id")
           }
         }) fold({ fail =>
-          JsonContent ~> ResponseString("""{"status":400,"msg":"%s"}""" format fail)
+          JsonContent ~> ResponseString(errorJson(fail))
         }, { ok =>
           JsonContent ~> ResponseString("""{"status":200, "id":"%s"}""" format ok)
         })
       }
       expected(p) orFail { errors =>
-        JsonContent ~> ResponseString("""{"status":400,"msg":"%s"}""" format(
+        JsonContent ~> ResponseString(errorJson(
           errors.map { _.error } mkString(". ")
         ))
       }
     }
-
   }
 }

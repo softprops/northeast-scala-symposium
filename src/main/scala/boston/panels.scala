@@ -1,7 +1,7 @@
 package nescala.boston
 
 import nescala.{ Cached, Clock, CookieToken, ClientToken,
-                Meetup, PollOver, Store, Tally }
+                Meetup, Store }
 import nescala.request.UrlDecoded
 
 // panel proposals
@@ -15,10 +15,15 @@ object Panels {
   val MaxTalkName = 200
   val MaxTalkDesc = 600
 
-  val withdrawing: unfiltered.Cycle.Intent[Any, Any] = {
+  def errorJson(msg: String) = """{"status":400,"msg":"%s"}""" format msg
+
+  def proposalJson(prop: String) = """{"status":200,"proposal":"%s"}""" format prop
+
+  val withdrawing: Cycle.Intent[Any, Any] = {
      // delete
     case POST(Path("/boston/panel_proposals/withdraw")) &
-      CookieToken(ClientToken(_, _, Some(_), Some(mid))) & Params(p) => Clock("withdrawing panel proposal") {
+      CookieToken(ClientToken(_, _, Some(_), Some(mid))) &
+        Params(p) => Clock("withdrawing panel proposal") {
 
       val expected = for {
         id <- lookup("id") is required("id is required")
@@ -41,21 +46,21 @@ object Panels {
             }
           }
         }).fold({ fail =>
-          JsonContent ~> ResponseString("""{"status":400,"msg":"%s"}""" format fail)
+          JsonContent ~> ResponseString(errorJson(fail))
         }, { ok =>
-          JsonContent ~> ResponseString("""{"status":200,"proposal":"%s"}""" format(ok))
+          JsonContent ~> ResponseString(proposalJson(ok))
         })
       }
       expected(p) orFail { errors =>
-        JsonContent ~> ResponseString("""{"status":400,"msg":"%s"}""" format(
+        JsonContent ~> ResponseString(errorJson(
           errors.map { _.error } mkString(". ")
         ))
       }
     }
   }
 
-  val intent: unfiltered.Cycle.Intent[Any, Any] = {
-    // create
+  val intent: Cycle.Intent[Any, Any] = {
+
     case POST(Path("/boston/panel_proposals")) &
       CookieToken(ClientToken(_, _, Some(_), Some(mid))) & Params(p) => Clock("creating boston panel proposal") {
 
@@ -101,19 +106,18 @@ object Panels {
             }
           }
         }).fold({fail =>
-          JsonContent ~> ResponseString("""{"status":400,"msg":"%s"}""" format fail)
+          JsonContent ~> ResponseString(errorJson(fail))
         },{ ok =>
           JsonContent ~> ResponseString("""{"status":200,"proposals":%s, "id":"%s"}""" format(ok._1, ok._2))
         })
       }
       expected(p) orFail { errors =>
-        JsonContent ~> ResponseString("""{"status":400,"msg":"%s"}""" format(
+        JsonContent ~> ResponseString(errorJson(
           errors.map { _.error } mkString(". ")
         ))
       }
     }
 
-    // edit
     case POST(Path(Seg("boston" :: "panel_proposals" :: UrlDecoded(id) :: Nil))) & Params(p) & CookieToken(
       ClientToken(_, _, Some(_), Some(mid))) => Clock("editing panel proposal %s" format id) {
       val expected = for {
@@ -140,13 +144,13 @@ object Panels {
            case invalid => Left("Invalid id")
           }
         }) fold({ fail =>
-          JsonContent ~> ResponseString("""{"status":400,"msg":"%s"}""" format fail)
+          JsonContent ~> ResponseString(errorJson(fail))
         }, { ok =>
           JsonContent ~> ResponseString("""{"status":200, "id":"%s"}""" format ok)
         })
       }
       expected(p) orFail { errors =>
-        JsonContent ~> ResponseString("""{"status":400,"msg":"%s"}""" format(
+        JsonContent ~> ResponseString(errorJson(
           errors.map { _.error } mkString(". ")
         ))
       }

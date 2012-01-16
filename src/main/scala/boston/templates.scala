@@ -38,6 +38,22 @@ trait Templates extends nescala.Templates {
     </html>
   )
 
+  def tallied(total: Int, entries: Seq[Map[String, String]]) =
+    bostonLayout(
+      <script type="text/javascript" src="/js/tally.js"></script>)(<link rel="stylesheet" type="text/csss" href="/css/tally.css"/>)({
+        head(true)
+      } ++ <div class="contained">
+         <p><strong>{total}</strong> votes submitted so far</p>
+         <ul data-total={ total.toString } id="tallies">{ entries map { e =>
+           <li class="clearfix" title={ e.get("mu_name").getOrElse("mu_name") } id={"e-%s" format e("id") }
+            data-score={ ((e("votes").toDouble / total) * 100).toString }>
+            <img class="avatar" src={  e("mu_photo").replace("member_", "thumb_") } />
+            <div class="progress clearfix"><span class="bar">.</span>
+            <span class="title">{ e("name") } <strong>{ e("votes") }</strong></span></div>
+          </li>
+        } }</ul>
+       </div>)
+
   def indexNoAuth = index(false)
 
   def indexWithAuth(proposals: Seq[Map[String, String]], panels: Seq[Map[String, String]]) =

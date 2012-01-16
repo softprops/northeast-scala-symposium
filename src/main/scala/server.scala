@@ -10,7 +10,8 @@ object Server {
     .filter(Planify {
       (NESS.site /: Seq(boston.Boston.site, nyc.Nyc.site, boston.Proposals.intent,
                         boston.Panels.intent, boston.Boston.talks, boston.Boston.panels,
-                        boston.Votes.intent, boston.Boston.api))(_ orElse _)
+                        boston.Votes.intent, boston.Boston.api, boston.Tally.talks,
+                        boston.Tally.panels))(_ orElse _)
     }).run(
       _ => (),
       _ => dispatch.Http.shutdown()

@@ -11,7 +11,7 @@ object Meetup extends Config {
   import net.liftweb.json.JsonDSL._
   import net.liftweb.json.JsonParser._
 
-  val defaultImage = "http://img1.meetupstatic.com/39194172310009655/img/noPhoto_50.gif"
+  val DefaultImage = "http://img1.meetupstatic.com/39194172310009655/img/noPhoto_50.gif"
 
   lazy val consumer = Consumer(
     property("mu_consumer"), property("mu_consumer_secret"))
@@ -30,13 +30,6 @@ object Meetup extends Config {
 
   def http = Http
 
-  object Members2 extends MembersBuilder(Map())
-  private[nescala] class MembersBuilder(params: Map[String, String]) extends QueryMethod {
-    private def param(key: String)(value: Any) = new MembersBuilder(params + (key -> value.toString))
-    val member_id = param("member_id")_
-    def complete = _ / "2" / "members" <<? params
-  }
-
   def has_rsvp(eventId: String, tok: oauth.Token) = {
     val mu = OAuthClient(consumer, tok)
     val (res, _) = http(mu.handle(Events.id(eventId)))
@@ -54,7 +47,7 @@ object Meetup extends Config {
         name <- Member.name(r)
         photo <- Member.photo_url(r)
       } yield {
-        id -> SimpleMember(id, name, if(photo.isEmpty) defaultImage else photo, None)
+        id -> SimpleMember(id, name, if(photo.isEmpty) DefaultImage else photo, None)
       }
     val twttrs =
       for {
@@ -98,24 +91,45 @@ object Meetup extends Config {
     }
 
   def rsvps(eventId: String) = {
-      val (res, _) = http(client.handle(Rsvps.event_id(eventId)))
-      
-      val result =
-        for {
-          r <- res
-          id <- Rsvp.id(r)
-          name <- Rsvp.name(r)
-          photo <- Rsvp.photo_url(r)
-          response <- Rsvp.response(r)
-          if(response == "yes")
-        } yield {
-          (id, name, if(photo.isEmpty) defaultImage else photo)
-        }
-      result map {
-        case (id, name, photo) =>
-          ("id" -> id) ~ ("name" -> name) ~ ("photo" -> photo)
+    def parse(res: List[JValue], meta: List[JValue]): List[JValue] = {
+      val result = for {
+        r <- res
+        id <- Rsvp.id(r)
+        name <- Rsvp.name(r)
+        photo <- Rsvp.photo_url(r)
+        response <- Rsvp.response(r)
+        if(response == "yes")
+      } yield {
+        (id, name, if(photo.isEmpty) DefaultImage else photo)
+      }
+      val JString(next) = meta \ "next"
+      val json = result map {
+          case (id, name, photo) =>
+            ("id" -> id) ~ ("name" -> name) ~ ("photo" -> photo)
+      }
+      if(json.isEmpty || next.isEmpty) {
+        json
+      } else {
+        val (r2, m2) = http(url(next) ># (Response.results ~ Response.meta))
+        parse(r2, m2) :: json
       }
     }
+    val (res, meta) = http(client.handle(Rsvps.event_id(eventId)))
+    parse(res, meta)
+  }
+
+  def hosting(memberId: String, eventId: String) =
+    hosts(eventId).contains(memberId.toInt)
+
+  def hosts(eventId: String) =  {
+    val (res, _) = http(client.handle(Events.id(eventId)))
+    for {
+      e <- res
+      JArray(hosts) <- e \ "event_hosts"
+      h <- hosts
+      JInt(id) <- h \ "member_id"
+    } yield id
+  }
 
   def event(eventId: String) = {
       val (res, _) = http(client.handle(Events.id(eventId)))
