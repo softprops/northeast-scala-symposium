@@ -137,18 +137,13 @@ trait Templates extends nescala.Templates {
   // listing of talk proposals (refactor plz)
   def talkListing(
     proposals: Seq[Map[String, String]],
-    canVote: Boolean = false,
-    votes: Seq[String] = Seq.empty[String]) = bostonLayout(
-    <script type="text/javascript" src="/js/boston/voting.js"></script>)(Nil)({
-      head(canVote, "vote-for-talk")
+    authed: Boolean = false,
+    votes: Seq[String] = Seq.empty[String]) = bostonLayout(Nil)(Nil)({
+      head(authed, "vote-for-talk")
     } ++ <div class="contained">
      <div id="maybe-talks-header">
         <h2>{ proposals.size } Scala campfire stories</h2>
-        <div>This year's symposium will feature 16 talks and one <a href="/2012/panels">panel</a> from members of the Scala community. Below is a list of current talk proposals.</div>{ if(canVote) <div id="votes-remaining">You have { Votes.MaxTalkVotes - votes.size match {
-          case 0 => " no votes"
-          case 1 => " one vote"
-          case n => " %d votes" format n
-        } } remaining</div> }
+        <div>This year's symposium will feature 16 talks and one <a href="/2012/panels">panel</a> from members of the Scala community. Below is a list of current talk proposals.</div>
       </div>
       <ul>{
         proposals.map { p =>
@@ -161,18 +156,6 @@ trait Templates extends nescala.Templates {
                   <a class="twttr" href={ "http://twitter.com/%s" format p("twttr").drop(1) } target="_blank">{ p("twttr") }</a>
                 } else <span/> }
             </div>
-            { if(canVote) {
-              <div>
-                <form class="ballot" action="/boston/votes" method="POST">
-                  <input type="hidden" name="vote" value={ p("id") }/>
-                  <input type="hidden" name="kind" value="talk"/>
-                  <input type="hidden" name="action" value={ if(votes.contains(p("id"))) "unvote" else "vote" }/>
-                  <input type="submit" class={ "voting btn%s" format(if(votes.contains(p("id"))) " voted-yes" else "") }
-                    value={ if(votes.contains(p("id"))) "Withdraw Vote" else "Vote" } disabled={
-                      if(votes.size >= Votes.MaxTalkVotes && !votes.contains(p("id"))) Some(xml.Text("disabled")) else None } />
-                </form>
-              </div>
-            } }
           </div>
           <p class="desc">{ p("desc") }</p>
         </li>
@@ -182,17 +165,13 @@ trait Templates extends nescala.Templates {
   )
 
   // listing of panel proposals (refactor plz)
-  def panelListing(proposals: Seq[Map[String, String]], canVote: Boolean = false,
-                   votes: Seq[String] = Seq.empty[String]) = bostonLayout(
-    <script type="text/javascript" src="/js/boston/voting.js"></script>)(Nil)({
-    head(canVote, "vote-for-panel")
+  def panelListing(proposals: Seq[Map[String, String]], authed: Boolean = false,
+                   votes: Seq[String] = Seq.empty[String]) = bostonLayout(Nil)(Nil)({
+    head(authed, "vote-for-panel")
   } ++ <div class="contained">
       <div id="maybe-talks-header">
         <h2>{ proposals.size } Scala Panel { if(proposals.size == 1) "Discussion" else "Discussons" }</h2>
-        <div>In addition to a number of <a href="/2012/talks">talks</a>, this year's symposium will feature one panel discussion among peers. Below is a list of current panel proposals.</div> { if(canVote) <div id="votes-remaining">You have { votes.size match {
-          case 0 => "one vote"
-          case 1 => "no votes"
-        } } remaining</div> }
+        <div>In addition to a number of <a href="/2012/talks">talks</a>, this year's symposium will feature one panel discussion among peers. Below is a list of current panel proposals.</div>
       </div>
       <ul>{
         proposals.map { p =>
@@ -205,18 +184,6 @@ trait Templates extends nescala.Templates {
                   <a class="twttr" href={ "http://twitter.com/%s" format p("twttr").drop(1) } target="_blank">{ p("twttr") }</a>
                 } else <span/> }
             </div>
-            { if(canVote) {
-              <div class="voting">
-                <form class="ballot" action="/boston/votes" method="POST">
-                  <input type="hidden" name="vote" value={ p("id") }/>
-                  <input type="hidden" name="kind" value="panel"/>
-                  <input type="hidden" name="action" value={ if(votes.contains(p("id"))) "unvote" else "vote" } />
-                  <input type="submit" class={ "voting btn%s" format(if(votes.contains(p("id"))) " voted-yes" else "") }
-                    value={ if(votes.contains(p("id"))) "Withdraw Vote" else "Vote" } disabled={
-                      if(votes.size >= Votes.MaxPanelVotes && !votes.contains(p("id"))) Some(xml.Text("disabled")) else None } />
-                </form>
-              </div>
-            } }
           </div>
           <p class="desc">{ p("desc") }</p>
         </li>
@@ -246,120 +213,9 @@ trait Templates extends nescala.Templates {
             }
           </div>
           <div class="r">
-            <h1>Polls are <a href="/2012/talks">open</a></h1>
-             <p>This year's symposium features 16 talks of 30 minutes, one keynote talk, and one 45 - 60 minute panel discussion.</p>
-             <p>Hopeful speakers and panelists may propose talks or panels on topics of their choosing which will be voted on by RSVP'd attendees. The schedule will be filled by talks that accrue the most votes, with the keynote spot (and $1000 travel offset) going to whichever receives the most votes of all.</p>            
-            <p>The voting polls open <strong>1/10</strong> and close <strong>1/24</strong>. If you have <a href="http://www.meetup.com/nescala/events/37637442/" target="_blank">RSVP'd</a>, you may vote by logging in with Meetup, and choosing your favorite <a href="/2012/talks">talk</a> and <a href="/2012/panels">panel</a> proposals.</p>            
-          </div>
-            {
-              if(authed) {
-                <div class="l divy">
-                  <p class="instruct">
-                    Please provide a single-paragraph description of your proposed talk.
-                  </p>
-                  <p class="instruct">
-                    Speakers may enter Twitter usernames and other biographical
-                    information in their
-                    <a target="_blank" href="http://www.meetup.com/nescala/profile/">
-                      member profile
-                    </a>.
-                  </p>
-                  <p class="instruct">
-                    Each person can post at most <strong>three</strong> talk proposals.
-                  </p>
-                </div>
-              } else <div class="l divy"/>
-            }
-            <div class="r divy" id="propose-talk">
-            {
-              if(authed) {
-                <div id="propose-container">
-                  <form action="/boston/proposals" method="POST" id="propose-form"
-                    class="proposing"
-                    style={ "display:%s" format(
-                      if(proposals.size < Proposals.MaxProposals) "visible" else "none"
-                    )}>
-                    <h4>Propose a talk</h4>
-                    <div>
-                      <label for="name">What's your talk called?</label>
-                      <input type="text" name="name" maxlength={ Proposals.MaxTalkName + "" }
-                        placeholder="How I learned to love my type system" />
-                    </div>
-                    <div>
-                      <label for="desc">What's your talk is about?</label>
-                      <div class="limited">
-                        <textarea name="desc" data-limit={ Proposals.MaxTalkDesc + "" }
-                          placeholder={ "Say it in %s characters or less" format(
-                            Proposals.MaxTalkDesc) } />
-                        <div>
-                          <div class="limit-label"/>
-                          <input type="submit" value="Propose Talk" class="btn" />
-                        </div>
-                      </div>
-                    </div>
-                  </form>
-                  { proposalList(proposals) } 
-                </div>
-              } else {
-                <span>
-                  <a href="/connect?then=propose-talk">Log in with Meetup</a>
-                  to submit a talk or panel.
-                </span>
-              }
-            }
-          </div>
-          {
-            if(authed) {
-              <div class="l divy">
-                <p class="instruct">
-                  One panel discussion will be chosen to be presented by a
-                  group of peers after Friday's talks.
-                </p>
-                <p class="instruct">
-                  Please provide a brief topic and description of what
-                  you're panel would be about.
-                </p>
-                <p class="instruct">
-                  One person can post at most <strong>three</strong>
-                  proposals for panel topics.
-                </p>
-              </div>
-            } else <div class="l divy"/>
-          }
-          <div class="r divy" id="propose-panel">
-            {
-              if(authed) {
-                <div id="propose-panel-container">
-                  <form action="/boston/panel_proposals" method="POST"
-                    id="propose-panel-form" class="proposing"
-                    style={ "display:%s" format(
-                      if(panels.size < Panels.MaxProposals) "visible" else "none"
-                    )}>
-                    <h4>Propose a Panel</h4>
-                    <div>
-                      <label for="name">What's the topic of your panel?</label>
-                      <input type="text" name="name"
-                        maxlength={ Panels.MaxTalkName + ""}
-                        placeholder="The sound of one million actors clapping" />
-                    </div>
-                    <div>
-                      <label for="desc">What's your panel is about?</label>
-                      <div class="limited">
-                        <textarea name="desc" data-limit={ Panels.MaxTalkDesc + "" }
-                            placeholder="The state of async Scala" />
-                        <div>
-                          <div class="limit-label"/>
-                          <input type="submit" value="Propose Panel" class="btn" />
-                        </div>
-                      </div>
-                    </div>
-                  </form>
-                  { panelList(panels) } 
-                </div>
-              } else {
-                <span/>
-              }
-            }
+            <h1>Polls are now <a href="/2012/talks">Closed</a></h1>
+            <p>This year's symposium features 16 talks of 30 minutes, one keynote talk, and one 45 - 60 minute panel discussion.</p>
+            <p>Thanks to all attendees who voted. The results will be posted soon.</p>           
           </div>
         </div>
       </div>

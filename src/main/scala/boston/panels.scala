@@ -59,7 +59,7 @@ object Panels {
     }
   }
 
-  val intent: Cycle.Intent[Any, Any] = {
+  val making: Cycle.Intent[Any, Any] = {
 
     case POST(Path("/boston/panel_proposals")) &
       CookieToken(ClientToken(_, _, Some(_), Some(mid))) & Params(p) => Clock("creating boston panel proposal") {
