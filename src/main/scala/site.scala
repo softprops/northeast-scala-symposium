@@ -41,9 +41,9 @@ object NESS extends Config {
                 Cookie("token",
                        ClientToken(at.value, at.secret, verifier, Some(Meetup.member_id(at).toString))
                        .toCookieString)) ~>  Redirect(then.get match {
-                  case Some("vote-for-talk") => "/2012/talks"
-                  case Some("vote-for-panel") => "/2012/panels"
-                  case other => "/#%s" format other.getOrElse("propose-talk")
+                  case Some("proposals") => "/2012/talk_tally"
+                  case Some("panel_proposals") => "/2012/panel_tally"
+                  case other => "/"
                 })
           case _ => sys.error("could not find request token")
         }

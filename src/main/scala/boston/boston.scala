@@ -84,8 +84,7 @@ object Boston extends Templates {
           } else (false, Nil)
         case _ => (false, Nil)
       }
-      println("can vote? %s, current votes %s" format(can, votes))
-      panelListing(scala.util.Random.shuffle(ret), canVote = can, votes = votes)
+      panelListing(scala.util.Random.shuffle(ret), authed = can, votes = votes)
     }
   }
 
@@ -147,7 +146,7 @@ object Boston extends Templates {
         case _ => (false, Nil)
       }
       println("can vote? %s, current talk votes %s" format(can, votes))
-      talkListing(scala.util.Random.shuffle(ret), canVote = can, votes = votes)
+      talkListing(scala.util.Random.shuffle(ret), authed = can, votes = votes)
     }
   }
 

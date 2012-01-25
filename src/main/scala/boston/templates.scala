@@ -38,11 +38,11 @@ trait Templates extends nescala.Templates {
     </html>
   )
 
-  def tallied(total: Int, entries: Seq[Map[String, String]]) =
+  def tallied(authed: Boolean, total: Int, entries: Seq[Map[String, String]], kind: String) =
     bostonLayout(
       <script type="text/javascript" src="/js/tally.js"></script>)(<link rel="stylesheet" type="text/csss" href="/css/tally.css"/>)({
-        head(true)
-      } ++ <div class="contained">
+        head(authed, kind)
+      } ++ <div class="contained"> { if(authed) {
          <p><strong>{total}</strong> votes submitted so far</p>
          <ul data-total={ total.toString } id="tallies">{ entries map { e =>
            <li class="clearfix" title={ e.get("mu_name").getOrElse("mu_name") } id={"e-%s" format e("id") }
@@ -51,8 +51,9 @@ trait Templates extends nescala.Templates {
             <div class="progress clearfix"><span class="bar">.</span>
             <span class="title">{ e("name") } <strong>{ e("votes") }</strong></span></div>
           </li>
-        } }</ul>
-       </div>)
+        } }</ul> } else {
+          <p>No Peeking. Login to view tally</p>
+       } }</div>)
 
   def indexNoAuth = index(false)
 
@@ -118,7 +119,7 @@ trait Templates extends nescala.Templates {
   }
 
   def login(authed: Boolean, then: String) =
-    if(!authed) <div id="auth-bar" class="clearfix"><div class="contained"><div class="l">Voting requires authentication and an <a href="http://www.meetup.com/nescala/events/37637442/" target="_blank">RSVP</a></div><div class="r"><a href={ "/connect%s" format(if(then.isEmpty) "" else "?then=%s".format(then)) } class="btn login">Log in with Meetup</a></div></div></div> else <span/>
+    if(!authed) <div id="auth-bar" class="clearfix"><div class="contained"><div class="l">Just who are you anyway?</div><div class="r"><a href={ "/connect%s" format(if(then.isEmpty) "" else "?then=%s".format(then)) } class="btn login">Log in with Meetup</a></div></div></div> else <span/>
 
   def head(authed: Boolean, afterlogin: String = "") =
    <div id="head" class="clearfix">
@@ -139,7 +140,7 @@ trait Templates extends nescala.Templates {
     proposals: Seq[Map[String, String]],
     authed: Boolean = false,
     votes: Seq[String] = Seq.empty[String]) = bostonLayout(Nil)(Nil)({
-      head(authed, "vote-for-talk")
+      head(true/*hide login*/, "vote-for-talk")
     } ++ <div class="contained">
      <div id="maybe-talks-header">
         <h2>{ proposals.size } Scala campfire stories</h2>
@@ -167,7 +168,7 @@ trait Templates extends nescala.Templates {
   // listing of panel proposals (refactor plz)
   def panelListing(proposals: Seq[Map[String, String]], authed: Boolean = false,
                    votes: Seq[String] = Seq.empty[String]) = bostonLayout(Nil)(Nil)({
-    head(authed, "vote-for-panel")
+    head(true/*hide login*/, "vote-for-panel")
   } ++ <div class="contained">
       <div id="maybe-talks-header">
         <h2>{ proposals.size } Scala Panel { if(proposals.size == 1) "Discussion" else "Discussons" }</h2>
@@ -265,7 +266,7 @@ trait Templates extends nescala.Templates {
     bostonLayout(Nil)(
     <script type="text/javascript" src="/js/jquery.scrollTo-1.4.2-min.js"></script>
     <script type="text/javascript" src="/js/boston/index.js"></script>)(
-      head(authed) ++ dayOne(authed, proposals, panels) ++ dayTwo ++ dayThree
+      head(true/*hide login*/) ++ dayOne(authed, proposals, panels) ++ dayTwo ++ dayThree
     )
 }
 

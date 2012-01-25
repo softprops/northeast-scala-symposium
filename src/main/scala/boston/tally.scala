@@ -13,7 +13,8 @@ object Tally extends Templates {
       CookieToken(ClientToken(_, _, Some(_), Some(mid))) =>      
       if(hosting(mid)) talliedFor("proposals")
       else Redirect("/2012/talks")
-    case GET(Path("/2012/talk_tally")) => Redirect("/2012/talks")
+    case GET(Path("/2012/talk_tally")) =>
+      tallied(false, 0, Nil, "proposals")
   }
 
   def panels: Cycle.Intent[Any, Any] = {
@@ -21,7 +22,8 @@ object Tally extends Templates {
       CookieToken(ClientToken(_, _, Some(_), Some(mid))) =>      
       if(hosting(mid)) talliedFor("panel_proposals")
       else Redirect("/2012/panels")
-    case GET(Path("/2012/panel_tally")) => Redirect("/2012/panels")
+    case GET(Path("/2012/panel_tally")) =>
+      tallied(false, 0, Nil, "panel_proposals")
   }
 
   private def talliedFor(kind: String) =
@@ -37,7 +39,7 @@ object Tally extends Templates {
         }
       }
       val total = entries.map(_("votes").toInt).sum
-      tallied(total, entries.sortBy(_("votes").toInt).reverse)
+      tallied(true, total, entries.sortBy(_("votes").toInt).reverse, kind)
     }
 
   private def hosting(who: String) = Meetup.hosting(who, Meetup.Boston.dayone_event_id)
