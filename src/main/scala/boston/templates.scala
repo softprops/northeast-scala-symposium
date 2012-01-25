@@ -214,7 +214,7 @@ trait Templates extends nescala.Templates {
             }
           </div>
           <div class="r">
-            <h1>Polls are now <a href="/2012/talks">Closed</a></h1>
+            <h1>Polls are now CLOSED</h1>
             <p>This year's symposium features 16 talks of 30 minutes, one keynote talk, and one 45 - 60 minute panel discussion.</p>
             <p>Thanks to all attendees who voted for their favorite <a href="/2012/talks">talks</a> and <a href="/2012/panels">panels</a>.</p><p>We will announce speakers when our highly sophisticated vote tabulating apparatus prints a receipt.</p>
             <div>
