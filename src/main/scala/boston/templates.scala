@@ -216,7 +216,15 @@ trait Templates extends nescala.Templates {
           <div class="r">
             <h1>Polls are now <a href="/2012/talks">Closed</a></h1>
             <p>This year's symposium features 16 talks of 30 minutes, one keynote talk, and one 45 - 60 minute panel discussion.</p>
-            <p>Thanks to all attendees who voted. The results will be posted soon.</p>           
+            <p>Thanks to all attendees who voted for their favorite <a href="/2012/talks">talks</a> and <a href="/2012/panels">panels</a>.</p><p>We will announce speakers when our highly sophisticated vote tabulating apparatus prints a receipt.</p>
+            <div>
+              <a class="img-link" target="_blank"
+                href="http://en.wikipedia.org/wiki/File:Voting_machine_Denver_Colorado_1912.JPG">
+                <img class="voting-machine"
+                  src="http://upload.wikimedia.org/wikipedia/commons/0/0c/Voting_machine_Denver_Colorado_1912.JPG"/>
+              </a>
+            </div>
+            <div>In the meantime, try something <a target="_blank" href="http://www.scala-lang.org/downloads#Milestones">new</a>.</div>
           </div>
         </div>
       </div>

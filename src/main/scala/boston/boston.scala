@@ -77,7 +77,6 @@ object Boston extends Templates {
       val (can, votes) = req match {
         case CookieToken(ClientToken(token, sec, Some(_), Some(mid))) =>
           if(Meetup.has_rsvp(Meetup.Boston.dayone_event_id, dispatch.oauth.Token(token, sec))) {
-            println("%s can vote for panels" format mid)
             (true, Store {
               _.smembers("boston:panel_votes:%s" format mid).map(_.filter(_.isDefined).map(_.get).toSeq).getOrElse(Nil)
             })
@@ -138,14 +137,12 @@ object Boston extends Templates {
       val (can, votes) =  req match {
         case CookieToken(ClientToken(token, sec, Some(_), Some(mid))) =>
           if(Meetup.has_rsvp(Meetup.Boston.dayone_event_id, dispatch.oauth.Token(token, sec))) {
-            println("%s can vote for talks" format mid)
             (true, Store {
               _.smembers("boston:talk_votes:%s" format mid).map(_.filter(_.isDefined).map(_.get).toSeq).getOrElse(Nil)
             })
           } else (false, Nil)
         case _ => (false, Nil)
       }
-      println("can vote? %s, current talk votes %s" format(can, votes))
       talkListing(scala.util.Random.shuffle(ret), authed = can, votes = votes)
     }
   }
