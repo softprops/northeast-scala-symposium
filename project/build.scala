@@ -4,7 +4,7 @@ object MyApp extends sbt.Build {
   lazy val root =
     Project("", file("."),
       settings = sbt.Defaults.defaultSettings ++ heroic.Plugin.heroicSettings
-    ) dependsOn(dispatchMeetup, memcached)
+    ) dependsOn(dispatchMeetup)
 
   // git-dependencies don't work on Heroku so we use submodules
   // don't forget:
@@ -17,7 +17,4 @@ object MyApp extends sbt.Build {
     "dispatch-meetup",
     file("lib/dispatch-meetup")
   ) dependsOn (dispatchLiftJson)
-
-  lazy val memcached = file("lib/memcached")
-
 }
