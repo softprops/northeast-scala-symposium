@@ -261,6 +261,7 @@ trait Templates extends nescala.Templates {
           <h3>
             <span>10am @<a href="http://maps.google.com/maps?q=32+Vassar+Street%2C+Cambridge%2C+MA">Stata Center</a></span>
           </h3>
+          <p>TBA</p>
           { rsvps }
         </div>
         <div class="r">No details yet</div>
