@@ -210,7 +210,7 @@ trait Templates extends nescala.Templates {
           <div class="r">
             <h1>Votes are in</h1>
             <p>This year's symposium features 16 talks of 30 minutes, one keynote talk, and one 45 - 60 minute panel discussion.</p>
-            <p>Thanks to all attendees who voted for their favorite and panels.</p>
+            <p>Thanks to all attendees who voted for their favorite talks and panels.</p>
             <div>
               <div id="keynote">
                 <h3>Keynote: <a href={ "#"+keynote("id").split(":")(2) }>{ keynote("name") }</a></h3>
