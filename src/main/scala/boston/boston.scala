@@ -8,6 +8,9 @@ object Boston extends Templates {
   import unfiltered.response._
   import unfiltered.Cycle
   import QParams._
+  import com.redis.RedisClient
+
+  private def mukey(of: String) = "boston:members:%s" format of
 
   def api: unfiltered.Cycle.Intent[Any, Any] = {
     case GET(Path(Seg("boston" :: "rsvps" :: event :: Nil))) => Clock("fetching rsvp list for %s" format event) {
@@ -21,8 +24,8 @@ object Boston extends Templates {
     }
   }
 
-  def panels: Cycle.Intent[Any, Any] = {
-    case req @ GET(Path(Seg("2012" :: "panels" :: Nil))) => Clock("fetching 2012 panels") {
+  def panelProposals: Cycle.Intent[Any, Any] = {
+    case req @ GET(Path(Seg("2012" :: "panels" :: Nil))) => Redirect("/") /*Clock("fetching 2012 panels") {
       val proposals = Store { s =>
         s.keys("boston:panel_proposals:*:*") match {
           case None => Seq.empty[Map[String, String]]
@@ -40,8 +43,6 @@ object Boston extends Templates {
             who
         }
       }).toSet.toSeq
-
-      def mukey(of: String) = "boston:members:%s" format of
       
       // find the members we may not have cached yet
       val notcached = Store { s =>
@@ -84,11 +85,11 @@ object Boston extends Templates {
         case _ => (false, Nil)
       }
       panelListing(scala.util.Random.shuffle(ret), authed = can, votes = votes)
-    }
+    }*/
   }
 
-  def talks: Cycle.Intent[Any, Any] = {
-    case req @ GET(Path(Seg("2012" :: "talks" :: Nil))) => Clock("fetching 2012 talks") {
+  def talkProposals: Cycle.Intent[Any, Any] = {
+    case req @ GET(Path(Seg("2012" :: "talks" :: Nil))) => Redirect("/")/*Clock("fetching 2012 talks") {
       val proposals = Store { s =>
         s.keys("boston:proposals:*:*") match {
           case None => Seq.empty[Map[String, String]]
@@ -107,7 +108,6 @@ object Boston extends Templates {
         }
       }).toSet.toSeq
 
-      def mukey(of: String) = "boston:members:%s" format of
       val notcached = Store { s =>
         pids.filterNot(p => s.exists(mukey(p)))
       }
@@ -144,37 +144,76 @@ object Boston extends Templates {
         case _ => (false, Nil)
       }
       talkListing(scala.util.Random.shuffle(ret), authed = can, votes = votes)
+    }*/
+  }
+
+  private def talks(r: RedisClient): Seq[Map[String, String]] = {    
+    val Talk = """boston:talks:(.*)""".r
+    r.keys("boston:talks:*") match {
+      case None => Seq.empty[Map[String, String]]
+      case Some(keys) =>
+        ((List.empty[Map[String, String]] /: keys.flatten)(
+          (a, e) => (e match {
+            case t @ Talk(mid) =>
+              r.hmget[String, String](t, "name", "desc").map(_ + ("id" -> t)).map {
+                _ ++ (r.hmget[String, String](mukey(mid),
+                                              "mu_name", "mu_photo", "twttr").get)
+              }.get :: a
+            case _ => a
+          }))).reverse
+    }
+  }
+
+  private def keynote(r: RedisClient): Map[String, String] = {
+    val Keynote = """boston:keynote:(.*)""".r
+    r.keys("boston:keynote:*") match {
+      case None => Map.empty[String, String]
+      case Some(Some(key) :: _) =>
+        key match {
+          case k @ Keynote(mid) =>
+            r.hmget[String, String](k, "name", "desc").map(_ + ("id" -> k)).map {
+              _ ++ r.hmget[String, String](mukey(mid),
+                                           "mu_name", "mu_photo", "twttr").flatten
+            }.get
+          case _ => Map.empty[String, String]
+        }
+      case _ => Map.empty[String, String]
+    }
+  }
+
+  private def panel(r: RedisClient): Map[String, String] = {
+    val Keynote = """boston:panel:(.*)""".r
+    r.keys("boston:panel:*") match {
+      case None => Map.empty[String, String]
+      case Some(skey :: _) =>
+        skey match {
+          case Some(key) =>
+            key match {
+              case k @ Keynote(mid) =>
+                r.hmget[String, String](k, "name", "desc").map(_ + ("id" -> k)).map {
+                  _ ++ r.hmget[String, String](mukey(mid),
+                                           "mu_name", "mu_photo", "twttr").flatten
+                }.get
+              case _ =>
+                Map.empty[String, String]
+            }
+          case _ =>
+            Map.empty[String, String]
+        }
+      case _ => Map.empty[String, String]
     }
   }
 
   def site: Cycle.Intent[Any, Any]  = {
-
-    case GET(Path("/") & CookieToken(ClientToken(_, _, Some(_), Some(mid)))) =>
-      // fetch the logged in user's talk proposals
-      val proposals = Store { s =>
-        s.keys("boston:proposals:%s:*" format mid) match {
-          case None => Seq.empty[Map[String, String]]
-          case Some(keys) =>
-            (Seq.empty[Map[String, String]] /: keys.filter(_.isDefined))(
-              (a, e) => a ++
-                s.hmget[String, String](e.get, "name", "desc").map(_ + ("id" -> e.get))
-            )
-        }
+    case GET(Path("/") & CookieToken(ClientToken(_, _, Some(_), Some(mid)))) => Clock("home") {
+      Store { s =>
+        index(true, keynote(s), talks(s), panel(s))
       }
-      val panels = Store { s =>
-        s.keys("boston:panel_proposals:%s:*" format mid) match {
-          case None => Seq.empty[Map[String, String]]
-          case Some(keys) =>
-            (Seq.empty[Map[String, String]] /: keys.filter(_.isDefined))(
-              (a, e) => a ++
-                s.hmget[String, String](e.get, "name", "desc").map(_ + ("id" -> e.get))
-            )
-        }
+    }
+    case GET(Path("/")) => Clock("home") {
+      Store { s =>
+        index(false, keynote(s), talks(s), panel(s))
       }
-
-      indexWithAuth(proposals, panels)
-
-    case GET(Path("/")) =>
-      indexNoAuth
+    }
   }
 }

@@ -45,7 +45,8 @@ object Proposals {
         }).fold({ fail =>
           JsonContent ~> ResponseString(errorJson(fail))
         }, { ok =>
-          JsonContent ~> ResponseString("""{"status":200,"proposal":"%s"}""" format(ok))
+          JsonContent ~> ResponseString("""{"status":200,"pr
+oposal":"%s"}""" format(ok))
         })
       }
       expected(p) orFail { errors =>

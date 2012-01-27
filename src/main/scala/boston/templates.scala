@@ -55,11 +55,6 @@ trait Templates extends nescala.Templates {
           <p>No Peeking. Login to view tally</p>
        } }</div>)
 
-  def indexNoAuth = index(false)
-
-  def indexWithAuth(proposals: Seq[Map[String, String]], panels: Seq[Map[String, String]]) =
-    index(true, proposals, panels)
-
   def panelList(props: Seq[Map[String, String]]) =
     listOf(props, "panel_proposals", Panels.MaxTalkName,
            Panels.MaxTalkDesc, "Your panel proposals", "Edit Panel", "#propose-panel-form")
@@ -193,13 +188,12 @@ trait Templates extends nescala.Templates {
     </div>
   )
 
-
   val rsvps =
     <div class="attending">
       <h4 class="tban"/><ul class="rsvps"/><p class="extra-rsvps"/>
     </div>
 
- def dayOne(authed: Boolean, proposals: Seq[Map[String, String]], panels: Seq[Map[String, String]]) = 
+ def dayOne(authed: Boolean, keynote: Map[String, String], talks: Seq[Map[String, String]], panel: Map[String, String]) = 
    <div id="day-one" data-event={ Meetup.Boston.dayone_event_id } class="day clearfix">
       <div class="contained">
         <div id="talk-submissions">
@@ -209,22 +203,60 @@ trait Templates extends nescala.Templates {
             <h3>
               <span>9am @<a href="http://maps.google.com/maps?q=One+Memorial+Drive%2C+Cambridge%2C+MA">NERD</a></span>
             </h3>
-            <p>Scala <a href="/2012/talks">Talks</a> and <a href="/2012/panels">Panels</a></p>{
+            <p>Scala Talks and Panel Discussion</p>{
               rsvps
             }
           </div>
           <div class="r">
-            <h1>Polls are now CLOSED</h1>
+            <h1>Votes are in</h1>
             <p>This year's symposium features 16 talks of 30 minutes, one keynote talk, and one 45 - 60 minute panel discussion.</p>
-            <p>Thanks to all attendees who voted for their favorite <a href="/2012/talks">talks</a> and <a href="/2012/panels">panels</a>.</p><p>We will announce speakers when our highly sophisticated vote tabulating apparatus prints a receipt.</p>
+            <p>Thanks to all attendees who voted for their favorite and panels.</p>
             <div>
-              <a class="img-link" target="_blank"
-                href="http://en.wikipedia.org/wiki/File:Voting_machine_Denver_Colorado_1912.JPG">
-                <img class="voting-machine"
-                  src="http://upload.wikimedia.org/wikipedia/commons/0/0c/Voting_machine_Denver_Colorado_1912.JPG"/>
-              </a>
+              <div id="keynote">
+                <h3>Keynote: <a href={ "#"+keynote("id").split(":")(2) }>{ keynote("name") }</a></h3>
+                <div class="who-box clearfix">
+                  <img class="avatar" src={ keynote("mu_photo").replace("member_", "thumb_") } />
+                  <div class="links">
+                    <a class="primary" href={ "http://meetup.com/nescala/members/%s" format keynote("id").split(":")(2) } target="_blank">{ keynote("mu_name") } </a>{ if(keynote.isDefinedAt("twttr")) {
+                     <a class="twttr" href={ "http://twitter.com/%s" format keynote("twttr").drop(1) } target="_blank">{ keynote("twttr") }</a>
+                    } else <span/> }
+                  </div>
+                </div>
+                <p class="desc">{ keynote("desc") }</p>
+              </div>
+              <div id="talks">
+                <h3>{talks.size} Talks</h3>
+                <ul>
+                { talks.map { t =>
+                   <li class="talk" id={ t("id").split(":")(2) }>
+                     <h3><a href={ "#"+t("id").split(":")(2) }>{ t("name") }</a></h3>
+                      <div class="who-box clearfix">
+                        <img class="avatar" src={ t("mu_photo").replace("member_", "thumb_") } />
+                          <div class="links">
+                             <a class="primary" href={ "http://meetup.com/nescala/members/%s" format t("id").split(":")(2) } target="_blank">{ t("mu_name") } </a>{ if(t.isDefinedAt("twttr")) {
+                             <a class="twttr" href={ "http://twitter.com/%s" format t("twttr").drop(1) } target="_blank">{ t("twttr") }</a>
+                             } else <span/> }
+                          </div>
+                      </div>
+                      <p class="desc">{ t("desc") }</p>
+                   </li>
+                } }
+                </ul>
+              </div>
+              <div id="panel">
+                <h3>Panel Discussion on</h3>
+                <h3><a href={ "#"+panel("id").split(":")(2) }>{ panel("name") }</a></h3>
+                <div class="who-box clearfix">
+                  <img class="avatar" src={ panel("mu_photo").replace("member_", "thumb_") } />
+                  <div class="links">
+                    <a class="primary" href={ "http://meetup.com/nescala/members/%s" format panel("id").split(":")(2) } target="_blank">{ panel("mu_name") } </a>{ if(panel.isDefinedAt("twttr")) {
+                     <a class="twttr" href={ "http://twitter.com/%s" format panel("twttr").drop(1) } target="_blank">{ panel("twttr") }</a>
+                    } else <span/> }
+                  </div>
+                </div>
+                <p class="desc">{ panel("desc") }</p>
+              </div>
             </div>
-            <div>In the meantime, try something <a target="_blank" href="http://www.scala-lang.org/downloads#Milestones">new</a>.</div>
           </div>
         </div>
       </div>
@@ -268,14 +300,15 @@ trait Templates extends nescala.Templates {
       </div>
     </div>
 
-  private def index(
+  def index(
     authed: Boolean,
-    proposals: Seq[Map[String, String]] = Nil,
-    panels: Seq[Map[String, String]] = Nil) =
+    keynote: Map[String, String],
+    talks: Seq[Map[String, String]],
+    panel: Map[String, String]) =
     bostonLayout(Nil)(
     <script type="text/javascript" src="/js/jquery.scrollTo-1.4.2-min.js"></script>
     <script type="text/javascript" src="/js/boston/index.js"></script>)(
-      head(true/*hide login*/) ++ dayOne(authed, proposals, panels) ++ dayTwo ++ dayThree
+      head(true/*hide login*/) ++ dayOne(authed, keynote, talks, panel) ++ dayTwo ++ dayThree
     )
 }
 
