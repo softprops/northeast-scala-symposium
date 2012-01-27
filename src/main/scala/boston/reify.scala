@@ -2,7 +2,7 @@ package nescala.boston
 
 import nescala.Store
 object Reify {
-  def main(a: Array[String]) {
+  def mainly(a: Array[String]) {
     
     val Proposal = """boston:proposals:(.*):(.*)""".r
     val PanelProposal = """boston:panel_proposals:(.*):(.*)""".r
