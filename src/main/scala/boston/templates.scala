@@ -2,7 +2,7 @@ package nescala.boston
 
 import nescala.Meetup
 
-trait Templates extends nescala.Templates {
+trait Templates extends nescala.Templates with SponsorTemplate {
   import java.net.URLEncoder.encode
 
   def bostonLayout(head: xml.NodeSeq)
@@ -23,6 +23,7 @@ trait Templates extends nescala.Templates {
         { body }
         <div id="footer">
           made possible with <span class="love">&#10084;</span> from the <a href="http://www.meetup.com/boston-scala/">Boston</a>, <a href="http://www.meetup.com/scala-phase/">Philadelphia</a>, and <a href="http://www.meetup.com/ny-scala/">New York</a> scala enthusiasts
+        <div>with a little <a href="/2012/friends">help from our friends</a>.</div>
           <div id="last-year">
             <div>What happen to last year? It ended.</div>
             <div>But you can still find it <a href="/2011">here</a>.</div>

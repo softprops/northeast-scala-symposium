@@ -215,5 +215,7 @@ object Boston extends Templates {
         index(false, keynote(s), talks(s), panel(s))
       }
     }
+    case GET(Path(Seg("2012" :: "friends" :: Nil))) =>
+      sponsors
   }
 }

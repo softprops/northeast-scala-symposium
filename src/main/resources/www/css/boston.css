@@ -407,7 +407,7 @@ input[type='text'], textarea {
   margin-top:.5em;
 }
 
-#day-one {
+#day-one, #sponsors {
   background:#DBF5FF;
 }
 
@@ -417,6 +417,10 @@ input[type='text'], textarea {
 
 #day-three {
   background:#F3F89A;
+}
+
+#sponsors {
+  padding: 1em;
 }
 
 #footer {
