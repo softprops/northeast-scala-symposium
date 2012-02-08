@@ -107,7 +107,7 @@ object Meetup extends Config {
           case (id, name, photo) =>
             ("id" -> id) ~ ("name" -> name) ~ ("photo" -> photo)
       }
-      if(json.isEmpty || next.isEmpty) {
+      if(next.isEmpty) {
         json
       } else {
         val (r2, m2) = http(url(next) ># (Response.results ~ Response.meta))
