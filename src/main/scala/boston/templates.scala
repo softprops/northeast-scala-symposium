@@ -297,7 +297,7 @@ trait Templates extends nescala.Templates with SponsorTemplate {
           <p>TBA</p>
           { rsvps }
         </div>
-        <div class="r">No details yet</div>
+        <div class="r">No formal events are planned, but space at the Stata Center will be available for attendees to meet, talk, and hack.</div>
       </div>
     </div>
 
