@@ -9,6 +9,8 @@ trait SponsorTemplate { self: Templates =>
       <div id="sponsors">
         <h1>A Little Help From Our Friends</h1>
         <p>If you get more than your money's worth at nescala, it's thanks to these guys.</p>
+        <a href="http://www.typesafe.com/"><img src="/images/sponsors/typesafe.png" /></a>
+        <p>Typesafe hired professionals to record the talks.</p>
         <a href="http://www.meetup.com/jobs/"><img src="/images/sponsors/meetup.png" /></a>
         <p>Meetup made our stylish yet functional tote bags.</p>
         <a href="https://foursquare.com/jobs/"><img src="/images/sponsors/foursquare.png" /></a>
