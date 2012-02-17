@@ -17,6 +17,7 @@ trait SponsorTemplate { self: Templates =>
         <p>Heroku will take you into a happy hour cloud on Friday.</p>
         <a href="https://foursquare.com/jobs/"><img src="/images/sponsors/foursquare.png" /></a>
         <p>Foursquare is checking you in to free drinks on Saturday night.</p>
+        <a href="https://www.novus.com/careers.php"><img src="/images/sponsors/novus.jpg" /></a>
         <a href="http://www.ardentex.com/software.html"><img src="/images/sponsors/ardentex.png" /></a>
       </div>
     )
