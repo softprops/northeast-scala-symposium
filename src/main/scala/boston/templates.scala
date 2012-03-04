@@ -7,7 +7,7 @@ trait Templates extends nescala.Templates with SponsorTemplate {
 
   def bostonLayout(head: xml.NodeSeq)
     (bodyScripts: xml.NodeSeq)
-    (body: xml.NodeSeq) = unfiltered.response.Html(
+    (body: xml.NodeSeq) = unfiltered.response.Html5(
       <html>
       <head>
         <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
@@ -82,7 +82,7 @@ trait Templates extends nescala.Templates with SponsorTemplate {
                <div class="controls clearfix">
                  <ul>
                    <li>
-                    <a href="mailto:doug@meetup.com">Email us</a> if you with to withdraw this.
+                    <a href="mailto:doug@meetup.com">Email us</a> if you wish to withdraw this.
                    </li>
                    <li>
                       <a href="#" class="edit-proposal" data-proposal={ p("id") }>
@@ -177,9 +177,12 @@ trait Templates extends nescala.Templates with SponsorTemplate {
           <div class="who-box clearfix">
             <img class="avatar" src={ p("mu_photo").replace("member_", "thumb_") } />
             <div class="links">
-              <a class="primary" href={ "http://meetup.com/nescala/members/%s" format p("id").split(":")(2) } target="_blank">{ p("mu_name") } </a>{ if(p.isDefinedAt("twttr")) {
-                  <a class="twttr" href={ "http://twitter.com/%s" format p("twttr").drop(1) } target="_blank">{ p("twttr") }</a>
-                } else <span/> }
+              <a class="primary"
+                 href={ "http://meetup.com/nescala/members/%s" format p("id").split(":")(2) }
+                 target="_blank">{ p("mu_name") }
+              </a>{ if(p.isDefinedAt("twttr")) {
+                <a class="twttr" href={ "http://twitter.com/%s" format p("twttr").drop(1) } target="_blank">{ p("twttr") }</a>
+              } else <span/> }
             </div>
           </div>
           <p class="desc">{ p("desc") }</p>
@@ -204,61 +207,84 @@ trait Templates extends nescala.Templates with SponsorTemplate {
             <h3>
               <span>9am @<a href="http://maps.google.com/maps?q=One+Memorial+Drive%2C+Cambridge%2C+MA">NERD</a></span>
             </h3>
-            <p>Scala Talks and Panel Discussion</p>{
-              rsvps
-            }
+            <p>Scala Talks and Panel Discussion</p>
           </div>
           <div class="r">
             <h1>Votes are in</h1>
             <p>This year's symposium features 16 talks of 30 minutes, one keynote talk, and one 45 - 60 minute panel discussion.</p>
             <p>Thanks to all attendees who voted for their favorite talks and panels.</p>
-            <div>
-              <div id="keynote">
-                <h3>Keynote: <a href={ "#"+keynote("id").split(":")(2) }>{ keynote("name") }</a></h3>
-                <div class="who-box clearfix">
-                  <img class="avatar" src={ keynote("mu_photo").replace("member_", "thumb_") } />
-                  <div class="links">
-                    <a class="primary" href={ "http://meetup.com/nescala/members/%s" format keynote("id").split(":")(2) } target="_blank">{ keynote("mu_name") } </a>{ if(keynote.isDefinedAt("twttr")) {
-                     <a class="twttr" href={ "http://twitter.com/%s" format keynote("twttr").drop(1) } target="_blank">{ keynote("twttr") }</a>
-                    } else <span/> }
-                  </div>
-                </div>
-                <p class="desc">{ keynote("desc") }</p>
-              </div>
-              <div id="talks">
-                <h3>{talks.size} Talks</h3>
-                <ul>
-                { talks.map { t =>
-                   <li class="talk" id={ t("id").split(":")(2) }>
-                     <h3><a href={ "#"+t("id").split(":")(2) }>{ t("name") }</a></h3>
-                      <div class="who-box clearfix">
-                        <img class="avatar" src={ t("mu_photo").replace("member_", "thumb_") } />
-                          <div class="links">
-                             <a class="primary" href={ "http://meetup.com/nescala/members/%s" format t("id").split(":")(2) } target="_blank">{ t("mu_name") } </a>{ if(t.isDefinedAt("twttr")) {
-                             <a class="twttr" href={ "http://twitter.com/%s" format t("twttr").drop(1) } target="_blank">{ t("twttr") }</a>
-                             } else <span/> }
-                          </div>
-                      </div>
-                      <p class="desc">{ t("desc") }</p>
-                   </li>
-                } }
-                </ul>
-              </div>
-              <div id="panel">
-                <h3>Panel Discussion on</h3>
-                <h3><a href={ "#"+panel("id").split(":")(2) }>{ panel("name") }</a></h3>
-                <div class="who-box clearfix">
-                  <img class="avatar" src={ panel("mu_photo").replace("member_", "thumb_") } />
-                  <div class="links">
-                    <a class="primary" href={ "http://meetup.com/nescala/members/%s" format panel("id").split(":")(2) } target="_blank">{ panel("mu_name") } </a>{ if(panel.isDefinedAt("twttr")) {
-                     <a class="twttr" href={ "http://twitter.com/%s" format panel("twttr").drop(1) } target="_blank">{ panel("twttr") }</a>
-                    } else <span/> }
-                  </div>
-                </div>
-                <p class="desc">{ panel("desc") }</p>
+          </div>
+          <div class="l hl">
+            <h3>Keynote</h3>
+          </div>
+          <div class="r hl">
+          </div>
+          <div class="talk l" id="keynote">
+            <h3>
+              <a href="#keynote">{ keynote("name") }</a>
+            </h3>
+            <div class="who-box clearfix">
+              <img class="avatar" src={ keynote("mu_photo").replace("member_", "thumb_") } />
+              <div class="links">
+                <a class="primary"
+                   href={ "http://meetup.com/nescala/members/%s" format keynote("id").split(":")(2) }
+                   target="_blank">{ keynote("mu_name") }
+                </a>{ if(keynote.isDefinedAt("twttr")) {
+                <a class="twttr"
+                    href={ "http://twitter.com/%s" format keynote("twttr").drop(1) }
+                    target="_blank">{ keynote("twttr") }
+                </a>
+                } else <span/> }
               </div>
             </div>
           </div>
+          <div class="r">
+            <div class="desc">{ keynote("desc").trim() }</div>
+          </div>
+          <div class ="l hl"><h3>Talks</h3></div>
+          <div class="r hl"></div>{ talks.map { t =>
+          <div class="talk l" id={ "t-" +t("id").split(":")(2) }>
+            <h3>
+              <a href={ "#t-"+t("id").split(":")(2) }>{ t("name") }</a>
+            </h3>
+            <div class="who-box clearfix">
+               <img class="avatar"
+                    src={ t("mu_photo").replace("member_", "thumb_") } />
+               <div class="links">
+                 <a class="primary"
+                    href={ "http://meetup.com/nescala/members/%s" format t("id").split(":")(2) }
+                    target="_blank">{ t("mu_name") }
+                 </a>{ if(t.isDefinedAt("twttr")) {
+                 <a class="twttr"
+                     href={ "http://twitter.com/%s" format t("twttr").drop(1) }
+                     target="_blank">{ t("twttr") }</a>
+                 } else <span/> }
+              </div>
+            </div>
+          </div>
+          <div class="r desc">{ t("desc").trim() }</div>
+          } }
+          <div class="l hl">
+            <h3>Panel</h3>
+          </div>
+          <div class="r hl">
+          </div>
+          <div id="panel" class="talk l">
+            <h3><a href="#panel">{ panel("name") }</a></h3>
+            <div class="who-box clearfix">
+              <img class="avatar" src={ panel("mu_photo").replace("member_", "thumb_") } />
+              <div class="links">
+                <a class="primary" href={ "http://meetup.com/nescala/members/%s" format panel("id").split(":")(2) } target="_blank">{ panel("mu_name") } </a>{ if(panel.isDefinedAt("twttr")) {
+                <a class="twttr" href={ "http://twitter.com/%s" format panel("twttr").drop(1) } target="_blank">{ panel("twttr") }</a>
+                } else <span/> }
+              </div>
+            </div>
+          </div>
+          <div class="r">
+            <p class="desc">{ panel("desc").trim() }</p>
+          </div>{
+             rsvps
+           }
         </div>
       </div>
     </div>
@@ -273,7 +299,7 @@ trait Templates extends nescala.Templates with SponsorTemplate {
             <span>10am @<a href="http://maps.google.com/maps?q=32+Vassar+Street%2C+Cambridge%2C+MA">Stata Center</a></span>
           </h3>
           <p>Scala Workshops</p>
-          { rsvps }
+          
         </div>
         <div class="r">
           <p>
@@ -281,6 +307,7 @@ trait Templates extends nescala.Templates with SponsorTemplate {
             hosted at MIT.
           </p>
         </div>
+        { rsvps }
       </div>
     </div>
 
@@ -295,9 +322,10 @@ trait Templates extends nescala.Templates with SponsorTemplate {
             <span>10am @<a href="http://maps.google.com/maps?q=32+Vassar+Street%2C+Cambridge%2C+MA">Stata Center</a></span>
           </h3>
           <p>TBA</p>
-          { rsvps }
+          
         </div>
         <div class="r">No formal events are planned, but space at the Stata Center will be available for attendees to meet, talk, and hack.</div>
+        { rsvps }
       </div>
     </div>
 

@@ -21,8 +21,8 @@ object ClientToken {
 object CookieToken {
   def unapply[T](r: HttpRequest[T]): Option[ClientToken] = r match {
     case Cookies(cookies) => cookies("token") match {
-      case Some(Cookie(_, value, _, _, _, _)) =>
-        Some(ClientToken.fromCookieString(value))
+      case Some(cookie) =>
+        Some(ClientToken.fromCookieString(cookie.value))
       case _ => None
     }
   }

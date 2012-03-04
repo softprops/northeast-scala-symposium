@@ -18,7 +18,6 @@ q { content:none; }
 
 .attending {
   clear:both;
-  width:330px;
 }
 
 .avatar {
@@ -66,15 +65,11 @@ li.talk h2 {
 }
 
 .who-box .avatar, .who-box .links {
-  float:left;
+  float:right;
 }
 
 .who-box .avatar {
-  margin-top:.15em;
-}
-
-.who-box .avatar {
-
+  margin:.15em 0 0 .5em;
 }
 
 .who-box .links {
@@ -92,9 +87,8 @@ li.talk h2 {
   float:right;
 }
 
-.talk .desc {
-  clear:both;
-  margin-top:.5em;
+.desc {
+  margin-bottom:.5em;
   white-space:pre-wrap;
 }
 
@@ -431,12 +425,56 @@ input[type='text'], textarea {
   clear:both;
 }
 
-h1 { clear:both; }
-h1, h2 { font-weight:bold; line-height:1.2em; letter-spacing:-1px;}
-h1 span { color:#FF005E; display:block; font-size:90px; }
-h3 span { display:block; line-height:0em; font-size:18px; color:#ccc;}
-h2 { font-size:90px; color:#B9DDFF; text-shadow:0 1px #ccc; }
-p { margin:1em 0; }
+h1 {
+  clear:both;
+}
+
+h1, h2 {
+  font-weight:bold;
+  line-height:1.2em;
+  letter-spacing:-1px;
+}
+
+h1 span {
+  color:#FF005E;
+  display:block;
+  font-size:90px;
+}
+
+h3 span {
+  display:block;
+  color:#ccc;
+  line-height:0em;
+  font-size:18px;
+}
+
+.hl {
+  border-bottom:2px solid #ddd;
+  margin-bottom:20px;
+}
+
+.hl h3 {
+  background:#DBF5FF;
+  margin-bottom:-35px;
+  width:4.5em;
+  float:right;
+  text-align:center;
+}
+
+.talk h3 {
+  margin-bottom:.5em;
+}
+
+h2 {
+  color:#B9DDFF; 
+  font-size:90px;
+  text-shadow:0 1px #ccc;
+}
+
+p {
+  margin:1em 0;
+}
+
 a:link,a:visited {
  color:#FF005E;
  text-decoration:none;
@@ -450,7 +488,7 @@ a:hover {
 }
 .l, .r {
  float:left;
- padding:0 .5em;
+ padding:.25em .5em .75em .5em;
  z-index:9999;
  width:540px;
 }
