@@ -11,6 +11,14 @@
         temp = a[i]; a[i] = a[j]; a[j] = temp;
       }
       return a;
+    }
+    , photoPartioned = function(a) {
+        var w = [], wo = [], def = 'http://img1.meetupstatic.com/39194172310009655/img/noPhoto_50.gif';
+        for(var i = 0, l = a.length; i < l; i++) {
+            var r = a[i];
+            (r.photo === def ? wo : w).push(r);
+        }
+        return [w, wo];
     };
 
     // sprinkle on extra info about each day
@@ -28,13 +36,15 @@
                   , t.name
                   ,'"/></span></a></li>'].join('');
         };
-        $(".tban", day).html("<strong>"+s+"</strong> functional types");
-        var n = typers.length, randomtypes = fyates(typers).splice(0, 40), buffer=[];
+        $(".tban", day).html("functional types attending");
+        var n = typers.length
+          , partioned = photoPartioned(typers)
+          , randomtypes = fyates(partioned[0]).concat(partioned[1]).splice(0, 45)
+          , buffer = [];
         for(t in randomtypes) {
           buffer.push(template(randomtypes[t]));
         }
         ul.append(buffer.join(''));
-        ext.html('with ' + (n - 40) + ' others');
         $('.rsvps li img', day).tipsy({fade:true, live:true, gravity:'sw'});
       });
     });
