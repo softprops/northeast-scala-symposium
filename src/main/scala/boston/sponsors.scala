@@ -11,8 +11,10 @@ trait SponsorTemplate { self: Templates =>
         <p>If you get more than your money's worth at nescala, it's thanks to these guys.</p>
         <a href="http://www.typesafe.com/"><img src="/images/sponsors/typesafe.png" /></a>
         <p>Typesafe is hiring professionals to record the talks.</p>
+        <a href="http://microsoftcambridge.com/Default.aspx"><img src="/images/sponsors/microsoft.jpg" /></a>
+        <p>Microsoft provided the conference space in their New England Research &amp; Development Center.</p>
         <a href="http://www.meetup.com/jobs/"><img src="/images/sponsors/meetup.png" /></a>
-        <p>Meetup is making our stylish yet functional tote bags.</p>
+        <p>Meetup made our stylish yet functional tote bags.</p>
         <a href="http://www.heroku.com/"><img src="/images/sponsors/heroku.png" /></a>
         <p>Heroku will take you into a happy hour cloud on Friday.</p>
         <a href="https://foursquare.com/jobs/"><img src="/images/sponsors/foursquare.png" /></a>
