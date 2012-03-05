@@ -302,9 +302,12 @@ trait Templates extends nescala.Templates with SponsorTemplate {
           
         </div>
         <div class="r">
+          The second day of the symposium is a hands-on unconference of Scala coding workshops held at MIT's Stata Center.
           <p>
-            The second day of the symposium is hands-on Scala hacking and workshops
-            hosted at MIT.
+            We've got room for 30 Scala Workshops, in five different rooms and 6 timeslots. The unconference orientation and planning is 9-10 in the morning. We can't serve food in this space so please arrive caffeinated and ready to workshop.
+          </p>
+          <p>
+            There will be two morning sessions, DIY lunch 12-1:30, and four afternoon sessions. Anyone can organize a workshop. The best workshops will be highly interactive and educational.
           </p>
         </div>
         { rsvps }
