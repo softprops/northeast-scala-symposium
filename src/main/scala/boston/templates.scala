@@ -208,6 +208,7 @@ trait Templates extends nescala.Templates with SponsorTemplate {
               <span>9am @<a href="http://maps.google.com/maps?q=One+Memorial+Drive%2C+Cambridge%2C+MA">NERD</a></span>
             </h3>
             <p>Scala Talks and Panel Discussion</p>
+            <p><a href="http://www.google.com/calendar/render?cid=https%3A%2F%2Fwww.google.com%2Fcalendar%2Ffeeds%2F7eirtkhjnn83vudugebkqpr3uc%2540group.calendar.google.com%2Fpublic%2Fbasic" target="_blank"><img src="http://www.google.com/calendar/images/ext/gc_button6.gif" border="0" alt="0" style="max-height: 700px; max-width: 700px; margin: 5px;" /></a></p>
           </div>
           <div class="r">
             <h1>Votes are in</h1>
