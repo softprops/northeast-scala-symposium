@@ -259,6 +259,8 @@ trait Templates extends nescala.Templates with SponsorTemplate {
                  <a class="twttr"
                      href={ "http://twitter.com/%s" format t("twttr").drop(1) }
                      target="_blank">{ t("twttr") }</a>
+                 } else <span/> } { if(t.isDefinedAt("slides")) {
+                   <a href={ t("slides") }>slides</a>
                  } else <span/> }
               </div>
             </div>
@@ -325,7 +327,7 @@ trait Templates extends nescala.Templates with SponsorTemplate {
           <h3>
             <span>10am @<a href="http://maps.google.com/maps?q=32+Vassar+Street%2C+Cambridge%2C+MA">Stata Center</a></span>
           </h3>
-          <p>TBA</p>
+          <p>Hack day</p>
           
         </div>
         <div class="r">No formal events are planned, but space at the Stata Center will be available for attendees to meet, talk, and hack.</div>

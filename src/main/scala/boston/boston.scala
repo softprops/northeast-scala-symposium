@@ -155,7 +155,7 @@ object Boston extends Templates {
         ((List.empty[Map[String, String]] /: keys.flatten)(
           (a, e) => (e match {
             case t @ Talk(mid) =>
-              r.hmget[String, String](t, "name", "desc").map(_ + ("id" -> t)).map {
+              r.hmget[String, String](t, "name", "desc", "slides").map(_ + ("id" -> t)).map {
                 _ ++ (r.hmget[String, String](mukey(mid),
                                               "mu_name", "mu_photo", "twttr").get)
               }.get :: a

@@ -70,17 +70,22 @@ li.talk h2 {
 
 .who-box .avatar {
   margin:.15em 0 0 .5em;
+  float:right;
 }
 
 .who-box .links {
-  margin-left:.5em;
+  float:right;
 }
 .who-box .links a {
   display:block;
+  font-size:80%;
 }
 
-.who-box .links a.twttr {
-  font-size:70%;
+.who-box .links a.primary {
+    border-bottom:1px solid #ccc;
+    padding-bottom:.25em;
+    margin-bottom:.25em;
+    font-size:100%;
 }
 
 .who-box .voting {
