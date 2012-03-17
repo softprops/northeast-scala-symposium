@@ -34,7 +34,7 @@ trait Templates extends nescala.Templates with SponsorTemplate {
       <script type="text/javascript" src="/facebox/facebox.js"></script>
       <script type="text/javascript" src="/js/jquery.tipsy.js"></script>
       <script type="text/javascript" src="/js/boston/boston.js"></script>
-      { bodyScripts }
+      { bodyScripts ++ embedly }
       </body>
     </html>
   )
@@ -116,6 +116,16 @@ trait Templates extends nescala.Templates with SponsorTemplate {
 
   def login(authed: Boolean, then: String) =
     if(!authed) <div id="auth-bar" class="clearfix"><div class="contained"><div class="l">Just who are you anyway?</div><div class="r"><a href={ "/connect%s" format(if(then.isEmpty) "" else "?then=%s".format(then)) } class="btn login">Log in with Meetup</a></div></div></div> else <span/>
+
+  val embedly =
+    <script type="text/javascript"><![CDATA[
+      var embedly_maxWidth = 550;
+      var embedly_method = 'replace';
+      var embedly_wrapElement = 'div';
+      var embedly_className = 'embed';
+      var embedly_addImageStyles = true;
+      var embedly_cssSelector = 'a.vid';
+    ]]></script><script type="text/javascript" src="http://scripts.embed.ly/embedly.js"></script>;
 
   def head(authed: Boolean, afterlogin: String = "") =
    <div id="head" class="clearfix">
@@ -240,6 +250,7 @@ trait Templates extends nescala.Templates with SponsorTemplate {
             </div>
           </div>
           <div class="r">
+            <div><a class="vid" href="http://www.youtube.com/watch/?v=YZxL0alO1yc">video</a></div>
             <div class="desc">{ keynote("desc").trim() }</div>
           </div>
           <div class ="l hl"><h3>Talks</h3></div>
