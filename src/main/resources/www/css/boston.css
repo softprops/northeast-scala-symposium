@@ -92,7 +92,8 @@ li.talk h2 {
   float:right;
 }
 
-.desc {
+.desc p {
+  margin-top:0;
   margin-bottom:.5em;
   white-space:pre-wrap;
 }

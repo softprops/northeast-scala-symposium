@@ -276,7 +276,11 @@ trait Templates extends nescala.Templates with SponsorTemplate {
               </div>
             </div>
           </div>
-          <div class="r desc">{ t("desc").trim() }</div>
+          
+          <div class="r desc">
+            {if(t.isDefinedAt("video")) { <a class="vid" href={ t("video").toString }>video</a> } }
+            <p>{ t("desc").trim() }</p>
+          </div>
           } }
           <div class="l hl">
             <h3>Panel</h3>
