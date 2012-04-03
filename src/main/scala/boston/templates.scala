@@ -23,7 +23,8 @@ trait Templates extends nescala.Templates with SponsorTemplate {
         { body }
         <div id="footer">
           made possible with <span class="love">&#10084;</span> from the <div><a href="http://www.meetup.com/boston-scala/">Boston</a>, <a href="http://www.meetup.com/scala-phase/">Philadelphia</a>, and <a href="http://www.meetup.com/ny-scala/">New York</a> scala enthusiasts,</div>
-        <div><a href="/2012/friends">with a little help from our friends</a>.</div>
+        <div class="divided">hosting from <a href="http://www.heroku.com/">heroku</a></div>
+        <div>and <a href="/2012/friends">with a little help from our friends</a>.</div>
           <div id="last-year">
             <div>What happen to last year? It ended.</div>
             <div>But you can still find it <a href="/2011">here</a>.</div>
