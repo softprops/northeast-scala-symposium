@@ -10,6 +10,14 @@ object Boston extends Templates {
   import QParams._
   import com.redis.RedisClient
 
+  def site: unfiltered.Cycle.Intent[Any, Any] =
+    (index /: Seq(talkProposals,
+                  panelProposals,
+                  Votes.intent,
+                  Boston.api,
+                  Tally.talks,
+                  Tally.panels))(_ orElse _)
+
   private def mukey(of: String) = "boston:members:%s" format of
 
   def api: unfiltered.Cycle.Intent[Any, Any] = {
@@ -89,7 +97,7 @@ object Boston extends Templates {
     }
   }
 
-  def site: Cycle.Intent[Any, Any]  = {
+  def index: Cycle.Intent[Any, Any]  = {
     case GET(Path("/") & CookieToken(ClientToken(_, _, Some(_), Some(mid)))) => Clock("home") {
       Store { s =>
         index(true, keynote(s), talks(s), panel(s))
