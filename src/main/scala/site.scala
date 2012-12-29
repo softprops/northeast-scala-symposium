@@ -12,7 +12,7 @@ object NESS extends Config {
 
   def site: Intent[Any, Any] = {
     
-    case GET(Path("/connect")) & Params(p) =>
+    case GET(Path(Seg("connect" :: Nil))) & Params(p) =>
       val callbackbase = "%s/authenticated" format property("host")
       val callback = p("then") match {
         case Seq(then) => "%s?then=%s" format(callbackbase, then)
@@ -25,10 +25,10 @@ object NESS extends Config {
                httpOnly = true)) ~>
           Redirect(Auth.authenticate_url(t).to_uri.toString)
 
-    case GET(Path("/disconnect")) =>
+    case GET(Path(Seg("disconnect" :: Nil))) =>
       SetCookies.discarding("token") ~> Redirect("/")
 
-    case req @GET(Path("/authenticated") & Params(params)) =>
+    case req @ GET(Path(Seg("authenticated" :: Nil)) & Params(params)) =>
       val expected = for {
         verifier <- lookup("oauth_verifier") is
           required("verifier is required") is
