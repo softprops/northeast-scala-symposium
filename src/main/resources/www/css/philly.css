@@ -153,9 +153,6 @@ li.talk h2 {
   text-align:left;
 }
 
-#proposal-edit-notification {
-  margin-top: 15em;
-}
 
 #proposal-notification,
 #proposal-edit-notification {
@@ -174,6 +171,10 @@ li.talk h2 {
 
 #proposal-notifications .ok {
   color:#00C3FF;
+}
+
+#proposal-edit-notification {
+  margin-top: 14em;
 }
 
 .btn:link,
