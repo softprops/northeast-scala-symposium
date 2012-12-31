@@ -21,4 +21,6 @@ trait Config {
     } catch { case nfe: NumberFormatException =>
       sys.error("%s was not an int" format property(name))
     }
+
+  val siteSecret = property("secret")
 }

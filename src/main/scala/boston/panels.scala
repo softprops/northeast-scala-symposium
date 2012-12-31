@@ -1,7 +1,6 @@
 package nescala.boston
 
-import nescala.{ Cached, Clock, CookieToken, ClientToken,
-                Meetup, Store }
+import nescala.{ Cached, Clock, AuthorizedToken, Meetup, Store }
 import nescala.request.UrlDecoded
 
 // panel proposals
@@ -22,7 +21,7 @@ object Panels {
   val withdrawing: Cycle.Intent[Any, Any] = {
      // delete
     case POST(Path("/boston/panel_proposals/withdraw")) &
-      CookieToken(ClientToken(_, _, Some(_), Some(mid))) &
+      AuthorizedToken(t) &
         Params(p) => Clock("withdrawing panel proposal") {
 
       val expected = for {
@@ -35,7 +34,7 @@ object Panels {
           else {
             key match {
               case Withdrawing(who, id) =>
-                if(mid.equals(who)) {
+                if(t.memberId.get.equals(who)) {
                   s.del(key).map( stat => if(stat > 0) s.decr(
                     "count:boston:panel_proposals:%s" format who
                   ))
@@ -62,8 +61,8 @@ object Panels {
   val making: Cycle.Intent[Any, Any] = {
 
     case POST(Path("/boston/panel_proposals")) &
-      CookieToken(ClientToken(_, _, Some(_), Some(mid))) & Params(p) => Clock("creating boston panel proposal") {
-
+      AuthorizedToken(t) & Params(p) => Clock("creating boston panel proposal") {
+      val mid = t.memberId.get
       val expected = for {
         name <- lookup("name") is required("name is required")
         desc <- lookup("desc") is required("desc is required")
@@ -118,8 +117,9 @@ object Panels {
       }
     }
 
-    case POST(Path(Seg("boston" :: "panel_proposals" :: UrlDecoded(id) :: Nil))) & Params(p) & CookieToken(
-      ClientToken(_, _, Some(_), Some(mid))) => Clock("editing panel proposal %s" format id) {
+    case POST(Path(Seg("boston" :: "panel_proposals" :: UrlDecoded(id) :: Nil))) &
+      Params(p) & AuthorizedToken(t) => Clock("editing panel proposal %s" format id) {
+      val mid = t.memberId.get
       val expected = for {
         name <- lookup("name") is required("name is required")
         desc <- lookup("desc") is required("desc is required")
@@ -155,6 +155,5 @@ object Panels {
         ))
       }
     }
-
   }
 }

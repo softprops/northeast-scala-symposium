@@ -1,4 +1,4 @@
-package nescala.boston
+package nescala.philly
 
 import nescala.{ Cached, Clock, AuthorizedToken, Meetup, Store }
 import nescala.request.UrlDecoded
@@ -11,41 +11,31 @@ object Votes {
   import QParams._
 
   val MaxTalkVotes = 8
-  val MaxPanelVotes = 1
 
   def errorJson(msg: String) = """{"status":400, "msg":"%s"}""" format msg
   def remainingJson(rem: Int) = """{"status":200, "remaining":%d}""" format rem
 
   def intent: unfiltered.Cycle.Intent[Any, Any] = {
-    case POST(Path(Seg("boston" :: "votes" :: Nil))) &
+    case POST(Path(Seg("philly" :: "votes" :: Nil))) &
       AuthorizedToken(t) & Params(p) => Clock("voting for proposal") {
         val mid = t.memberId.get
-        if(!Meetup.has_rsvp(Meetup.Boston.dayone_event_id, t.token)) JsonContent ~> ResponseString(
+        if (!Meetup.has_rsvp(Meetup.Philly.eventId, t.token)) JsonContent ~> ResponseString(
           errorJson("you must rsvp to vote")) else {
           val expected = for {
             vote <- lookup("vote") is required("vote is required")
-            kind <- lookup("kind") is required("kind is required")
             action <- lookup("action") is required("action is required")
           } yield {
-            val Talk = """^boston:proposals:(.*):(.*)$""".r
-            val Panel = """^boston:panel_proposals:(.*):(.*)$""".r
+            val Talk = """^philly:proposals:(.*):(.*)$""".r
             val votedfor = vote.get
-            JsonContent ~> (kind match {
-              case Some("talk") => votedfor match {
-                case Talk(member, talkId) =>
-                  Right(("boston:talk_votes:%s" format mid, "count:boston:talk_votes:%s" format mid))
-                case _ => Left("invalid kind of vote")
-              }
-              case Some("panel") => votedfor match {
-                case Panel(member, panelId) =>
-                  Right(("boston:panel_votes:%s" format mid, "count:boston:panel_votes:%s" format mid))
-                case _ => Left("invalid kind of vote")
-              }
-              case _ => Left("invalid kind of vote")
+            JsonContent ~> (votedfor match {
+              case Talk(member, talkId) =>
+                Right(("philly:talk_votes:%s" format mid, "count:philly:talk_votes:%s" format mid))
+              case _ =>
+                Left("invalid kind of vote")
             }).fold({ err => ResponseString(errorJson(err)) }, { _ match {
               case (vkey, ckey) =>
                 Store { s =>
-                  val maxvotes = kind match { case Some("talk") => MaxTalkVotes case _ => MaxPanelVotes }
+                  val maxvotes = MaxTalkVotes
                   if(!s.exists(votedfor)) ResponseString(errorJson("invalid vote"))
                   else action match {
                     case Some("vote") =>

@@ -1,7 +1,6 @@
 package nescala.boston
 
-import nescala.{ Cached, Clock, CookieToken,
-                ClientToken, Meetup, Store }
+import nescala.{ AuthorizedToken, Cached, Clock, Meetup, Store }
 object Tally extends Templates {
   import unfiltered._
   import unfiltered.request._
@@ -10,8 +9,8 @@ object Tally extends Templates {
 
   def talks: Cycle.Intent[Any, Any] = {
     case GET(Path("/2012/talk_tally")) &
-      CookieToken(ClientToken(_, _, Some(_), Some(mid))) =>      
-      if(hosting(mid)) talliedFor("proposals")
+      AuthorizedToken(t) =>
+      if(hosting(t.memberId.get)) talliedFor("proposals")
       else Redirect("/2012/talks")
     case GET(Path("/2012/talk_tally")) =>
       tallied(false, 0, Nil, "proposals")
@@ -19,8 +18,8 @@ object Tally extends Templates {
 
   def panels: Cycle.Intent[Any, Any] = {
     case GET(Path("/2012/panel_tally")) &
-      CookieToken(ClientToken(_, _, Some(_), Some(mid))) =>      
-      if(hosting(mid)) talliedFor("panel_proposals")
+      AuthorizedToken(t) =>
+      if(hosting(t.memberId.get)) talliedFor("panel_proposals")
       else Redirect("/2012/panels")
     case GET(Path("/2012/panel_tally")) =>
       tallied(false, 0, Nil, "panel_proposals")

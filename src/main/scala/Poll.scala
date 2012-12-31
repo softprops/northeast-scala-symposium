@@ -16,7 +16,7 @@ object Poll extends Templates with nyc.Entries {
     //case POST(Params(params) & CookieToken(ClientToken(v, s, Some(c), Some(m)))) =>
     //  JsonContent ~> ResponseString(compact(render(Nil)))
 
-    case GET(CookieToken(ClientToken(v, s, Some(c), Some(m)))) =>
+    case GET(AuthorizedToken(t)) =>
       page(
         <div id="countdown"><span id="remaining">... votes</span> left</div> ++ {
         Random.shuffle(entries.zipWithIndex).map { case (entry, index) =>

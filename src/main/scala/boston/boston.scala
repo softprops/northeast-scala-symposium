@@ -1,7 +1,6 @@
 package nescala.boston
 
-import nescala.{ Cached, Clock, CookieToken, ClientToken,
-                Meetup, Store }
+import nescala.{ AuthorizedToken, Cached, Clock, Meetup, Store }
 
 object Boston extends Templates {
   import unfiltered.request._
@@ -98,12 +97,12 @@ object Boston extends Templates {
   }
 
   def index: Cycle.Intent[Any, Any]  = {
-    case GET(Path("/") & CookieToken(ClientToken(_, _, Some(_), Some(mid)))) => Clock("home") {
+    case GET(Path(Seg("2012":: Nil))) & AuthorizedToken(t) => Clock("home") {
       Store { s =>
         index(true, keynote(s), talks(s), panel(s))
       }
     }
-    case GET(Path("/")) => Clock("home") {
+    case GET(Path(Seg("2012" :: Nil))) => Clock("home") {
       Store { s =>
         index(false, keynote(s), talks(s), panel(s))
       }

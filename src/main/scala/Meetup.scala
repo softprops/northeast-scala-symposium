@@ -26,6 +26,11 @@ object Meetup extends Config {
     val daythree_event_id = property("boston.daythree_event_id")
   }
 
+  object Philly {
+    // todo: fill me in when there is a Meetup available
+    val eventId = property("boston.dayone_event_id")
+  }
+
   val client: Client = APIKeyClient(property("api_key"))
 
   def http = Http

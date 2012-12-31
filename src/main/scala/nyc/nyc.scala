@@ -3,12 +3,7 @@ package nescala.nyc
 import unfiltered.request._
 import unfiltered.response._
 
-import unfiltered.Cookie
-import dispatch.meetup.Auth
-import dispatch.oauth.{ Consumer, Token }
-import nescala.Meetup
-
-import nescala.{ Cached, ClientToken, CookieToken, Config, Meetup, PollOver, Tally }
+import nescala.{ Cached, Config, Meetup }
 
 object Nyc extends Config {
   import net.liftweb.json.compact

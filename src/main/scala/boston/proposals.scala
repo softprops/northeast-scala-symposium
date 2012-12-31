@@ -1,7 +1,6 @@
 package nescala.boston
 
-import nescala.{ Cached, Clock, CookieToken, ClientToken,
-                Meetup, Store }
+import nescala.{ AuthorizedToken, Cached, Clock, Meetup, Store }
 import nescala.request.UrlDecoded
 
 // talk proposals
@@ -20,8 +19,8 @@ object Proposals {
   val withdrawing: Cycle.Intent[Any, Any] = {
     // delete
     case POST(Path("/boston/proposals/withdraw")) &
-      CookieToken(ClientToken(_, _, Some(_), Some(mid))) & Params(p) => Clock("withdrawing proposal") {
-
+      AuthorizedToken(t) & Params(p) => Clock("withdrawing proposal") {
+      val mid = t.memberId.get
       val expected = for {
         id <- lookup("id") is required("id is required")
       } yield {
@@ -60,8 +59,8 @@ oposal":"%s"}""" format(ok))
   val making: Cycle.Intent[Any, Any] = {
     // create
     case POST(Path("/boston/proposals")) &
-      CookieToken(ClientToken(token, sec, Some(_), Some(mid))) & Params(p) => Clock("creating boston talk proposal") {
-        
+      AuthorizedToken(t) & Params(p) => Clock("creating boston talk proposal") {
+      val mid = t.memberId.get
       val expected = for {
         name <- lookup("name") is required("name is required")
         desc <- lookup("desc") is required("desc is required")
@@ -117,8 +116,9 @@ oposal":"%s"}""" format(ok))
     }
 
     // edit
-    case POST(Path(Seg("boston" :: "proposals" :: UrlDecoded(id) :: Nil))) & Params(p) & CookieToken(
-      ClientToken(_, _, Some(_), Some(mid))) => Clock("editing proposal %s" format id) {
+    case POST(Path(Seg("boston" :: "proposals" :: UrlDecoded(id) :: Nil))) & Params(p) &
+      AuthorizedToken(t) => Clock("editing proposal %s" format id) {
+      val mid = t.memberId.get
       val expected = for {
         name <- lookup("name") is required("name is required")
         desc <- lookup("desc") is required("desc is required")
