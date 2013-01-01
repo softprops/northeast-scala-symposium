@@ -213,7 +213,7 @@ trait Templates extends nescala.Templates with SponsorTemplate {
         so we need you to <a href="#speakup">post your ideas</a> for talks.
       </p>
       <p>
-        Talks are also choosen by you. Please browse the <a href="/2013/talks#proposed">current talk list</a> and vote for the talks you want to see.
+        Talks are also chosen by you. Please browse the <a href="/2013/talks#proposed">current talk list</a> and vote for the talks you want to see.
       </p>
       { twttrFollow }
       </div>
