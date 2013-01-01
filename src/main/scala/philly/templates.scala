@@ -6,7 +6,7 @@ trait Templates extends nescala.Templates with SponsorTemplate {
   import java.net.URLEncoder.encode
 
   val meetupGroup = "http://www.meetup.com/nescala/"
-  val eventLink = meetupGroup + Meetup.Philly.eventId
+  val eventLink = meetupGroup + "/events/" + Meetup.Philly.eventId + "/"
 
   def phillyLayout(head: xml.NodeSeq)
     (bodyScripts: xml.NodeSeq)
