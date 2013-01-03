@@ -70,6 +70,16 @@ li.talk {
   white-space:pre-line;
 }
 
+
+#venue-image-container  {
+  border-radius:4px;
+  width:550px;
+  height:200px;
+  background:url(https://lh3.googleusercontent.com/-iETigRzMSzE/UNSagKcVVMI/AAAAAAAADHc/0aO5nx5zQlw/s814/IMG_0171.JPG);
+  box-shadow: inset 0px 0px 10px rgba(0,0,0,0.7);
+  margin-bottom:1em;
+}
+
 li.talk h2 {
   font-size: 32px;
   line-height:1.5em;
