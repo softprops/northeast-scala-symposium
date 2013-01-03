@@ -141,7 +141,7 @@ trait Templates extends nescala.Templates with SponsorTemplate {
       </a>
       <div>
         <h4>Scala community liberation</h4>
-        <h4>in Philly</h4>
+        <h4>in <a href="#where">Philly</a></h4>
         <h4>Feb 8-9, 2013</h4>
         <hr/>
       </div>
@@ -225,7 +225,7 @@ trait Templates extends nescala.Templates with SponsorTemplate {
              proposals: Seq[Map[String, String]]): xml.NodeSeq = {
    <div id="day-one" data-event={ Meetup.Philly.eventId } class="day clearfix">
       <div class="contained">
-        <div id="speakup">
+        <div id="speakup" class="clearfix">
           <div class="l">
             <h1>Talking</h1>
           </div>
@@ -243,7 +243,7 @@ trait Templates extends nescala.Templates with SponsorTemplate {
           } else propose(proposals)
         }
       </div>
-      <div id="voting">
+      <div id="voting" class="clearfix">
         <div class="l divy">
           <h1>Voting</h1>
         </div>
@@ -256,16 +256,16 @@ trait Templates extends nescala.Templates with SponsorTemplate {
           }
          }
         </div>
-        <div id="where">
-          <div class="l divy">
-            <h1>Arriving</h1>
-          </div>
-          <div class="r divy">
-            <div id="venue-image-container"></div>
-            <p>This years symposium will be held at Drexel University.</p>
-            <p>For more information on finding hotels check out <a href="http://universitycity.org/accommodations">this list of commodations</a> or suggest one <a href="http://www.meetup.com/nescala/events/97192402/comments/142822472/">here</a>.
-            </p>
-          </div>
+      </div>
+      <div id="where" class="clearfix">
+        <div class="l divy">
+          <h1>Arriving</h1>
+        </div>
+        <div class="r divy">
+          <div id="venue-image-container"></div>
+          <p>This years symposium will be held at Drexel University.</p>
+          <p>For more information on finding hotels check out <a href="http://universitycity.org/accommodations">this list of commodations</a> or suggest one <a href="http://www.meetup.com/nescala/events/97192402/comments/142822472/">here</a>.
+          </p>
         </div>
       </div>
     </div>
