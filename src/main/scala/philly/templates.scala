@@ -232,6 +232,9 @@ trait Templates extends nescala.Templates with SponsorTemplate {
           <div class="r">
             <p>This year's symposium features <span>{Proposals.TalkTime}</span> minute talks.</p>
             <p>Hopeful speakers may propose talks on topics of their choosing. The schedule will be filled by talks that accrue the most votes, with the keynote spot going to whichever proposal receives the most votes.</p>
+           <p>
+            The deadline for posting talk proposals is <strong>Friday, Jan 11</strong> so be sure to post them soon.
+           </p>
           </div>
           <div class="l"/><hr/>{
           if (!authed) {
@@ -251,8 +254,14 @@ trait Templates extends nescala.Templates with SponsorTemplate {
           { if (!authed) {
             <p>Talks are selected by you, but we need to know you are attending first.</p>
             <p><a href="/login?then=vote" class="btn">Login to vote</a></p>
+            <p>
+              The deadline for voting for the talks you want to see is <strong>Friday, Jan 18</strong>.
+            </p>
           } else { 
             <p>Talks are selected by you, so <a href="/2013/talks">get voting</a> now!</p>
+            <p>
+              The deadline for voting for the talks you want to see is <strong>Friday, Jan 18</strong>.
+            </p>
           }
          }
         </div>
