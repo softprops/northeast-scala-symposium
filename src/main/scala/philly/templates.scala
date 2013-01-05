@@ -240,7 +240,7 @@ trait Templates extends nescala.Templates with SponsorTemplate {
           if (!authed) {
             <div class="r">
               <h2>Speak up</h2>
-              <p>In order to submit a talk proposals, we need to know you are attending.</p>
+              <p>In order to submit a talk proposal, we need to know you are attending.</p>
               <p><a href="/login?then=talk" class="btn">Login to talk</a></p>
             </div>
           } else propose(proposals)
@@ -272,7 +272,7 @@ trait Templates extends nescala.Templates with SponsorTemplate {
         </div>
         <div class="r divy">
           <div id="venue-image-container"></div>
-          <p>This years symposium will be held at Drexel University.</p>
+          <p>This year's symposium will be held at Drexel University.</p>
           <p>For more information on finding hotels check out <a href="http://universitycity.org/accommodations">this list of accommodations</a> or suggest one <a href="http://www.meetup.com/nescala/events/97192402/comments/142822472/">here</a>.
           </p>
         </div>
