@@ -15,6 +15,52 @@ object Votes {
   def errorJson(msg: String) = """{"status":400, "msg":"%s"}""" format msg
   def remainingJson(rem: Int) = """{"status":200, "remaining":%d}""" format rem
 
+  def voteCount(talkKey: String) =
+    Store { s =>
+      if (!s.exists(talkKey)) None
+      else s.hmget(talkKey, "votes")
+            .map(_("votes"))
+    }
+
+  def withdrawVotesFor(talkKey: String) =
+    Store { s =>
+      if (!s.exists(talkKey)) Nil
+      else {
+        // find voters
+        val voters = s.keys("philly:talk_votes:*")
+                      .map(_.flatten.filter(s.sismember(_, talkKey)))
+                      .getOrElse(Nil)
+        // remove talk key from voters and decr counterKeys
+        voters.map { voter =>
+          s.srem(voter, talkKey)
+          s.decr("count:%s" format voter)
+          s.hincrby(talkKey, "votes", -1)
+          voter
+        }
+      }
+    }
+
+  // member voting keys are stored in the format
+  // philly:proposals:{memberId}:{talkId}
+  //
+  // the members current voting count it stored in the format
+  // count:philly:talk_votes:{memberId}
+  // 
+  // when unvoting, given
+  // - a talkKey: "philly:proposals:{proposerId}:{talkId}"
+  // - a voterCountKey "count:philly:talk_votes:{voterId}"
+  // - a voterVoteKey "philly:talk_votes:{voterId}"
+  // be sure to.
+  //
+  // 1) decrement the proposals vote count
+  // redis.hincrby(talkKey, "votes", -1) 
+  //
+  // 2) decrement the voters voterCountKey
+  // redis.decr(voterCountKey)
+  //
+  // 3) remove the proposal key from the votersvoterVoteKey
+  // redis.srem(voterVoteKey, talkKey)
+
   def intent: unfiltered.Cycle.Intent[Any, Any] = {
     case POST(Path(Seg("philly" :: "votes" :: Nil))) &
       AuthorizedToken(t) & Params(p) => Clock("voting for proposal") {
@@ -29,7 +75,8 @@ object Votes {
             val votedfor = vote.get
             JsonContent ~> (votedfor match {
               case Talk(member, talkId) =>
-                Right(("philly:talk_votes:%s" format mid, "count:philly:talk_votes:%s" format mid))
+                Right(("philly:talk_votes:%s" format mid,
+                       "count:philly:talk_votes:%s" format mid))
               case _ =>
                 Left("invalid kind of vote")
             }).fold({ err => ResponseString(errorJson(err)) }, { _ match {

@@ -18,9 +18,13 @@ object Proposals extends Templates {
   def errorJson(msg: String) = """{"status":400,"msg":"%s"}""" format msg
 
   def withdraw(mid: String, key: String) = {
+    Votes.withdrawVotesFor(key) match {
+      case Nil    => println("talk %s had no votes" format key)
+      case votes  => println("remove votes %s for talk %s" format(votes, key))
+    }
     val Withdrawing = """philly:proposals:(.*):(.*)""".r
     (Store { s =>
-      if(!s.exists(key))  Left("proposal did not exist")
+      if(!s.exists(key)) Left("proposal did not exist")
       else {
         key match {
           case Withdrawing(who, id) =>
@@ -136,32 +140,6 @@ object Proposals extends Templates {
     })
   }
 
-  val withdrawing: Cycle.Intent[Any, Any] = {
-    // delete
-    case POST(Path("/philly/proposals/withdraw")) &
-      AuthorizedToken(t) & Params(p) => Clock("withdrawing proposal") {
-      val expected = for {
-        id <- lookup("id") is required("id is required")
-      } yield {
-        val key = id.get
-        withdraw(t.memberId.get, key)
-          .fold({ fail =>
-            JsonContent ~> ResponseString(errorJson(fail))
-          }, { ok =>
-            JsonContent ~>
-              ResponseString(
-                """{"status":200,"proposal":"%s"}""" format(ok))
-          })
-      }
-      expected(p) orFail { errors =>
-        JsonContent ~> ResponseString(errorJson(
-          errors.map { _.error } mkString(". ")
-        ))
-      }
-    }
-  }
-
-
   val viewing: Cycle.Intent[Any, Any] = {
     case req @ GET(Path(Seg("2013" :: "talks" :: Nil))) => Clock("fetching 2012 talks proposals") {
       val (can, votes) =  req match {
@@ -183,7 +161,6 @@ object Proposals extends Templates {
   }
 
   val making: Cycle.Intent[Any, Any] = {
-    // create
     case POST(Path("/philly/proposals")) &
       AuthorizedToken(t) & Params(p) => Clock("creating philly talk proposal") {
       val expected = for {
