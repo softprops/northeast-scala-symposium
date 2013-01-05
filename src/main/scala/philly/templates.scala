@@ -264,7 +264,7 @@ trait Templates extends nescala.Templates with SponsorTemplate {
         <div class="r divy">
           <div id="venue-image-container"></div>
           <p>This years symposium will be held at Drexel University.</p>
-          <p>For more information on finding hotels check out <a href="http://universitycity.org/accommodations">this list of commodations</a> or suggest one <a href="http://www.meetup.com/nescala/events/97192402/comments/142822472/">here</a>.
+          <p>For more information on finding hotels check out <a href="http://universitycity.org/accommodations">this list of accommodations</a> or suggest one <a href="http://www.meetup.com/nescala/events/97192402/comments/142822472/">here</a>.
           </p>
         </div>
       </div>
