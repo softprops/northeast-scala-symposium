@@ -141,7 +141,7 @@ trait Templates extends nescala.Templates with SponsorTemplate {
       </a>
       <div>
         <h4>Scala community liberation</h4>
-        <h4>in <a href="#where">Philly</a></h4>
+        <h4>in <a href="//#where">Philly</a></h4>
         <h4>Feb 8-9, 2013</h4>
         <hr/>
       </div>
