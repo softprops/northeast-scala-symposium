@@ -106,16 +106,24 @@ object Proposals extends Templates {
    }).toSet.toSeq
 
     val notcached = Store { s =>
-      pids.filterNot(p => s.exists(Philly.mukey(p)))
+      val tenMinutesAgo = System.currentTimeMillis - (60 * 1000 * 10)
+      def stale(key: String) = s.hmget[String, String](key, "mtime") flatMap {
+        case map => map.get("mtime").map(_.toLong > tenMinutesAgo)
+      }
+      def refresh(key: String) =
+        s.exists(key) && stale(key).getOrElse(false)
+      pids.filterNot( p => refresh(Philly.mukey(p)))
     }
 
     val members = if (!notcached.isEmpty) {
       val ms = Meetup.members(notcached)
       Store { s =>
         ms.map { m =>
+          println("(re)fetching %s" format m)
           val data = Map(
             "mu_name" -> m.name,
-            "mu_photo" -> m.photo
+            "mu_photo" -> m.photo,
+            "mtime" -> System.currentTimeMillis.toString
           ) ++ m.twttr.map("twttr" -> _)
                 s.hmset(Philly.mukey(m.id), data)
                 m.id -> data
