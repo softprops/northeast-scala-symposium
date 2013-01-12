@@ -255,7 +255,7 @@ trait Templates extends nescala.Templates with SponsorTemplate {
   }
 
   def propose(proposals: Seq[Map[String, String]]): xml.NodeSeq =
-    if (!proposals.isEmpty) <div class="l"/> else {
+    if (proposals.isEmpty) <div class="l"/> else {
     <div class="l" id="proposal-notifications">
       <div id="proposal-notification"/>
       <div id="proposal-edit-notification"/>
