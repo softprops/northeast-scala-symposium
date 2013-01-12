@@ -203,17 +203,19 @@ trait Templates extends nescala.Templates with SponsorTemplate {
 
   val drexelMap = "http://goo.gl/maps/s0n7h"
   
-  val blurb =
+  def blurb(authed: Boolean) =
     <div id="blurb">
       <div class="contained">
       <p>Just <a href={ eventLink }>RSVP</a> <span class="amp">&amp;</span> you're in.</p>
       <hr/>
       <p>
-        As in years <a href="/2012">past</a>, this symposium features talks by you, the attendees,
-        so we need you to <a href="#speakup">post your ideas</a> for talks.
+        As in years <a href="/2012">past</a>, this symposium features talks by you, the attendees.
       </p>
       <p>
-        Talks are also chosen by you. Please browse the <a href="/2013/talks#proposed">current talk list</a> and vote for the talks you want to see.
+        Talks are also selected by you so get out and <a class="btn" href={ if (authed) "/2013/talks#proposed" else "/login?then=vote" }>vote</a>
+      </p>
+      <p>
+        The deadline for voting for the talks you want to see is <strong>Friday, Jan 18</strong>.
       </p>
       { twttrFollow }
       </div>
@@ -231,40 +233,11 @@ trait Templates extends nescala.Templates with SponsorTemplate {
           </div>
           <div class="r">
             <p>This year's symposium features <span>{Proposals.TalkTime}</span> minute talks.</p>
-            <p>Hopeful speakers may propose talks on topics of their choosing. The schedule will be filled by talks that accrue the most votes, with the keynote spot going to whichever proposal receives the most votes.</p>
-           <p>
-            The deadline for posting talk proposals is <strong>Friday, Jan 11</strong> so be sure to post them soon.
-           </p>
+            <p>Hopeful speakers have proposed talks on topics of their choosing. The schedule will be filled by talks that accrue the most votes, with the keynote spot going to whichever proposal receives the most votes.</p>
           </div>
           <div class="l"/><hr/>{
-          if (!authed) {
-            <div class="r">
-              <h2>Speak up</h2>
-              <p>In order to submit a talk proposal, we need to know you are attending.</p>
-              <p><a href="/login?then=talk" class="btn">Login to talk</a></p>
-            </div>
-          } else propose(proposals)
+          if (!authed) <div class="r"/> else propose(proposals)
         }
-      </div>
-      <div id="voting" class="clearfix">
-        <div class="l divy">
-          <h1>Voting</h1>
-        </div>
-        <div class="r divy">
-          { if (!authed) {
-            <p>Talks are selected by you, but we need to know you are attending first.</p>
-            <p><a href="/login?then=vote" class="btn">Login to vote</a></p>
-            <p>
-              The deadline for voting for the talks you want to see is <strong>Friday, Jan 18</strong>.
-            </p>
-          } else { 
-            <p>Talks are selected by you, so <a href="/2013/talks">get voting</a> now!</p>
-            <p>
-              The deadline for voting for the talks you want to see is <strong>Friday, Jan 18</strong>.
-            </p>
-          }
-         }
-        </div>
       </div>
       <div id="where" class="clearfix">
         <div class="l divy">
@@ -281,7 +254,8 @@ trait Templates extends nescala.Templates with SponsorTemplate {
   </div>
   }
 
-  def propose(proposals: Seq[Map[String, String]]): xml.NodeSeq = {
+  def propose(proposals: Seq[Map[String, String]]): xml.NodeSeq =
+    if (!proposals.isEmpty) <div class="l"/> else {
     <div class="l" id="proposal-notifications">
       <div id="proposal-notification"/>
       <div id="proposal-edit-notification"/>
@@ -289,42 +263,16 @@ trait Templates extends nescala.Templates with SponsorTemplate {
     <div class="r" id="propose-talk">
       <h2>Speak up</h2>
       <p class="instruct">
-        Please provide a brief single-paragraph description of your proposed talk.
+        Thanks for submitting your talk proposals.
       </p>
       <p class="instruct">
-        Speakers may enter Twitter usernames and other biographical
-        information in their
+        You may enter your Twitter username and other biographical
+        information on your
         <a target="_blank" href="http://www.meetup.com/nescala/profile/">
           Meetup member profile
         </a>.
       </p>
-      <p class="instruct">
-        Each attendee can post at most <strong>three</strong> talk proposals.
-      </p>
       <div id="propose-container" class="divy">
-        <form action="/philly/proposals" method="POST" id="propose-form"
-          class="proposing" style={ "display:%s" format(
-              if (proposals.size < Proposals.MaxProposals) "visible" else "none"
-          )}>
-          <h4>Propose a talk</h4>
-          <div>
-            <label for="name">What's your talk called?</label>
-            <input type="text" name="name" maxlength={ Proposals.MaxTalkName + "" }
-                      placeholder="How I learned to love my type system" />
-          </div>
-          <div>
-            <label for="desc">What's your talk is about?</label>
-            <div class="limited">
-              <textarea name="desc" data-limit={ Proposals.MaxTalkDesc + "" }
-                placeholder={ "Say it in %s characters or less" format(
-                  Proposals.MaxTalkDesc) } />
-              <div>
-                <div class="limit-label"/>
-                <input type="submit" value="Propose Talk" class="btn" />
-              </div>
-            </div>
-          </div>
-        </form>
         { proposalList(proposals) } 
       </div>
     </div>
@@ -367,7 +315,7 @@ trait Templates extends nescala.Templates with SponsorTemplate {
     phillyLayout(Nil)(
     <script type="text/javascript" src="/js/jquery.scrollTo-1.4.2-min.js"></script>
     <script type="text/javascript" src="/js/philly/index.js"></script>)(
-      head(authed) ++ blurb ++ dayOne(authed, keynote, talks, proposals)
+      head(authed) ++ blurb(authed) ++ dayOne(authed, keynote, talks, proposals)
     )
 }
 

@@ -168,7 +168,7 @@ object Proposals extends Templates {
     }
   }
 
-  val making: Cycle.Intent[Any, Any] = {
+  private val create: Cycle.Intent[Any, Any] = {
     case POST(Path("/philly/proposals")) &
       AuthorizedToken(t) & Params(p) => Clock("creating philly talk proposal") {
       val expected = for {
@@ -188,7 +188,9 @@ object Proposals extends Templates {
         ))
       }
     }
+  } 
 
+  val making: Cycle.Intent[Any, Any] = {
     // edit
     case POST(Path(Seg("philly" :: "proposals" :: UrlDecoded(id) :: Nil))) & Params(p) &
       AuthorizedToken(t) => Clock("editing proposal %s" format id) {

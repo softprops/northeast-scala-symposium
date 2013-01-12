@@ -191,6 +191,7 @@
       return false;
     });
 
+    // out of commision
     $("#propose-form").submit(function(e){
       e.preventDefault();
       var frm = $(this)
