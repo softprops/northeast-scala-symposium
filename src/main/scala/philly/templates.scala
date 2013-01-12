@@ -212,7 +212,7 @@ trait Templates extends nescala.Templates with SponsorTemplate {
         As in years <a href="/2012">past</a>, this symposium features talks by you, the attendees.
       </p>
       <p>
-        Talks are also selected by you so get out and <a class="btn" href={ if (authed) "/2013/talks#proposed" else "/login?then=vote" }>vote</a>
+        Talks are also selected by you so get out <span class="amp">&amp;</span> <a class="btn" href={ if (authed) "/2013/talks#proposed" else "/login?then=vote" }>vote</a>
       </p>
       <p>
         The deadline for voting for the talks you want to see is <strong>Friday, Jan 18</strong>.
