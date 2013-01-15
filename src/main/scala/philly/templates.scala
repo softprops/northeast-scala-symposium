@@ -167,7 +167,7 @@ trait Templates extends nescala.Templates with SponsorTemplate {
           case n => " %d votes" format n
         } } remaining</div> }
       </div>
-      { if (!authed) <p>If you have <a href="">RSVP'd</a> you may login <span class="amp">&amp;</span> <a class="btn" href="/login?then=vote">Vote</a></p>
+      { if (!authed) <p>If you have <a href={eventLink}>RSVP'd</a> you may login <span class="amp">&amp;</span> <a class="btn" href="/login?then=vote">Vote</a></p>
       else <span/> }
       <ul>{
         proposals.map { p =>
