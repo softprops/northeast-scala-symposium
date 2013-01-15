@@ -150,20 +150,23 @@ object Proposals extends Templates {
 
   val viewing: Cycle.Intent[Any, Any] = {
     case req @ GET(Path(Seg("2013" :: "talks" :: Nil))) => Clock("fetching 2012 talks proposals") {
-      val (can, votes) =  req match {
+      val (authed, canVote, votes) =  req match {
         case AuthorizedToken(t)
           if (Meetup.has_rsvp(Meetup.Philly.eventId, t.token)) =>
             val mid = t.memberId.get
-            (true, Store {
+            (true, true, Store {
               _.smembers("philly:talk_votes:%s" format mid)
                .map(_.filter(_.isDefined).map(_.get).toSeq)
                .getOrElse(Nil)
             })
+        case AuthorizedToken(t) =>
+          (true, false, Nil)
         case _ =>
-          (false, Nil)
+          (false, false, Nil)
       }
-      talkListing(scala.util.Random.shuffle(currentProposals),
-                  canVote = can,
+      talkListing(authed,
+                  scala.util.Random.shuffle(currentProposals),
+                  canVote = canVote,
                   votes = votes)
     }
   }

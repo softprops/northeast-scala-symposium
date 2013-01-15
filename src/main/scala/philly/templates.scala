@@ -150,6 +150,7 @@ trait Templates extends nescala.Templates with SponsorTemplate {
 
   // listing of talk proposals (refactor plz)
   def talkListing(
+    authed: Boolean,
     proposals: Seq[Map[String, String]],
     canVote: Boolean = false,
     votes: Seq[String] = Seq.empty[String]) = phillyLayout(
@@ -158,12 +159,16 @@ trait Templates extends nescala.Templates with SponsorTemplate {
     } ++ <div class="contained">
      <div id="maybe-talks-header">
         <h2 id="proposed">{ proposals.size } Scala campfire stories</h2>
-        <div>This year's symposium features talks from members of the Scala community. Below is a list of current talk proposals.</div>{ if (canVote) <div id="votes-remaining">You have { Votes.MaxTalkVotes - votes.size match {
+        <div>
+          <p>This year's symposium features talks from members of the Scala community. Below is a list of current talk proposals.</p>
+        </div>{ if (canVote) <div id="votes-remaining">You have { Votes.MaxTalkVotes - votes.size match {
           case 0 => " no votes"
           case 1 => " one vote"
           case n => " %d votes" format n
         } } remaining</div> }
       </div>
+      { if (!authed) <p>If you have <a href="">RSVP'd</a> you may login <span class="amp">&amp;</span> <a class="btn" href="/login?then=vote">Vote</a></p>
+      else <span/> }
       <ul>{
         proposals.map { p =>
         <li class="talk" id={ p("id").split(":")(3) }>
