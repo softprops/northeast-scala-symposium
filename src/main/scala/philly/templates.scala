@@ -27,6 +27,7 @@ trait Templates extends nescala.Templates with SponsorTemplate {
         <div id="footer">
           made possible with <span class="love">&#10084;</span> from the <div><a href="http://www.meetup.com/boston-scala/">Boston</a>, <a href="http://www.meetup.com/scala-phase/">Philadelphia</a>, and <a href="http://www.meetup.com/ny-scala/">New York</a> scala enthusiasts,</div>
         <div class="divided">hosting from <a href="http://www.heroku.com/">heroku</a></div>
+        <div>and <a href="/2013/friends">with a little help from our friends</a>.</div>
           <div id="last-year">
             <div>What happen to last year? It ended.</div>
             <div>But you can still find it <a href="/2012">here</a>.</div>
@@ -148,7 +149,6 @@ trait Templates extends nescala.Templates with SponsorTemplate {
     </div>
    </div> ++ { login(authed, afterlogin) }
 
-  // listing of talk proposals (refactor plz)
   def talkListing(
     authed: Boolean,
     proposals: Seq[Map[String, String]],
@@ -160,15 +160,13 @@ trait Templates extends nescala.Templates with SponsorTemplate {
      <div id="maybe-talks-header">
         <h2 id="proposed">{ proposals.size } Scala campfire stories</h2>
         <div>
-          <p>This year's symposium features talks from members of the Scala community. Below is a list of current talk proposals.</p>
+          <p>This year's symposium features talks from members of the Scala community. Below is a list of this years talk proposals.</p>
         </div>{ if (canVote) <div id="votes-remaining">You have { Votes.MaxTalkVotes - votes.size match {
           case 0 => " no votes"
           case 1 => " one vote"
           case n => " %d votes" format n
         } } remaining</div> }
       </div>
-      { if (!authed) <p>If you have <a href={eventLink}>RSVP'd</a> you may login <span class="amp">&amp;</span> <a class="btn" href="/login?then=vote">Vote</a></p>
-      else <span/> }
       <ul>{
         proposals.map { p =>
         <li class="talk" id={ p("id").split(":")(3) }>
@@ -214,13 +212,7 @@ trait Templates extends nescala.Templates with SponsorTemplate {
       <p>Just <a href={ eventLink }>RSVP</a> <span class="amp">&amp;</span> you're in.</p>
       <hr/>
       <p>
-        As in years <a href="/2012">past</a>, this symposium features talks by you, the attendees.
-      </p>
-      <p>
-        Talks are also selected by you so get out <span class="amp">&amp;</span> <a class="btn" href={ if (authed) "/2013/talks#proposed" else "/login?then=vote" }>vote</a>
-      </p>
-      <p>
-        The deadline for voting for the talks you want to see is <strong>Friday, Jan 18</strong>.
+        As in years <a href="/2012">past</a>, this symposium features talks by <a href="/2013/talks#proposed">proposed</a> and choosen by the attendees.
       </p>
       { twttrFollow }
       </div>
@@ -230,7 +222,7 @@ trait Templates extends nescala.Templates with SponsorTemplate {
              keynote: Map[String, String],
              talks: Seq[Map[String, String]],
              proposals: Seq[Map[String, String]]): xml.NodeSeq = {
-   <div id="day-one" data-event={ Meetup.Philly.eventId } class="day clearfix">
+   <div id="day-one" class="clearfix">
       <div class="contained">
         <div id="speakup" class="clearfix">
           <div class="l">
@@ -238,7 +230,10 @@ trait Templates extends nescala.Templates with SponsorTemplate {
           </div>
           <div class="r">
             <p>This year's symposium features <span>{Proposals.TalkTime}</span> minute talks.</p>
+            <hr/>
             <p>Hopeful speakers have proposed talks on topics of their choosing. The schedule will be filled by talks that accrue the most votes, with the keynote spot going to whichever proposal receives the most votes.</p>
+            <hr/>
+            <p>This years talks will be announced soon. Follow <a href="http://twitter.com/nescalas">@nescalas</a> to find out just when.</p>
           </div>
           <div class="l"/><hr/>{
           if (!authed) <div class="r"/> else propose(proposals)
@@ -254,6 +249,9 @@ trait Templates extends nescala.Templates with SponsorTemplate {
           <p>For more information on finding hotels check out <a href="http://universitycity.org/accommodations">this list of accommodations</a> or suggest one <a href="http://www.meetup.com/nescala/events/97192402/comments/142822472/">here</a>.
           </p>
         </div>
+      </div>
+      <div class="day clearfix divy" data-event={ Meetup.Philly.eventId }>
+       { rsvps }
       </div>
     </div>
   </div>

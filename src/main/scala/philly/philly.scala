@@ -11,18 +11,12 @@ object Philly extends Templates {
 
   def site: unfiltered.Cycle.Intent[Any, Any] =
     (index /: Seq(talkProposals,
-                  Votes.intent,
                   api,
                   Tally.talks))(_ orElse _)
 
   def mukey(of: String) = "philly:members:%s" format of
 
   private def index: Cycle.Intent[Any, Any]  = {
-    case GET(Path(Seg(Nil))) & AuthorizedToken(t) => Clock("home") {
-      Store { s =>
-        indexPage(true, keynote(s), talks(s), proposals(s, t.memberId.get))
-      }
-    }
     case GET(Path(Seg(Nil))) => Clock("home") {
       Store { s =>
         indexPage(false, keynote(s), talks(s))
@@ -37,7 +31,6 @@ object Philly extends Templates {
       Clock("fetching rsvp list for %s" format event) {
         import net.liftweb.json._
         import net.liftweb.json.JsonDSL._
-
         JsonContent ~> ResponseString(
           Cached.getOr("meetup:event:%s:rsvps" format event) {
             (compact(render(Meetup.rsvps(event))), Some(60 * 15))
@@ -47,7 +40,7 @@ object Philly extends Templates {
 
   /** redirect home after we close this */
   private def talkProposals: Cycle.Intent[Any, Any] = 
-    Proposals.making orElse Proposals.viewing
+    Proposals.viewing
 
   private def proposals(r: RedisClient, mid: String): Seq[Map[String, String]] = {
     r.keys("philly:proposals:%s:*" format mid) match {

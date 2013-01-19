@@ -3,7 +3,7 @@ package nescala.philly
 import nescala.{ AuthorizedToken, Cached, Clock, Meetup, Store }
 import nescala.request.UrlDecoded
 
-// talk proposals
+// talk proposals (decommisioned for the season)
 object Proposals extends Templates {
   import unfiltered._
   import unfiltered.request._
@@ -150,7 +150,7 @@ object Proposals extends Templates {
 
   val viewing: Cycle.Intent[Any, Any] = {
     case req @ GET(Path(Seg("2013" :: "talks" :: Nil))) => Clock("fetching 2012 talks proposals") {
-      val (authed, canVote, votes) =  req match {
+      /*val (authed, canVote, votes) =  req match {
         case AuthorizedToken(t)
           if (Meetup.has_rsvp(Meetup.Philly.eventId, t.token)) =>
             val mid = t.memberId.get
@@ -163,11 +163,11 @@ object Proposals extends Templates {
           (true, false, Nil)
         case _ =>
           (false, false, Nil)
-      }
-      talkListing(authed,
+      }*/
+      talkListing(false,
                   scala.util.Random.shuffle(currentProposals),
-                  canVote = canVote,
-                  votes = votes)
+                  canVote = false,
+                  votes = Nil)
     }
   }
 

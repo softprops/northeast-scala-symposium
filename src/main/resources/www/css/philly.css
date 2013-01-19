@@ -532,14 +532,8 @@ h2 {
 }
 
 h1 span {
-  color:#B45081;
+  color:#FC00C1;
 }
-
-/*h1 span {
-  color:#FF005E;
-  display:block;
-  font-size:90px;
-}*/
 
 h3 span {
   display:block;
@@ -689,4 +683,8 @@ a.voted:visited {
 
 .ballot .btn {
   margin-right:1em;
+}
+
+.sponsor img {
+    max-width:200px;
 }
