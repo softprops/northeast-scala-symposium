@@ -211,12 +211,72 @@ trait Templates extends nescala.Templates with SponsorTemplate {
       <div class="contained">
       <p>Just <a href={ eventLink }>RSVP</a> <span class="amp">&amp;</span> you're in.</p>
       <hr/>
-      <p>
-        As in years <a href="/2012">past</a>, this symposium features talks by <a href="/2013/talks#proposed">proposed</a> and choosen by the attendees.
-      </p>
       { twttrFollow }
       </div>
     </div>
+
+  def renderKeynote(keynote: Map[String, String]) = {
+    val memberId = keynote("id").split(":")(3)
+    <div class="l hl"><h3>Keynote</h3></div>
+    <div class="r hl"/>
+    <div class="talk l" id="keynote">
+      <h3>
+        <a href="#keynote">{ keynote("name") }</a>
+      </h3>
+      <div class="who-box clearfix">
+        <img class="avatar" src={ keynote("mu_photo").replace("member_", "thumb_") } />
+        <div class="links">
+          <a class="primary"
+              href={ "http://meetup.com/nescala/members/%s" format memberId }
+              target="_blank">{ keynote("mu_name") }
+          </a>{ if(keynote.isDefinedAt("twttr")) {
+          <a class="twttr"
+             href={ "http://twitter.com/%s" format keynote("twttr").drop(1) }
+              target="_blank">{ keynote("twttr") }
+           </a>
+          } else <span/> }
+        </div>
+      </div>
+    </div>
+    <div class="r">
+      <div class="desc">{ keynote("desc").trim() }</div>
+    </div>
+  }
+
+  def renderTalk(t: Map[String, String]): xml.NodeSeq = {
+    val memberId = t("id").split(":")(3)
+    <div class="talk l" id={ "t-" + memberId }>
+      <h3><a href={ "#t-" + memberId }>{ t("name") }</a></h3>
+        <div class="who-box clearfix">
+          <img class="avatar"
+              src={ t("mu_photo").replace("member_", "thumb_") } />
+          <div class="links">
+            <a class="primary"
+                href={ "http://meetup.com/nescala/members/%s" format memberId }
+                target="_blank">{ t("mu_name") }
+            </a>{ if(t.isDefinedAt("twttr")) {
+            <a class="twttr"
+                href={ "http://twitter.com/%s" format t("twttr").drop(1) }
+                target="_blank">{ t("twttr") }</a>
+            } else <span/> } { if(t.isDefinedAt("slides")) {
+              <a href={ t("slides") }>slides</a>
+            } else <span/> }
+          </div>
+        </div>
+      </div>   
+      <div class="r desc">
+        {if(t.isDefinedAt("video")) { <a class="vid" href={ t("video").toString }>video</a> } }
+        <p>{ t("desc").trim() }</p>
+      </div>
+      <hr/>
+  }
+
+  def renderTalks(talks: Seq[Map[String, String]]): xml.NodeSeq = {
+    <div class ="l hl"><h3>Talks</h3></div>
+    <div class="r hl"></div><div>{
+      talks.map(renderTalk)
+    }</div>
+  }
 
   def dayOne(authed: Boolean,
              keynote: Map[String, String],
@@ -224,20 +284,17 @@ trait Templates extends nescala.Templates with SponsorTemplate {
              proposals: Seq[Map[String, String]]): xml.NodeSeq = {
    <div id="day-one" class="clearfix">
       <div class="contained">
-        <div id="speakup" class="clearfix">
+        <div id="speaking" class="clearfix">
           <div class="l">
-            <h1>Talking</h1>
+            <h1>Speaking</h1>
           </div>
           <div class="r">
-            <p>This year's symposium features <span>{Proposals.TalkTime}</span> minute talks.</p>
+            <p>This year's symposium features two tracks of eight <span>{Proposals.TalkTime}</span> minute talks and one 45 minute keynote.</p>
             <hr/>
-            <p>Hopeful speakers have proposed talks on topics of their choosing. The schedule will be filled by talks that accrue the most votes, with the keynote spot going to whichever proposal receives the most votes.</p>
-            <hr/>
-            <p>This years talks will be announced soon. Follow <a href="http://twitter.com/nescalas">@nescalas</a> to find out just when.</p>
+            <p>Thanks to all the attendees who voted on talk selections.</p>
           </div>
-          <div class="l"/><hr/>{
-          if (!authed) <div class="r"/> else propose(proposals)
-        }
+          { renderKeynote(keynote) }
+          { renderTalks(talks) }
       </div>
       <div id="where" class="clearfix">
         <div class="l divy">

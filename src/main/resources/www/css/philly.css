@@ -334,6 +334,7 @@ li.talk h2 {
 body {
   font-family:'Arvo',helvetica, arial;
   font-size:24px;
+  line-height:1.45em;
   color:#385A7A;
   background:#fbfbfb;
   background:url(/images/debut_light.png)
@@ -534,7 +535,7 @@ h2 {
 h1 span {
   color:#FC00C1;
 }
-
+.
 h3 span {
   display:block;
   color:#ccc;
@@ -548,7 +549,7 @@ h3 span {
 }
 
 .hl h3 {
-  background:#DBF5FF;
+  background:url(/images/debut_light.png);
   margin-bottom:-35px;
   width:4.5em;
   float:right;
@@ -557,6 +558,7 @@ h3 span {
 
 .talk h3 {
   margin-bottom:.5em;
+  word-break: break-word;
 }
 
 h2 {
