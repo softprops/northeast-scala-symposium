@@ -114,7 +114,7 @@ object Meetup extends Config {
       if(next.isEmpty) json
       else {
         val (r2, m2) = http(url(next) ># (Response.results ~ Response.meta))
-        parse(r2, m2) :: json
+        parse(r2, m2) ++ json
       }
     }
     val (res, meta) = http(client.handle(Rsvps.event_id(eventId)))

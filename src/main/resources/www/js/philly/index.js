@@ -36,10 +36,10 @@
                   , t.name
                   ,'"/></span></a></li>'].join('');
         };
-        $(".tban", day).html("functional types attended");
+        $(".tban", day).html("a sampling of the functional types attending");
         var n = typers.length
           , partioned = photoPartioned(typers)
-          , randomtypes = fyates(partioned[0]).concat(partioned[1]).splice(0, 45)
+          , randomtypes = fyates(partioned[0]).concat(partioned[1]).splice(0, 120)
           , buffer = [];
         for(t in randomtypes) {
           buffer.push(template(randomtypes[t]));

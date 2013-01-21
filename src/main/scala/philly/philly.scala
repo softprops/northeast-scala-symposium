@@ -11,21 +11,17 @@ object Philly extends Templates {
 
   def site: unfiltered.Cycle.Intent[Any, Any] =
     (index /: Seq(talkProposals,
-                  Votes.intent,
                   api,
                   Tally.talks))(_ orElse _)
 
   def mukey(of: String) = "philly:members:%s" format of
 
   private def index: Cycle.Intent[Any, Any]  = {
-    case GET(Path(Seg(Nil))) & AuthorizedToken(t) => Clock("home") {
-      Store { s =>
-        indexPage(true, keynote(s), talks(s), proposals(s, t.memberId.get))
-      }
-    }
     case GET(Path(Seg(Nil))) => Clock("home") {
       Store { s =>
-        indexPage(false, keynote(s), talks(s))
+        indexPage(false, // authed
+                  keynote(s),
+                  scala.util.Random.shuffle(talks(s)))
       }
     }
     case GET(Path(Seg("2013" :: "friends" :: Nil))) =>
@@ -37,7 +33,6 @@ object Philly extends Templates {
       Clock("fetching rsvp list for %s" format event) {
         import net.liftweb.json._
         import net.liftweb.json.JsonDSL._
-
         JsonContent ~> ResponseString(
           Cached.getOr("meetup:event:%s:rsvps" format event) {
             (compact(render(Meetup.rsvps(event))), Some(60 * 15))
@@ -47,7 +42,7 @@ object Philly extends Templates {
 
   /** redirect home after we close this */
   private def talkProposals: Cycle.Intent[Any, Any] = 
-    Proposals.making orElse Proposals.viewing
+    Proposals.viewing
 
   private def proposals(r: RedisClient, mid: String): Seq[Map[String, String]] = {
     r.keys("philly:proposals:%s:*" format mid) match {
@@ -60,9 +55,38 @@ object Philly extends Templates {
     }
   }
 
+  private def proposal(r: RedisClient, pkey: String) =
+    r.hmget[String, String](pkey, "name", "desc")
+     .map(_ + ("id" -> pkey))
+
+  private def promote(pkey: String, to: String) = {
+    val Prop = "philly:proposals:(.*):(.*)".r
+    Store { s =>  
+      proposal(s, pkey).map { prop =>
+        prop("id") match {
+          case Prop(mid, _) =>
+            println("promoting %s'd proposal '%s' to %s"
+                    .format(mid, prop("name"), to))
+            Right(s.hmset("2013:philly:%s:%s".format(to, mid), Map(
+              "name" -> prop("name"),
+              "desc" -> prop("desc")
+            )))
+          case invalid =>
+            Left("invalid proposal key %s" format invalid)
+        }
+      }.getOrElse(Left("could not find proposal"))
+    }    
+  }
+
+  def promoteKeynote(pkey: String) =
+    promote(pkey, "keynote")
+
+  def promoteTalk(pkey: String) =
+    promote(pkey, "talk")
+
   private def talks(r: RedisClient): Seq[Map[String, String]] = {    
-    val Talk = """philly:talks:(.*)""".r
-    r.keys("philly:talks:*") match {
+    val Talk = """2013:philly:talk:(.*)""".r
+    r.keys("2013:philly:talk:*") match {
       case None => Seq.empty[Map[String, String]]
       case Some(keys) =>
         ((List.empty[Map[String, String]] /: keys.flatten)(
@@ -77,10 +101,9 @@ object Philly extends Templates {
     }
   }
 
-
   private def keynote(r: RedisClient): Map[String, String] = {
-    val Keynote = """philly:keynote:(.*)""".r
-    r.keys("philly:keynote:*") match {
+    val Keynote = """2013:philly:keynote:(.*)""".r
+    r.keys("2013:philly:keynote:*") match {
       case None => Map.empty[String, String]
       case Some(Some(key) :: _) =>
         key match {
