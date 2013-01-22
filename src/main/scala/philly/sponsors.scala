@@ -22,7 +22,12 @@ trait SponsorTemplate { self: Templates =>
         <div class="sponsor">
           <a href="http://www.heroku.com/"><img src="/images/sponsors/heroku.png" /></a>
           <p>Heroku makes nescala.org possible and for that we are thankful.</p>
-        </div>
+        </div>      
+        <hr/>
+        <div class="sponsor">
+          <a href="http://www.icn-i.com/"><img src="/images/sponsors/intelcapnet.png" /></a>
+          <p>Intelligent Capital Network is making sure attendees are happy by buying drinks for happy hour.</p>
+        </div>      
         <hr/>
       </div>
     )
