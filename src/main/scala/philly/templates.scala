@@ -274,7 +274,7 @@ trait Templates extends nescala.Templates with SponsorTemplate {
   def renderTalks(talks: Seq[Map[String, String]]): xml.NodeSeq = {
     <div class ="l hl"><h3>Talks</h3></div>
     <div class="r hl"></div><div>{
-      talks.map(renderTalk)
+      talks.sortBy(t => (t("order"), t("track"))).map(renderTalk)
     }</div>
   }
 
