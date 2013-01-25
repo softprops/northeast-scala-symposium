@@ -59,6 +59,18 @@ object Philly extends Templates {
     r.hmget[String, String](pkey, "name", "desc")
      .map(_ + ("id" -> pkey))
 
+  def placeInTrack(member: Int, track: Int, order: Int) =
+    Store { s =>
+      val key = "2013:philly:talk:%s" format member
+      if (!s.exists(key)) Left("%s does not appear to be speaking" format member)
+      else {
+        Right(s.hmset(key, Map(
+          "track" -> track.toString,
+          "order" -> order.toString
+        )))
+      }
+    }
+
   private def promote(pkey: String, to: String) = {
     val Prop = "philly:proposals:(.*):(.*)".r
     Store { s =>  
@@ -92,7 +104,7 @@ object Philly extends Templates {
         ((List.empty[Map[String, String]] /: keys.flatten)(
           (a, e) => (e match {
             case t @ Talk(mid) =>
-              r.hmget[String, String](t, "name", "desc", "slides", "video").map(_ + ("id" -> t)).map {
+              r.hmget[String, String](t, "name", "desc", "slides", "video", "track", "order").map(_ + ("id" -> t)).map {
                 _ ++ (r.hmget[String, String](mukey(mid),
                                               "mu_name", "mu_photo", "twttr").get)
               }.get :: a
