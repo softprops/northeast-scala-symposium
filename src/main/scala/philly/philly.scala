@@ -59,6 +59,26 @@ object Philly extends Templates {
     r.hmget[String, String](pkey, "name", "desc")
      .map(_ + ("id" -> pkey))
 
+  def switchSpeaker(current: Int, target: Int) =
+    Store { s =>
+      val talk = "2013:philly:talk:%s" format current
+      val member = mukey(target.toString)
+      if (!s.exists(talk)) Left("%s does not appear to be speaking" format current)
+      else if (!s.exists(member)) Left("%s does not appear to be a member" format target)
+      else {
+        val talkAttrs = s.hmget[String, String](talk,
+                                                "name",
+                                                "desc",
+                                                "slides",
+                                                "video",
+                                                "track",
+                                                "order").get
+        s.hmset("2013:philly:talk:%s" format target, talkAttrs)
+        s.del(talk)
+        Right(talkAttrs)
+      }
+    }
+
   def placeInTrack(member: Int, track: Int, order: Int) =
     Store { s =>
       val key = "2013:philly:talk:%s" format member
