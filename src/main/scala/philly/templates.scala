@@ -1,6 +1,7 @@
 package nescala.philly
 
 import nescala.Meetup
+import scala.collection.immutable.TreeMap
 
 trait Templates extends nescala.Templates with SponsorTemplate {
   import java.net.URLEncoder.encode
@@ -215,9 +216,67 @@ trait Templates extends nescala.Templates with SponsorTemplate {
       </div>
     </div>
 
+  val times = Map(
+    "registration" -> "9:00am",
+    "opening" -> "9:55am",
+    "keynote" -> "10:00am",
+    "0"       -> "11:00am",
+    "1"       -> "11:45am",
+    "2"       -> "12:30",
+    "lunch"   -> "1:15pm",
+    "3"       -> "2:15pm",
+    "4"       -> "3:00pm",
+    "5"       -> "3:45am",
+    "6"       -> "4:30pm",
+    "7"       -> "5:15pm")
+
+  val tracks = Map(
+    "0" -> "A",
+    "1" -> "B"
+  )
+
+  def renderRegistration = {
+    <div class="l hl">
+      <span class="time">{ times("registration") }</span>
+      <h3>Registration</h3>
+    </div>
+    <div class="r hl"/>
+    <div class="l"/>
+    <div class="r">
+      Sign in and get something to eat for breakfast provided by <a href="https://www.novus.com/" target="_blank"><img class="sponsor-inline" alt="novus" src="http://nescala.org/images/sponsors/novus-bw.jpg"/></a>
+    </div>
+  }
+
+  def renderOpeningRemarks = {
+    <div class="l hl">
+      <span class="time">{ times("opening") }</span>
+      <h3>Remarks</h3>
+    </div>
+    <div class="r hl"/>
+    <div class="l"/>
+    <div class="r">
+      Opening remarks and symposium kick off
+    </div>
+  }
+
+  def renderLunch = {
+    <div class="l hl">
+      <span class="time">{ times("lunch") }</span>
+      <h3>Lunch</h3>
+    </div>
+    <div class="r hl"/>
+    <div class="l"/>
+    <div class="r">
+      Refuel with lunch provided by <a href="http://www.linkedin.com/" target="_blank"><img alt="linkedin" class="sponsor-inline" src="http://nescala.org/images/sponsors/linkedin-bw.svg"/></a>
+    </div>
+  }
+
   def renderKeynote(keynote: Map[String, String]) = {
     val memberId = keynote("id").split(":")(3)
-    <div class="l hl"><h3>Keynote</h3></div>
+    <div class="l hl">
+      <span class="time">{times("keynote")}</span>
+      <h3>Keynote</h3>
+    </div>
     <div class="r hl"/>
     <div class="talk l" id="keynote">
       <h3>
@@ -245,7 +304,9 @@ trait Templates extends nescala.Templates with SponsorTemplate {
 
   def renderTalk(t: Map[String, String]): xml.NodeSeq = {
     val memberId = t("id").split(":")(3)
+    val track = tracks(t.getOrElse("track", "0"))
     <div class="talk l" id={ "t-" + memberId }>
+      <div class={"track track%s" format track.toLowerCase }>{ track }</div>
       <h3><a href={ "#t-" + memberId }>{ t("name") }</a></h3>
         <div class="who-box clearfix">
           <img class="avatar"
@@ -271,12 +332,23 @@ trait Templates extends nescala.Templates with SponsorTemplate {
       <hr/>
   }
 
-  def renderTalks(talks: Seq[Map[String, String]]): xml.NodeSeq = {
-    <div class ="l hl"><h3>Talks</h3></div>
+  def renderTalkOrder(order: String, talks: Seq[Map[String, String]]) = {
+    <div class ="l hl">
+      <span class="time">{ times(order) }</span>
+      <h3>Talks</h3>
+    </div>
     <div class="r hl"></div><div>{
-      talks.sortBy(t => (t("order"), t("track"))).map(renderTalk)
-    }</div>
+      talks.map(renderTalk)
+    }</div> ++ { if (order == "2") renderLunch  else <span/> }
   }
+
+  def renderTalks(talks: Seq[Map[String, String]]): xml.NodeSeq =
+    (TreeMap.empty[String, Seq[Map[String, String]]] ++
+       talks.sortBy(t => (t("order"), t("track")))
+       .groupBy(_("order")))
+       .map { case (ord, ts) => renderTalkOrder(ord, ts) }
+       .toList
+       .flatten
 
   def dayOne(authed: Boolean,
              keynote: Map[String, String],
@@ -285,16 +357,21 @@ trait Templates extends nescala.Templates with SponsorTemplate {
    <div id="day-one" class="clearfix">
       <div class="contained">
         <div id="speaking" class="clearfix">
+         <div class="inner-right">
           <div class="l">
-            <h1>Speaking</h1>
+            <h1>Schedule</h1>
           </div>
           <div class="r">
             <p>This year's symposium features two tracks of eight <span>{Proposals.TalkTime}</span> minute talks and one 45 minute keynote.</p>
             <hr/>
             <p>Thanks to all the attendees who voted on talk selections.</p>
           </div>
+          { renderRegistration }
+          { renderOpeningRemarks }
           { renderKeynote(keynote) }
           { renderTalks(talks) }
+        </div>
+        <div class="inner-left"></div>
       </div>
       <div id="where" class="clearfix">
         <div class="l divy">
