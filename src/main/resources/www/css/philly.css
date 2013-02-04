@@ -535,7 +535,7 @@ h2 {
 h1 span {
   color:#FC00C1;
 }
-.
+
 h3 span {
   display:block;
   color:#ccc;
@@ -548,12 +548,72 @@ h3 span {
   margin-bottom:20px;
 }
 
+#speaking {
+  position:relative;
+}
+
+#speaking .inner-left {
+  float:left;
+  border-right:1px solid #eee;
+  padding:1em;
+  height:100%;
+  position:absolute;
+  z-index:-1;
+}
+
+#speaking .inner-right {
+  float:right;
+  margin-right:1.75em;
+}
+
+.track {
+  color:#fff;
+  float:left;
+  margin-top:50%;
+  position:absolute;
+  margin-left:.8em;
+  text-align:center;
+  background:#333;
+  border-radius:60px;
+  width:35px;
+}
+
+.tracka {
+  background: -webkit-gradient(radial, center center, 0, center center,35, from(#1a82f7), to(#2F2727));
+  background: -webkit-radial-gradient(circle, #1a82f7, #2F2727);
+  background: -moz-radial-gradient(circle, #1a82f7, #2F2727);
+  background: -ms-radial-gradient(circle, #1a82f7, #2F2727);
+}
+
+.trackb {
+  background: -webkit-gradient(radial, center center, 0, center center,35, from(#FD69DB), to(#FC00C1));
+  background: -webkit-radial-gradient(circle, #FD69DB, #FC00C1);
+  background: -moz-radial-gradient(circle, #FD69DB, #FC00C1);
+  background: -ms-radial-gradient(circle, #FD69DB, #FC00C1);
+}
+
+.hl .time {
+  margin-bottom:-35px;
+  padding:0 .5em;
+  background: url(/images/debut_light.png);
+  float:left;
+  text-align:left;
+  color:#9498A0;
+  font-size:80%;
+}
+
 .hl h3 {
   background:url(/images/debut_light.png);
   margin-bottom:-35px;
-  width:4.5em;
+  width:6.5em;
   float:right;
   text-align:center;
+}
+
+
+
+.talk {
+  position:relative;
 }
 
 .talk h3 {
@@ -689,4 +749,9 @@ a.voted:visited {
 
 .sponsor img {
     max-width:200px;
+}
+
+.sponsor-inline {
+  width: 6em;
+  vertical-align:text-bottom;
 }
