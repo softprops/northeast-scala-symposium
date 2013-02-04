@@ -753,5 +753,7 @@ a.voted:visited {
 
 .sponsor-inline {
   width: 6em;
+}
+.sponsor-inline.linkedin {
   vertical-align:text-bottom;
 }
