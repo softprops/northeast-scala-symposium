@@ -79,6 +79,31 @@ object Philly extends Templates {
       }
     }
 
+  def syncMember(mid: String) =
+    Store { s =>
+      Meetup.members(Seq(mid)).headOption match {
+        case Some(mem) =>
+          val key = mukey(mid)
+          println("updating member %s" format key)
+          println("name %s" format mem.name)
+          println("photo %s" format mem.photo)
+          s.hmset(key, Map(
+            "mu_name" -> mem.name,
+            "mu_photo" -> mem.photo
+          ) ++ mem.twttr.map("twttr" -> _))
+        case _ => () // not very likely
+      }
+   }
+
+  def slides(speaker: Int, url: String) =
+    Store { s =>
+      val talk = "2013:philly:talk:%s" format speaker
+      if (!s.exists(talk)) Left("%s does not appear to be speaking" format speaker)
+      else {
+        Right(s.hmset(talk, Map("slides" -> url)))
+      }
+    }
+
   def placeInTrack(member: Int, track: Int, order: Int) =
     Store { s =>
       val key = "2013:philly:talk:%s" format member
