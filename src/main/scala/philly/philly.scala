@@ -95,12 +95,18 @@ object Philly extends Templates {
       }
    }
 
-  def slides(speaker: Int, url: String) =
+  def keynoteSlides(speaker: Int, url: String) =
+    slides(speaker, "keynote", url)
+
+  def talkSlides(speaker: Int, url: String) =
+    slides(speaker, "talk", url)
+
+  def slides(speaker: Int, kind: String, url: String) =
     Store { s =>
-      val talk = "2013:philly:talk:%s" format speaker
-      if (!s.exists(talk)) Left("%s does not appear to be speaking" format speaker)
+      val key = "2013:philly:%s:%s" format(kind, speaker)
+      if (!s.exists(key)) Left("%s does not appear to be speaking" format speaker)
       else {
-        Right(s.hmset(talk, Map("slides" -> url)))
+        Right(s.hmset(key, Map("slides" -> url)))
       }
     }
 
