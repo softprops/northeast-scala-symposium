@@ -293,7 +293,9 @@ trait Templates extends nescala.Templates with SponsorTemplate {
              href={ "http://twitter.com/%s" format keynote("twttr").drop(1) }
               target="_blank">{ keynote("twttr") }
            </a>
-          } else <span/> }
+          } else <span/> } { if(keynote.isDefinedAt("slides")) {
+              <a href={ keynote("slides") }>slides</a>
+            } else <span/> }
         </div>
       </div>
     </div>
