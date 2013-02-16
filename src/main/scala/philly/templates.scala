@@ -243,7 +243,7 @@ trait Templates extends nescala.Templates with SponsorTemplate {
     <div class="r hl"/>
     <div class="l"/>
     <div class="r">
-      Sign in and get something to eat for breakfast provided by <a href="https://www.novus.com/" target="_blank"><img class="sponsor-inline" alt="novus" src="http://nescala.org/images/sponsors/novus-bw.jpg"/></a>
+      Sign in and get something to eat for breakfast provided by <a href="https://www.novus.com/" target="_blank"><img class="sponsor-inline" alt="novus" src="/images/sponsors/novus-bw.svg"/></a>
     </div>
   }
 
@@ -267,7 +267,7 @@ trait Templates extends nescala.Templates with SponsorTemplate {
     <div class="r hl"/>
     <div class="l"/>
     <div class="r">
-      Refuel with lunch provided by <a href="http://www.linkedin.com/" target="_blank"><img alt="linkedin" class="sponsor-inline" src="http://nescala.org/images/sponsors/linkedin-bw.svg"/></a>
+      Refuel with lunch provided by <a href="http://www.linkedin.com/" target="_blank"><img alt="linkedin" class="sponsor-inline linkedin" src="/images/sponsors/linkedin-bw.svg"/></a>
     </div>
   }
 
