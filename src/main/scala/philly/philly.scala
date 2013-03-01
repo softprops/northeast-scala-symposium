@@ -95,6 +95,21 @@ object Philly extends Templates {
       }
    }
 
+  def keynoteVideo(speaker: Int, url: String) =
+    video(speaker, "keynote", url)
+
+  def talkVideo(speaker: Int, url: String) =
+    video(speaker, "talk", url)
+
+  def video(speaker: Int, kind: String, url: String) =
+    Store { s =>
+      val key = "2013:philly:%s:%s" format(kind, speaker)
+      if (!s.exists(key)) Left("%s does not appear to be speaking" format speaker)
+      else {
+        Right(s.hmset(key, Map("video" -> url)))
+      }
+    }
+  
   def keynoteSlides(speaker: Int, url: String) =
     slides(speaker, "keynote", url)
 
