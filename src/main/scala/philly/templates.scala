@@ -271,6 +271,17 @@ trait Templates extends nescala.Templates with SponsorTemplate {
     </div>
   }
 
+
+  def youtube(url: String) = {
+    val YouTube = "https://www.youtube.com/watch?v=(.+)".r
+    url match {
+      case YouTube(id) =>
+        <iframe width="550" height="309" src={"http://www.youtube.com/embed/%s?feature=oembed".format(id)} frameborder="0" allowfullscreen=""></iframe>
+      case _ =>
+        <a class="vid" href={ url }>video</a>
+    }
+  }
+
   def renderKeynote(keynote: Map[String, String]) = {
     val memberId = keynote("id").split(":")(3)
     <div class="l hl">
@@ -300,8 +311,7 @@ trait Templates extends nescala.Templates with SponsorTemplate {
       </div>
     </div>
     <div class="r">
-      {if(keynote.isDefinedAt("video")) { <a class="vid" href={ keynote("video").toString }>video</a> } }
-      <hr/>
+      {if(keynote.isDefinedAt("video")) { youtube(keynote("video")) ++ <hr/> } }
       <div class="desc">{ keynote("desc").trim() }</div>
     </div>
   }
@@ -330,7 +340,7 @@ trait Templates extends nescala.Templates with SponsorTemplate {
         </div>
       </div>   
       <div class="r desc">
-        {if(t.isDefinedAt("video")) { <a class="vid" href={ t("video").toString }>video</a> } }
+        {if(t.isDefinedAt("video")) { youtube(t("video")) ++ <hr/> } }
         <p>{ t("desc").trim() }</p>
       </div>
       <hr/>
@@ -442,7 +452,7 @@ trait Templates extends nescala.Templates with SponsorTemplate {
         </div>
       </div>          
       <div class="r desc">
-        {if(t.isDefinedAt("video")) { <a class="vid" href={ t("video").toString }>video</a> } }
+        {if(t.isDefinedAt("video")) { youtube(t("video")) ++ <hr/> } }
         <p>{ t("desc").trim() }</p>
       </div>
   }
