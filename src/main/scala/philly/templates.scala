@@ -273,9 +273,9 @@ trait Templates extends nescala.Templates with SponsorTemplate {
 
 
   def youtube(url: String) = {
-    val YouTube = "https://www.youtube.com/watch?v=(.+)".r
+    val YouTube = """http(s?)://www.youtube.com/watch\?v=(.+)""".r
     url match {
-      case YouTube(id) =>
+      case YouTube(_, id) =>
         <iframe width="550" height="309" src={"http://www.youtube.com/embed/%s?feature=oembed".format(id)} frameborder="0" allowfullscreen=""></iframe>
       case _ =>
         <a class="vid" href={ url }>video</a>
