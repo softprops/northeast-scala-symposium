@@ -1,14 +1,13 @@
 package nescala.boston
 
 import nescala.{ AuthorizedToken, Cached, Clock, Meetup, Store }
+import unfiltered.request._
+import unfiltered.request.QParams._
+import unfiltered.response._
+import unfiltered.Cycle
+import com.redis.RedisClient
 
 object Boston extends Templates {
-  import unfiltered.request._
-  import unfiltered.response._
-  import unfiltered.Cycle
-  import QParams._
-  import com.redis.RedisClient
-
   def site: unfiltered.Cycle.Intent[Any, Any] =
     (index /: Seq(talkProposals,
                   panelProposals,
@@ -21,13 +20,9 @@ object Boston extends Templates {
 
   def api: unfiltered.Cycle.Intent[Any, Any] = {
     case GET(Path(Seg("boston" :: "rsvps" :: event :: Nil))) => Clock("fetching rsvp list for %s" format event) {
-      import net.liftweb.json._
-      import net.liftweb.json.JsonDSL._
-
+      import org.json4s.native.JsonMethods.{ compact, render }
       JsonContent ~> ResponseString(
-        Cached.getOr("meetup:event:%s:rsvps" format event) {
-          (compact(render(Meetup.rsvps(event))), Some(60 * 15))
-        })
+        compact(render(Cached.Boston.Rsvps(event))))
     }
   }
 
@@ -48,8 +43,7 @@ object Boston extends Templates {
           (a, e) => (e match {
             case t @ Talk(mid) =>
               r.hmget[String, String](t, "name", "desc", "slides", "video").map(_ + ("id" -> t)).map {
-                _ ++ (r.hmget[String, String](mukey(mid),
-                                              "mu_name", "mu_photo", "twttr").get)
+                _ ++ r.hmget[String, String](mukey(mid), "mu_name", "mu_photo", "twttr").get
               }.get :: a
             case _ => a
           }))).reverse
@@ -64,8 +58,7 @@ object Boston extends Templates {
         key match {
           case k @ Keynote(mid) =>
             r.hmget[String, String](k, "name", "desc", "slides", "video").map(_ + ("id" -> k)).map {
-              _ ++ r.hmget[String, String](mukey(mid),
-                                           "mu_name", "mu_photo", "twttr").flatten
+              _ ++ r.hmget[String, String](mukey(mid), "mu_name", "mu_photo", "twttr").get
             }.get
           case _ => Map.empty[String, String]
         }
@@ -83,8 +76,7 @@ object Boston extends Templates {
             key match {
               case k @ Keynote(mid) =>
                 r.hmget[String, String](k, "name", "desc").map(_ + ("id" -> k)).map {
-                  _ ++ r.hmget[String, String](mukey(mid),
-                                           "mu_name", "mu_photo", "twttr").flatten
+                  _ ++ r.hmget[String, String](mukey(mid), "mu_name", "mu_photo", "twttr").get
                 }.get
               case _ =>
                 Map.empty[String, String]

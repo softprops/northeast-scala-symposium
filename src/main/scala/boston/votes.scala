@@ -10,11 +10,11 @@ object Votes {
   import unfiltered.response._
   import QParams._
 
-  val MaxTalkVotes = 8
-  val MaxPanelVotes = 1
+  val MaxTalkVotes = 8L
+  val MaxPanelVotes = 1L
 
   def errorJson(msg: String) = """{"status":400, "msg":"%s"}""" format msg
-  def remainingJson(rem: Int) = """{"status":200, "remaining":%d}""" format rem
+  def remainingJson(rem: Long) = """{"status":200, "remaining":%d}""" format rem
 
   def intent: unfiltered.Cycle.Intent[Any, Any] = {
     case POST(Path(Seg("boston" :: "votes" :: Nil))) &

@@ -16,3 +16,6 @@ boston.daythree_event_id = 44049692
 philly.event_id = 97192402
 
 secret = SITE_SECRET
+
+nyc.2014.dayone_event_id = 160217402
+nyc.2014.daytwo_event_id = 160255032

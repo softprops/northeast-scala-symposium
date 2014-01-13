@@ -4,11 +4,9 @@ import models.Vote
 import scala.util.Random
 import unfiltered.request._
 import unfiltered.response._
-import dispatch.oauth.Token
-import net.liftweb.json._
-import net.liftweb.json.JsonDSL._
-import scala.collection.JavaConversions._
-import java.lang.{ Integer => JInt }
+import org.json4s._
+import org.json4s.JsonDSL._
+import scala.collection.JavaConverters._
 
 object Poll extends Templates with nyc.Entries {
   val VOTES = 10

@@ -2,7 +2,7 @@ package nescala
 
 import unfiltered.Cookie
 import unfiltered.request.{Cookies, HttpRequest}
-import dispatch.oauth.Token
+import com.ning.http.client.oauth.RequestToken
 
 case class ClientToken(value: String,
                        sec: String,
@@ -18,7 +18,7 @@ case class ClientToken(value: String,
         .mkString(ClientToken.Delimiter)
   }
 
-  def token = Token(value, sec)
+  def token = new RequestToken(value, sec)
 
   def authorized =
     code.isDefined && memberId.isDefined

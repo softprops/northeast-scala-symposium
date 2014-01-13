@@ -2,18 +2,18 @@ package nescala.philly
 
 import nescala.{ Cached, Clock, AuthorizedToken, Meetup, Store }
 import nescala.request.UrlDecoded
+import unfiltered._
+import unfiltered.request._
+import unfiltered.request.QParams._
+import unfiltered.response._
 
 // talk proposals
 object Votes {
-  import unfiltered._
-  import unfiltered.request._
-  import unfiltered.response._
-  import QParams._
 
-  val MaxTalkVotes = 8
+  val MaxTalkVotes = 8L
 
   def errorJson(msg: String) = """{"status":400, "msg":"%s"}""" format msg
-  def remainingJson(rem: Int) = """{"status":200, "remaining":%d}""" format rem
+  def remainingJson(rem: Long) = """{"status":200, "remaining":%d}""" format rem
 
   def voteCount(talkKey: String) =
     Store { s =>

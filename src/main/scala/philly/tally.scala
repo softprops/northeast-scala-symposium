@@ -9,7 +9,7 @@ object Tally extends Templates {
   import QParams._
 
   def talks: Cycle.Intent[Any, Any] = {
-    case r@GET(Path("/2013/talk_tally")) =>
+    case r @ GET(Path(Seg("2013" :: "talk_tally" :: Nil))) =>
       r match {
         case AuthorizedToken(t) =>
           val mid = t.memberId.get

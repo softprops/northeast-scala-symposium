@@ -1,23 +1,22 @@
 package nescala
 
+import dispatch._
+import dispatch.oauth._
+import com.ning.http.client.oauth.{ ConsumerKey, RequestToken }
+import org.json4s._
+import org.json4s.JsonDSL._
+import scala.concurrent.{ Future, ExecutionContext }
+import scala.concurrent.ExecutionContext.Implicits.global
+
 object Meetup extends Config {
-  import dispatch._
-  import meetup._
-  import dispatch.liftjson.Js._
-  import oauth._
-  import Http._
-
-  import net.liftweb.json.JsonAST._
-  import net.liftweb.json.JsonDSL._
-  import net.liftweb.json.JsonParser._
-
-  val DefaultImage = "http://img1.meetupstatic.com/39194172310009655/img/noPhoto_50.gif"
-
-  lazy val consumer = Consumer(
-    property("mu_consumer"), property("mu_consumer_secret"))
 
   object Nyc {
     val event_id = property("nyc.event_id")
+  }
+
+  object Nyc2014 {
+    val dayoneEventId = property("nyc.2014.dayone_event_id")
+    val daytwoEventId = property("nyc.2014.daytwo_event_id")
   }
 
   object Boston {
@@ -30,94 +29,136 @@ object Meetup extends Config {
     val eventId = property("philly.event_id")
   }
 
-  val client: Client = APIKeyClient(property("api_key"))
+  case class SimpleMember(id: String, name: String, photo: String, twttr: Option[String])
+
+  val DefaultImage =
+    "http://img1.meetupstatic.com/39194172310009655/img/noPhoto_50.gif"
+
+  lazy val consumer = new ConsumerKey(
+    property("mu_consumer"), property("mu_consumer_secret"))  
+
+  val AuthExchange = new dispatch.oauth.Exchange
+    with SomeHttp with SomeConsumer with SomeEndpoints with SomeCallback {
+    def http = Meetup.http
+    lazy val consumer = Meetup.consumer
+    val requestToken = "https://api.meetup.com/oauth/request/"
+    val accessToken = "https://api.meetup.com/oauth/access/"
+    val authorize = "http://www.meetup.com/authenticate/"
+    val callback = "xxx" // callback is passed in below
+
+    def fetchRequestToken(callback: String)
+      (implicit executor: ExecutionContext)
+      : Future[Either[String,RequestToken]] = {
+      val promised = http(
+        url(requestToken) 
+        << Map("oauth_callback" -> callback)
+        <@ (consumer)
+        > as.oauth.Token
+      )
+      for (eth <- message(promised, "request token")) yield eth.joinRight
+    }
+  }
+
+  def host = :/("api.meetup.com").secure
+  def apiKey = property("api_key")
 
   def http = Http
 
-  def has_rsvp(eventId: String, tok: oauth.Token) = {
-    val mu = OAuthClient(consumer, tok)
-    val (res, _) = http(mu.handle(Events.id(eventId)))
-    res.flatMap(Event.myrsvp).contains("yes")
+  def has_rsvp(eventId: String, token: RequestToken): Boolean = {
+    val body = http(
+      host / "2" / "event" / eventId <<? Map("fields" -> "self", "only" -> "self") <@(consumer, token)
+      > as.json4s.Json).apply()
+    (for (JString(resp) <- body \ "self" \ "rsvp" \ "response") yield resp)
+    .headOption.filter(_ == "yes").isDefined
   }
 
-  case class SimpleMember(id: String, name: String, photo: String, twttr: Option[String])
-
-  def members(ids: Traversable[String]) = {
-    val (res, _) = http(client.handle(Members.member_id(ids.mkString(","))))
-    val all =
-      for {
-        r <- res
-        id <- Member.id(r)
-        name <- Member.name(r)
-        photo <- Member.photo_url(r)
-      } yield {
-        id -> SimpleMember(id, name, if(photo.isEmpty) DefaultImage else photo, None)
-      }
-    val twttrs =
-      for {
-        r <- res
-        id <- Member.id(r)
-        JString(twttr) <- r \ "other_services" \ "twitter" \ "identifier"
-      } yield {
-        (id, twttr)
-      }
-    val mems = (Map(all:_*) /: twttrs)((a,e) =>
-      e match {
-        case (id, twttr) =>
-          if(a isDefinedAt id) a.updated(id, a(id).copy(twttr = Some(twttr)))
-          else a
-      }
+  def members(ids: Traversable[String]): List[SimpleMember] = {
+    val body = http(
+      host / "2" / "members" <<? Map("key" -> apiKey, "member_id" -> ids.mkString(","))
+      > as.json4s.Json).apply()
+    for {
+      JObject(fields) <- body
+      ("results", JObject(member)) <- fields
+      ("id", JInt(id))             <- member
+      ("name", JString(name))      <- member
+    } yield SimpleMember(
+      id.toString,
+      name,
+      (for {
+        ("photo", JObject(photo))     <- member
+        ("photo_link", JString(link)) <- photo
+      } yield link).headOption.getOrElse(DefaultImage),
+      (for {
+        ("other_services", JObject(srv)) <- member
+        ("twitter", JObject(twt))        <- srv
+        ("identifier", JString(twttr))   <- twt
+      } yield twttr).headOption
     )
-    mems.values
   }
 
-  def member_id(tok: oauth.Token) = {
-    val mu = OAuthClient(consumer, tok)
-    val (res, _) = http(mu.handle(Members.self))
-    res.flatMap(Member.id).apply(0).toInt
+  def member_id(token: RequestToken): Int = {
+    val body = http(
+      host / "2" / "member" / "self" <<? Map("only" -> "id") <@(consumer, token)
+      > as.json4s.Json).apply()
+    (for (JInt(id) <- body \ "id") yield id.toInt).headOption.getOrElse(0)
   }
 
   def photos(eventId: String) = {
-    val (res, _) = http(client.handle(Photos.event_id(eventId)))
-    val result =
-      for {
-        r <- res
-        id <- Photo.photo_id(r)
-        hr_link <- Photo.highres_link(r)
-        photo_link <- Photo.photo_link(r)
-        thumb_link <- Photo.thumb_link(r)
-      } yield (id, hr_link, photo_link, thumb_link)
-      result map {
-        case (id, hires_link, photo_link, thumb_link) =>
-          ("id" -> id) ~ ("hires_link" -> hires_link) ~
-            ("photo_link" -> photo_link) ~ ("thumb_link" -> thumb_link)
-      }
-    }
+    val body = http(
+      host / "2" / "photos" <<? Map("key" -> apiKey, "event_id" -> eventId)
+      > as.json4s.Json).apply()
+    for {
+      JObject(resp) <- body
+      ("results", JArray(ary)) <- resp
+      JObject(photo) <- ary
+      ("photo_id", id) <- photo
+      ("highres_link", hires) <- photo
+      ("photo_link", link) <- photo
+      ("thumb_link", thumb) <- photo
+    } yield ("id" -> id) ~ ("hires_link" -> hires) ~ ("photo_link" -> link) ~ ("thumb_link" -> thumb)
+  }
 
   def rsvps(eventId: String) = {
-    def parse(res: List[JValue], meta: List[JValue]): List[JValue] = {
-      val result = for {
-        r <- res
-        id <- Rsvp.id(r)
-        name <- Rsvp.name(r)
-        photo <- Rsvp.photo_url(r)
-        response <- Rsvp.response(r)
-        if(response == "yes")
-      } yield {
-        (id, name, if(photo.isEmpty) DefaultImage else photo)
+    def parse(res: JValue, meta: JValue): List[JValue] = {
+      val yeses: List[(Int, String, String)] = for {
+        JObject(rsvp)               <- res
+        ("rsvp_id", JInt(id))       <- rsvp
+        ("response", JString(resp)) <- rsvp
+        if resp == "yes"
+      } yield (
+        id.toInt,
+        (for {
+          ("member", JObject(member)) <- rsvp
+          ("name", JString(name))     <- member
+        } yield name).headOption.getOrElse("???"),
+        (for {
+          ("member_photo", JObject(photo)) <- rsvp
+          ("photo_link", JString(link))    <- photo
+        } yield link).headOption.getOrElse(DefaultImage)
+      )
+      val json = yeses map {
+        case (id, name, photo) =>
+          ("id" -> id) ~ ("name" -> name) ~ ("photo" -> photo)
       }
       val JString(next) = meta \ "next"
-      val json = result map {
-          case (id, name, photo) =>
-            ("id" -> id) ~ ("name" -> name) ~ ("photo" -> photo)
-      }
-      if(next.isEmpty) json
-      else {
-        val (r2, m2) = http(url(next) ># (Response.results ~ Response.meta))
+      if (next.isEmpty) json else {
+        val body = http(url(next) > as.json4s.Json).apply()
+        val (r2, m2) = (for {
+          JObject(fs)     <- body
+          ("results", r2) <- fs
+          ("meta", m2)    <- fs
+        } yield (r2, m2)).head
+        
         parse(r2, m2) ++ json
       }
     }
-    val (res, meta) = http(client.handle(Rsvps.event_id(eventId)))
+    val body = http(host / "2" / "rsvps" <<? Map("event_id" -> eventId, "key" -> apiKey)
+                    > as.json4s.Json).apply()
+    val (res, meta) = (for {
+      JObject(fs)      <- body
+      ("results", res) <- fs
+      ("meta", meta)   <- fs
+    } yield (res, meta)).head
     parse(res, meta)
   }
 
@@ -125,31 +166,23 @@ object Meetup extends Config {
     hosts(eventId).contains(memberId.toInt)
 
   def hosts(eventId: String) =  {
-    val (res, _) = http(client.handle(Events.id(eventId)))
-    for {
-      e <- res
-      JArray(hosts) <- e \ "event_hosts"
-      h <- hosts
-      JInt(id) <- h \ "member_id"
-    } yield id
+    val body = http(host / "2" / "event" / eventId <<? Map(
+      "fields" -> "event_hosts", "only" -> "event_hosts.member_id", "key" -> apiKey)
+      > as.json4s.Json).apply()
+    for (JInt(id) <- body \ "event_hosts" \ "member_id") yield id
   }
 
   def event(eventId: String) = {
-      val (res, _) = http(client.handle(Events.id(eventId)))
-      val result =
-        for {
-          e <- res
-          cutoff <- Event.rsvp_cutoff(e)
-          yes <- Event.rsvpcount(e)
-          no <- Event.no_rsvpcount(e)
-          limit <- Event.rsvp_limit(e)
-        } yield {
-          (cutoff, yes, no, limit)
-        }
-      result map {
-        case (cutoff, yes, no, limit) =>
-          ("cutoff" ->  cutoff) ~ ("yes" -> yes) ~ ("no" -> no) ~
-            ("limit" -> limit)
-      }
-    }
+    val body = http(host / "2"/ "event" / eventId <<? Map(
+      "key" -> apiKey, "fields" -> "rsvp_rules", "only" -> "rsvp_rules,rsvp_limit,yes_rsvp_count")
+      > as.json4s.Json).apply()
+    for {
+      JObject(event) <- body
+      ("yes_rsvp_count", JInt(yes)) <- event
+    } yield Map(
+      "cutoff" -> (for (JInt(cutoff) <- body \ "rsvp_rules" \ "close_time") yield cutoff.toInt).headOption.getOrElse(0),
+      "yes" -> yes.toInt,
+      "no" -> 0,
+      "limit" -> (for (JInt(lim) <- body \ "rsvp_limit") yield lim.toInt).headOption.getOrElse(0))
+  }
 }

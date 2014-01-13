@@ -1,14 +1,14 @@
 package nescala.philly
 
 import nescala.{ Cached, Clock, AuthorizedToken, Meetup, Store }
+import unfiltered.request._
+import unfiltered.response._
+import unfiltered.Cycle
+import unfiltered.request.QParams._
+import com.redis.RedisClient
+import org.json4s.native.JsonMethods._
 
 object Philly extends Templates {
-  import unfiltered.request._
-  import unfiltered.response._
-  import unfiltered.Cycle
-  import QParams._
-  import com.redis.RedisClient
-
   def site: unfiltered.Cycle.Intent[Any, Any] =
     (index /: Seq(talkProposals,
                   api,
@@ -17,7 +17,7 @@ object Philly extends Templates {
   def mukey(of: String) = "philly:members:%s" format of
 
   private def index: Cycle.Intent[Any, Any]  = {
-    case GET(Path(Seg(Nil))) => Clock("home") {
+    case GET(Path(Seg(/*"2013" :: */Nil))) => Clock("home") {
       Store { s =>
         indexPage(false, // authed
                   keynote(s),
@@ -29,14 +29,10 @@ object Philly extends Templates {
   }
 
   private def api: unfiltered.Cycle.Intent[Any, Any] = {
-    case GET(Path(Seg("philly" :: "rsvps" :: event :: Nil))) =>
+    case GET(Path(Seg("philly" :: "rsvps" :: event :: Nil))) => // fixme(doug): this path should be 2013
       Clock("fetching rsvp list for %s" format event) {
-        import net.liftweb.json._
-        import net.liftweb.json.JsonDSL._
         JsonContent ~> ResponseString(
-          Cached.getOr("meetup:event:%s:rsvps" format event) {
-            (compact(render(Meetup.rsvps(event))), Some(60 * 15))
-          })
+          compact(render(Cached.Philly.rsvps)))
       }
   }
 
@@ -171,8 +167,7 @@ object Philly extends Templates {
           (a, e) => (e match {
             case t @ Talk(mid) =>
               r.hmget[String, String](t, "name", "desc", "slides", "video", "track", "order").map(_ + ("id" -> t)).map {
-                _ ++ (r.hmget[String, String](mukey(mid),
-                                              "mu_name", "mu_photo", "twttr").get)
+                _ ++ r.hmget[String, String](mukey(mid), "mu_name", "mu_photo", "twttr").get
               }.get :: a
             case _ => a
           }))).reverse
@@ -187,8 +182,7 @@ object Philly extends Templates {
         key match {
           case k @ Keynote(mid) =>
             r.hmget[String, String](k, "name", "desc", "slides", "video").map(_ + ("id" -> k)).map {
-              _ ++ r.hmget[String, String](mukey(mid),
-                                           "mu_name", "mu_photo", "twttr").flatten
+              _ ++ r.hmget[String, String](mukey(mid), "mu_name", "mu_photo", "twttr").get
             }.get
           case _ => Map.empty[String, String]
         }

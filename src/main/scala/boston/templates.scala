@@ -96,7 +96,7 @@ trait Templates extends nescala.Templates with SponsorTemplate {
                <div class="edit-desc limited">
                   <textarea data-limit={ maxDesc + "" } name="desc">{ p("desc") }</textarea>
                   <div class="form-extras">
-                    <div class="limit-label"/>
+                    <div class="limit-label"></div>
                     <div class="edit-controls clearfix">
                       <input type="submit" value={ editLabel } class="btn" />
                       <input type="button" value="Cancel" class="btn cancel" />
@@ -115,8 +115,8 @@ trait Templates extends nescala.Templates with SponsorTemplate {
     <a href="https://twitter.com/nescalas" class="twitter-follow-button" data-show-count="false" data-lang="en" data-size="large">Follow @nescalas</a>
   }
 
-  def login(authed: Boolean, then: String) =
-    if(!authed) <div id="auth-bar" class="clearfix"><div class="contained"><div class="l">Just who are you anyway?</div><div class="r"><a href={ "/connect%s" format(if(then.isEmpty) "" else "?then=%s".format(then)) } class="btn login">Log in with Meetup</a></div></div></div> else <span/>
+  def login(authed: Boolean, after: String) =
+    if (!authed) <div id="auth-bar" class="clearfix"><div class="contained"><div class="l">Just who are you anyway?</div><div class="r"><a href={ "/connect%s" format(if (after.isEmpty) "" else "?then=%s".format(after)) } class="btn login">Log in with Meetup</a></div></div></div> else <span></span>
 
   val embedly =
     <script type="text/javascript"><![CDATA[
@@ -162,7 +162,7 @@ trait Templates extends nescala.Templates with SponsorTemplate {
             <div class="links">
               <a class="primary" href={ "http://meetup.com/nescala/members/%s" format p("id").split(":")(2) } target="_blank">{ p("mu_name") } </a>{ if(p.isDefinedAt("twttr")) {
                   <a class="twttr" href={ "http://twitter.com/%s" format p("twttr").drop(1) } target="_blank">{ p("twttr") }</a>
-                } else <span/> }
+                } else <span></span> }
             </div>
           </div>
           <p class="desc">{ p("desc") }</p>
@@ -193,7 +193,7 @@ trait Templates extends nescala.Templates with SponsorTemplate {
                  target="_blank">{ p("mu_name") }
               </a>{ if(p.isDefinedAt("twttr")) {
                 <a class="twttr" href={ "http://twitter.com/%s" format p("twttr").drop(1) } target="_blank">{ p("twttr") }</a>
-              } else <span/> }
+              } else <span></span> }
             </div>
           </div>
           <p class="desc">{ p("desc") }</p>
@@ -205,7 +205,7 @@ trait Templates extends nescala.Templates with SponsorTemplate {
 
   val rsvps =
     <div class="attending">
-      <h4 class="tban"/><ul class="rsvps"/><p class="extra-rsvps"/>
+      <h4 class="tban"></h4><ul class="rsvps"></ul><p class="extra-rsvps"></p>
     </div>
 
  def dayOne(authed: Boolean, keynote: Map[String, String], talks: Seq[Map[String, String]], panel: Map[String, String]) = 
@@ -246,7 +246,7 @@ trait Templates extends nescala.Templates with SponsorTemplate {
                     href={ "http://twitter.com/%s" format keynote("twttr").drop(1) }
                     target="_blank">{ keynote("twttr") }
                 </a>
-                } else <span/> }
+                } else <span></span> }
               </div>
             </div>
           </div>
@@ -271,9 +271,9 @@ trait Templates extends nescala.Templates with SponsorTemplate {
                  <a class="twttr"
                      href={ "http://twitter.com/%s" format t("twttr").drop(1) }
                      target="_blank">{ t("twttr") }</a>
-                 } else <span/> } { if(t.isDefinedAt("slides")) {
+                 } else <span></span> } { if(t.isDefinedAt("slides")) {
                    <a href={ t("slides") }>slides</a>
-                 } else <span/> }
+                 } else <span></span> }
               </div>
             </div>
           </div>
@@ -295,7 +295,7 @@ trait Templates extends nescala.Templates with SponsorTemplate {
               <div class="links">
                 <a class="primary" href={ "http://meetup.com/nescala/members/%s" format panel("id").split(":")(2) } target="_blank">{ panel("mu_name") } </a>{ if(panel.isDefinedAt("twttr")) {
                 <a class="twttr" href={ "http://twitter.com/%s" format panel("twttr").drop(1) } target="_blank">{ panel("twttr") }</a>
-                } else <span/> }
+                } else <span></span> }
               </div>
             </div>
           </div>
