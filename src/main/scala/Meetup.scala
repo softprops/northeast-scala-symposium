@@ -41,10 +41,10 @@ object Meetup extends Config {
     with SomeHttp with SomeConsumer with SomeEndpoints with SomeCallback {
     def http = Meetup.http
     lazy val consumer = Meetup.consumer
-    val requestToken = "https://api.meetup.com/oauth/request/"
-    val accessToken = "https://api.meetup.com/oauth/access/"
-    val authorize = "http://www.meetup.com/authenticate/"
-    val callback = "xxx" // callback is passed in below
+    val requestToken = "https://api.meetup.com/oauth/request"
+    val accessToken = "https://api.meetup.com/oauth/access"
+    val authorize = "http://www.meetup.com/authorize"
+    val callback = "oob"
 
     def fetchRequestToken(callback: String)
       (implicit executor: ExecutionContext)

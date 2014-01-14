@@ -15,8 +15,9 @@ object Nyc extends Templates {
     index
 
   private def index: Cycle.Intent[Any, Any]  = {
-    case GET(Path(Seg(Nil))) => Clock("home") {
-      indexPage(false)
+    case r @ GET(Path(Seg(Nil))) => Clock("home") {
+      val authed = AuthorizedToken(r).isDefined
+      indexPage(authed) 
     }
   }
 }

@@ -42,6 +42,8 @@ object ClientToken {
 object AuthorizedToken {
   def unapply[T](r: HttpRequest[T]): Option[ClientToken] =
     CookieToken(r).filter(_.authorized)
+  def apply[T](r: HttpRequest[T]): Option[ClientToken] =
+    unapply(r)    
 }
 
 object CookieToken {

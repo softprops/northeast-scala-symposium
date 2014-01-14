@@ -8,27 +8,28 @@ import unfiltered.response._
 import unfiltered.Cookie
 import com.ning.http.client.oauth.RequestToken
 import scala.concurrent.ExecutionContext.Implicits.global
+import nescala.request.UrlEncoded
 
 object NESS extends Config {
 
   def site: Intent[Any, Any] = {    
     case GET(Path(Seg("login" :: Nil))) & Params(p) =>
-      val callbackbase = "%s/authenticated" format property("host")
+      val callbackbase = s"${property("host")}/authenticated"
       val callback = p("then") match {
-        case Seq(after) => "%s?then=%s" format(callbackbase, after)
+        case Seq(after) => s"$callbackbase?then=$after"
         case _ => callbackbase
       }
-      println(s"callback $callback")
       Meetup.AuthExchange.fetchRequestToken(callback).apply().fold({
         ResponseString(_)
       }, { t =>
         // drop cookie and redirect to meetup for auth
         val to = Meetup.AuthExchange.signedAuthorize(t)
-        println(s"fetched request token $t. redirecting to auth $to")
         SetCookies(
           Cookie("token",
-                 ClientToken(t.getKey, t.getSecret,
-                             Hashing(t.getKey, t.getSecret)).toCookieString,
+                 ClientToken(
+                   t.getKey,
+                   t.getSecret,
+                   Hashing(t.getKey, t.getSecret)).toCookieString,
                  httpOnly = true)) ~> Redirect(to)
       })
 
@@ -60,10 +61,10 @@ object NESS extends Config {
                        verifier,
                        mid).toCookieString,
                      httpOnly = true)) ~> Redirect(after.get match {
-                case Some("vote") => "/2013/talks#proposed"
+                case Some("vote") => "/2014/talks#proposed"
                   case Some("talk") => "/#propose-talk"
-                  case Some("proposals") => "/2013/talk_tally"
-                  case Some("panel_proposals") => "/2013/panel_tally"
+                  case Some("proposals") => "/2014/talk_tally"
+                  case Some("panel_proposals") => "/2014/panel_tally"
                   case other => "/"
                 })
           })

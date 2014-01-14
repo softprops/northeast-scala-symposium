@@ -17,7 +17,7 @@ object Philly extends Templates {
   def mukey(of: String) = "philly:members:%s" format of
 
   private def index: Cycle.Intent[Any, Any]  = {
-    case GET(Path(Seg(/*"2013" :: */Nil))) => Clock("home") {
+    case GET(Path(Seg("2013" :: Nil))) => Clock("home") {
       Store { s =>
         indexPage(false, // authed
                   keynote(s),
