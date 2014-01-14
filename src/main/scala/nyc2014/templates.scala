@@ -48,7 +48,7 @@ trait Templates {
             <div class="center">
               <div class="unit whole">
                 <p>
-                  This year's symposium, uses structual sharing with those, 3 years passed.
+                  This year's symposium, uses structural sharing with those, 3 years passed.
                 </p>
               </div>
               <p class="unit one-third">
