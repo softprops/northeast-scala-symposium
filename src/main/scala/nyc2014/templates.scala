@@ -39,22 +39,18 @@ trait Templates {
          </div>
          <div class="unit whole center lead">
           <p>
-            This year's symposium features talks in four flavors:
+            This year's symposium features talks in three flavors:
           </p>
           <div class="grid">
-            <div class="unit one-quarter">
-              Long (55 min)
-              <p class="small mute">1 slot (keynote)</p>
-            </div>
-            <div class="unit one-quarter">
+            <div class="unit one-third">
               Med (45 min)
-              <p class="small mute">2 slots</p>
+              <p class="small mute">3 slots</p>
             </div>
-            <div class="unit one-quarter">
+            <div class="unit one-third">
               Short (30 min)
               <p class="small mute">4 slots</p>
             </div>
-            <div class="unit one-quarter">
+            <div class="unit one-third">
               Lightning (15 min)
               <p class="small mute">6 slots</p>
             </div>
@@ -87,7 +83,6 @@ trait Templates {
                          } else <span></span>
                  }
               </div><div class="mute">{ p("kind") match {
-                case "keynote" => "55 minutes"
                 case "medium" => "45 minutes"
                 case "short" => "30 minutes"
                 case  "lightning" => "15 minutes"
@@ -150,7 +145,7 @@ trait Templates {
         else
           <p class="instruct">You have used up all your talk proposals</p>
        }</div>
-        <div id="propose-container" class="unit two-thirds">{ if (proposals.size < Proposals.MaxProposals) 
+        <div id="propose-container" class="unit two-thirds">{ if (proposals.size < Proposals.MaxProposals)
           <form action="/2014/proposals" method="POST" id="propose-form" class="proposing">
             <div id="proposal-notifications">
               <div id="proposal-notification"></div>
@@ -162,7 +157,6 @@ trait Templates {
               </div>
               <div class="unit half">
                 <select name="kind">
-                 <option value="keynote">Long (55 min)</option>
                  <option value="medium">Medium (45 min)</option>
                  <option value="short">Short (30 min)</option>
                  <option value="lightning">Lightning (15 min)</option>
@@ -170,7 +164,7 @@ trait Templates {
               </div>
             </div>
             <div class="grid">
-              <div class="unit whole">                                                                   
+              <div class="unit whole">
                  <label for="name">What's your talk called?</label>
               </div>
               <div class="unit whole">
@@ -180,8 +174,8 @@ trait Templates {
             <div class="grid">
               <div class="unit whole">
                 <label for="desc">What's your talk is about?</label>
-              </div>            
-              <div class="unit whole">     
+              </div>
+              <div class="unit whole">
                 <div class="limited">
                   <textarea name="desc" data-limit={ Proposals.MaxTalkDesc + "" }
                     placeholder={ "Say it in %s characters or less" format(
@@ -230,7 +224,6 @@ trait Templates {
                <div>
                  <p>
                     This is a <select class="edit-kind" name="kind" disabled="disabled">
-                    <option value="keynote" selected={  Option(p("kind")).filter(_ == "keynote").map( _ => "selected").orNull }>Long (55 min)</option>
                     <option value="medium" selected={ Option(p("kind")).filter(_ == "medium").map( _ => "selected").orNull }>Medium (45 min)</option>
                     <option value="short" selected={ Option(p("kind")).filter(_ == "short").map( _ => "selected").orNull }>Short (30 min)</option>
                     <option value="lightning" selected={ Option(p("kind")).filter(_ == "lightning").map( _ => "selected").orNull }>Lightning (15 min)</option>
@@ -241,7 +234,7 @@ trait Templates {
                <div class="edit-desc limited">
                   <textarea data-limit={ maxDesc + "" } name="desc">{ p("desc") }</textarea>
                   <div class="limit-label"></div>
-                  <div class="form-extras">                    
+                  <div class="form-extras">
                     <div class="edit-controls clearfix">
                       <input type="submit" value={ editLabel } class="btn" />
                       <input type="button" value="Cancel" class="btn cancel" />
@@ -313,7 +306,7 @@ trait Templates {
       </body>
     </html>
   )
-  
+
   val twttrFollow = {
     <a href="https://twitter.com/nescalas" class="twitter-follow-button" data-show-count="false" data-size="large">Follow @nescalas</a>
   }
@@ -347,7 +340,7 @@ trait Templates {
         </div>
       </div>
     </header>
-  
+
   def blurb(authed: Boolean) = (<section>
     <div class="grid">
       <div class="unit whole lead center">
@@ -366,7 +359,7 @@ trait Templates {
       <div class="unit half">
         <h2>One day of <strong>sharing</strong>.</h2>
         <p>
-         <a href={dayoneLink}>Day 1</a> is back to basics with <a href="#where">one room</a>, <a href="/2014/talks">one track of talks</a>. 
+         <a href={dayoneLink}>Day 1</a> is back to basics with <a href="#where">one room</a>, <a href="/2014/talks">one track of talks</a>.
         </p>
         <p>
           Seating on day 1 is <strong>limited</strong>. The first block of RSVPs will open Wednesday January 15 at noon. We've set a cap of 50 for this block and expect these to sell out quickly to punctual, signed in members of this meetup who have paypal accounts and know how to use them.
@@ -384,7 +377,7 @@ trait Templates {
          <a href={daytwoLink}>Day 2</a> will be an informal unconference self-organized on the spot by whoever shows up.
         </p>
         <p>
-          More info to follow. 
+          More info to follow.
         </p>
       </div>
     </div>

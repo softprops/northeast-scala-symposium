@@ -53,7 +53,7 @@
       function (e) {
       e.preventDefault();
       var self = $(this), href = self.attr('href');
-      if(confirm("Are you sure you want to withdraw this?")) {        
+      if(confirm("Are you sure you want to withdraw this?")) {
           $.post(href, {}, function(e){
           switch(e.status) {
           case 200:
@@ -156,7 +156,7 @@
       e.preventDefault();
       var frm = $(this)
         , isPanel = frm.attr("id") === 'propose-panel-form'
-        , lid = isPanel ? '#panel_proposals-list' : '#proposals-list' 
+        , lid = isPanel ? '#panel_proposals-list' : '#proposals-list'
         , action = frm.attr("action")
         , fields = $("input,textarea,select", frm)
         , data = frm.serialize()
@@ -188,7 +188,6 @@
                , '</div>'
                , '<div>'
                , '<p> This is a <select class="edit-kind" name="kind" disabled="disabled"> '
-               , ' <option value="keynote">Long (55 min)</option>'
                , ' <option value="medium">Medium (45 min)</option>'
                , ' <option value="short">Short (30 min)</option>'
                , ' <option value="lightning">Lightning (15 min)</option>'
