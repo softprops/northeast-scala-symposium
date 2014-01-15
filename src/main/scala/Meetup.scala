@@ -78,7 +78,8 @@ object Meetup extends Config {
       > as.json4s.Json).apply()
     for {
       JObject(fields) <- body
-      ("results", JObject(member)) <- fields
+      ("results", JArray(ary))     <- fields
+      JObject(member)              <- ary
       ("id", JInt(id))             <- member
       ("name", JString(name))      <- member
     } yield SimpleMember(
