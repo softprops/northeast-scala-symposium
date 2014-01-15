@@ -83,10 +83,10 @@ trait Templates {
               <div class="links">
                 <p><a class="primary" href={ s"http://meetup.com/nescala/members/${p("id").split(":")(2)}" }
                          target="_blank">{ p("mu_name") } </a></p>{ if(p.isDefinedAt("twttr")) {
-                           <p><a class="twttr" href={ s"http://twitter.com/${p("twttr").drop(1)}" } target="_blank">{ p("twttr") }</a></p>
+                           <p><a class="twttr small" href={ s"http://twitter.com/${p("twttr").drop(1)}" } target="_blank">{ p("twttr") }</a></p>
                          } else <span></span>
                  }
-              </div><div>{ p("kind") match {
+              </div><div class="mute">{ p("kind") match {
                 case "keynote" => "55 minutes"
                 case "medium" => "45 minutes"
                 case "short" => "30 minutes"
@@ -151,8 +151,7 @@ trait Templates {
           <p class="instruct">You have used up all your talk proposals</p>
        }</div>
         <div id="propose-container" class="unit two-thirds">{ if (proposals.size < Proposals.MaxProposals) 
-          <form action="/2014/proposals" method="POST" id="propose-form" class="proposing" >
-            <h2>Propose a talk</h2>            
+          <form action="/2014/proposals" method="POST" id="propose-form" class="proposing">
             <div id="proposal-notifications">
               <div id="proposal-notification"></div>
               <div id="proposal-edit-notification"></div>

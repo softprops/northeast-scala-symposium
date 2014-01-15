@@ -92,7 +92,7 @@ h2 strong {
   line-height:.25em;
 }
 
-p, pre {
+p, pre, label {
   font-size: 1.2em;
   line-height: 1.8em;
 }
@@ -224,9 +224,7 @@ hr {
 
 .proposing input[type="text"],
 .proposing textarea {
-  margin:.5em 0;
   padding:.25em;
-  margin:1em 0;
   font-size:24px;
   color:#333;
   width:100%;
@@ -401,11 +399,14 @@ input[type='text'], textarea {
   font-size: 26px;
   padding: .25em;
   width: 97.5%;
-  margin: .5em auto;
+  margin: 0 auto;
+}
+
+.propose-edit-form input[type='text'], .propose-edit-form textarea {
+  margin:0 0 1em 0;
 }
 
 ul { list-style:none; margin:0; padding:0; }
-
 
 .circle {
   line-height: 0;/* remove line-height */ 
@@ -430,3 +431,7 @@ ul { list-style:none; margin:0; padding:0; }
 a.circle {
   color: transparent;
 } /* IE fix: removes blue border */
+
+.links p {
+  margin:0;
+}
