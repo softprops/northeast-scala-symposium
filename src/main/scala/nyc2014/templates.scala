@@ -116,6 +116,8 @@ trait Templates {
       <div class="grid" id="propose">
         <div class="unit whole">
           <h2>Speak up</h2>
+          <p>The deadline for submitting talk proposals is <strong>Jan 23</strong>.</p>
+          <p>Speakers will be guaranteed a spot on the RSVP list, <strong>and</strong> a spot for a friend or colleague.</p>
           <p>In order to submit a talk proposal, we need to know a little more about you.</p>
           <p><a href="/login?then=talk" class="btn">Login to talk</a></p>
         </div>
@@ -126,6 +128,8 @@ trait Templates {
     <div class="grid" id="propose">
       <div class="unit whole">
         <h2>Speak up</h2>
+        <p>The deadline for submitting talk proposals is <strong>Jan 23</strong>.</p>
+        <p>Speakers will be guaranteed a spot on the RSVP list, <strong>and</strong> a spot for a friend or colleague.</p>
       </div>
       <div id="propose-talk">
         <div class="unit one-third">{ if (proposals.size < Proposals.MaxProposals)
@@ -360,6 +364,9 @@ trait Templates {
         <h2>One day of <strong>sharing</strong>.</h2>
         <p>
          <a href={dayoneLink}>Day 1</a> is back to basics with <a href="#where">one room</a>, <a href="/2014/talks">one track of talks</a>.
+        </p>
+        <p>
+          If you wish to talk on day one, get your proposal in <a href="#propose">now</a>. The deadline for submitting talk proposals is <strong>Jan 23</strong>. Speakers will be guaranteed an RSVP spot, <strong>and</strong> a spot for a friend or colleague.
         </p>
         <p>
           Seating on day 1 is <strong>limited</strong>. The first block of RSVPs will open Wednesday January 15 at noon. We've set a cap of 50 for this block and expect these to sell out quickly to punctual, signed in members of this meetup who have paypal accounts and know how to use them.
