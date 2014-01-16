@@ -369,10 +369,7 @@ trait Templates {
           If you wish to talk on day one, get your proposal in <a href="#propose">now</a>. The deadline for submitting talk proposals is <strong>Jan 23</strong>. Speakers will be guaranteed an RSVP spot, <strong>and</strong> a spot for a friend or colleague.
         </p>
         <p>
-          Seating on day 1 is <strong>limited</strong>. The first block of RSVPs will open Wednesday January 15 at noon. We've set a cap of 50 for this block and expect these to sell out quickly to punctual, signed in members of this meetup who have paypal accounts and know how to use them.
-        </p>
-        <p>
-          After this block does sell out, we'll announce a date and time for the second and final block.
+          Seating on day 1 is <strong>limited</strong>. The first block of RSVPs sold out instantly. The second and <strong>final</strong> block of 40 more tickets will open at <strong>10 AM Friday January 17</strong>.
         </p>
         <p>
           If you've got something you'd like to talk about, <a href="#propose">let us know</a>.
