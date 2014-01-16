@@ -369,7 +369,7 @@ trait Templates {
           If you wish to talk on day one, get your proposal in <a href="#propose">now</a>. The deadline for submitting talk proposals is <strong>Jan 23</strong>. Speakers will be guaranteed an RSVP spot, <strong>and</strong> a spot for a friend or colleague.
         </p>
         <p>
-          Seating on day 1 is <strong>limited</strong>. The first block of RSVPs sold out instantly. The second and <strong>final</strong> block of 40 more tickets will open at <strong>10 AM Friday January 17</strong>.
+          Seating on day 1 is <strong>limited</strong>. The first block of RSVPs sold out instantly. The second and <strong>final</strong> block of 40 more tickets will open at <strong>10 AM Friday January 17</strong>. You can keep track of this status on <a href={dayoneLink}>Meetup</a>.
         </p>
         <p>
           If you've got something you'd like to talk about, <a href="#propose">let us know</a>.
