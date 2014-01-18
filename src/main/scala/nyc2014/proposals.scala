@@ -104,19 +104,18 @@ object Proposals extends Templates {
           who
       }
     }).toSet.toSeq
-    val notcached = Store { s =>
+
+    val stale = Store { s =>
       val tenMinutesAgo = System.currentTimeMillis - (60 * 1000 * 10)
       def stale(key: String) = s.hmget[String, String](key, "mtime") flatMap {
-        case map => map.get("mtime").map(_.toLong > tenMinutesAgo)
+        _.get("mtime").map(_.toLong < tenMinutesAgo)
       }
-      def refresh(key: String) =
-        s.exists(key) && true//stale(key).getOrElse(false)
-      pids.filterNot( p => refresh(Nyc.mukey(p)))
+      def refresh(key: String) = s.exists(key) && stale(key).getOrElse(true)
+      pids.filter( p => refresh(Nyc.mukey(p)))
     }
-
-    val members = if (!notcached.isEmpty) {
-      val ms = Meetup.members(notcached)
-      println(s"fetched members $ms for not cached $notcached")
+    val members: Map[String, Map[String, String]] = (if (!stale.isEmpty) {
+      val cached = pids.filterNot(stale.contains)
+      val ms = Meetup.members(stale)
       Store { s =>
         ms.map { m =>
           val data = Map(
@@ -124,8 +123,14 @@ object Proposals extends Templates {
             "mu_photo" -> m.photo,
             "mtime" -> System.currentTimeMillis.toString
           ) ++ m.twttr.map("twttr" -> _)
-                s.hmset(Nyc.mukey(m.id), data)
-                m.id -> data
+          s.hmset(Nyc.mukey(m.id), data)
+          m.id -> data
+        } ++ cached.map { p =>
+          p -> s.hmget[String, String](
+            Nyc.mukey(p),
+            "mu_name",
+            "mu_photo",
+            "twttr").get
         }
       }
     } else {
@@ -138,7 +143,7 @@ object Proposals extends Templates {
             "twttr").get
         }
       }
-    }
+    }).toMap
 
     (proposals /: members)((a, e) => e match {
       case (key, value) =>          
