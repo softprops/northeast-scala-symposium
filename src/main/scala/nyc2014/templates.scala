@@ -362,6 +362,7 @@ trait Templates {
       </div></div></section><section><div class="grid">
       <div class="unit half">
         <h2>One day of <strong>sharing</strong>.</h2>
+        <p class="mute">Sat Mar 1, 8am to 6pm</p>
         <p>
          <a href={dayoneLink}>Day 1</a> is back to basics with <a href="#where">one room</a>, <a href="/2014/talks">one track of talks</a>.
         </p>
@@ -377,12 +378,29 @@ trait Templates {
       </div>
       <div class="unit half">
         <h2>One day of <strong>pairing</strong>.</h2>
+        <p class="mute">Sun Mar 2, 9am to 5pm</p>
         <p>
-         <a href={daytwoLink}>Day 2</a> will be an informal unconference self-organized on the spot by whoever shows up.
+          <a href={daytwoLink}>Day 2</a> is a free-to-attend, hands-on <a href="http://en.wikipedia.org/wiki/Unconference">unconference</a>,
+          self-organized on the spot by whoever shows up. (Trust us, this works.)
         </p>
         <p>
-          More info to follow.
+          In past years we've had workshops, panels, talks that didn't make it into day 1, debates, group hugs (well, not really).
+          The unconference is whatever you want to make of it.
         </p>
+        <p>
+          We're taking over all three floors of Meetup HQ, so there will be plenty of room for everyone,
+          even those who didn't get in for <a href={dayoneLink}>Day 1</a>.
+        </p>
+        <p>
+          Unconference participants will collectively fill the schedule grid first thing Sunday morning.
+          Bring your laptop, and your conversation ideas.
+        </p>
+       <p>
+         Rooms, projectors, whiteboards, and markers will be provided. (Video adapters will not be provided! Make sure you bring your own.)
+       </p>
+       <p>
+         There might be food; we're working on it.
+       </p>
       </div>
     </div>
   </section>)
@@ -395,6 +413,14 @@ trait Templates {
           This year's symposium will be held @ <a target="_blank" href="http://meetup.com/">Meetup</a> <a href="http://www.gramfeed.com/instagram/tags#meetuphq">HQ</a>.
           </p>
           <iframe src="https://maps.google.com/maps?z=1&amp;f=q&amp;hl=en&amp;q=632+Broadway,+New+York,+NY,+10012,+us&amp;ie=UTF8&amp;hq=&amp;hnear=632+Broadway,+New+York,+10012&amp;ll=40.726166,-73.996023&amp;spn=0.002529,0.003578&amp;t=m&amp;z=14&amp;output=embed"></iframe>
+      </div>
+    </div>
+  </section>
+
+  val attending = <section>
+    <div class="grid">
+      <div class="unit whole day" data-event={ Meetup.Nyc2014.dayoneEventId }>
+        <ul class="rsvps"></ul>
       </div>
     </div>
   </section>
