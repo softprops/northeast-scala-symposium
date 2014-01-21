@@ -329,12 +329,8 @@ trait Templates {
    <header>
     <div class="grid">
       <div class="unit whole center title">
-        <a href="/">
-          <h1>
-            north°<br/>
-            scala
-          </h1>
-          <h2 class="amp mute">symposium</h2>
+        <a href="/" class="logo">
+          <img src="/images/2014-logo.svg" alt="north east scala symposium logo"></img>
         </a>
         <div class="center">
           <hr/>

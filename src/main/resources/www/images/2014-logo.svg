@@ -1,0 +1,484 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="570.7428"
+   height="287.7851"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.48.2 r9819"
+   sodipodi:docname="logo.svg"
+   inkscape:export-filename="/Users/dougtangren/code/scala/projects/northeast-scala-symposium/src/main/resources/www/images/2014-logo.png"
+   inkscape:export-xdpi="90"
+   inkscape:export-ydpi="90">
+  <defs
+     id="defs4">
+    <inkscape:path-effect
+       effect="skeletal"
+       id="path-effect4070"
+       is_visible="true"
+       pattern="m 165.41421,-361.53033 1,0"
+       copytype="single_stretched"
+       prop_scale="1"
+       scale_y_rel="false"
+       spacing="0"
+       normal_offset="0"
+       tang_offset="0"
+       prop_units="false"
+       vertical_pattern="false"
+       fuse_tolerance="0" />
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="0 : 526.18109 : 1"
+       inkscape:vp_y="872.04724 : 1216.8128 : 1"
+       inkscape:vp_z="744.09448 : 526.18109 : 1"
+       inkscape:persp3d-origin="372.04724 : 350.78739 : 1"
+       id="perspective4039" />
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1.4142136"
+     inkscape:cx="283.71749"
+     inkscape:cy="165.48474"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer2"
+     showgrid="false"
+     inkscape:window-width="1280"
+     inkscape:window-height="733"
+     inkscape:window-x="166"
+     inkscape:window-y="29"
+     inkscape:window-maximized="0"
+     fit-margin-top="10"
+     fit-margin-left="10"
+     fit-margin-right="10"
+     fit-margin-bottom="10" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:groupmode="layer"
+     id="layer3"
+     inkscape:label="background"
+     style="display:inline"
+     transform="translate(5.9849075,46.645817)">
+    <rect
+       style="fill:#000000;fill-opacity:0"
+       id="rect3026"
+       width="278.5"
+       height="83.5"
+       x="103"
+       y="395.86218"
+       rx="14.292993"
+       ry="14.458333" />
+    <rect
+       style="fill:#000000;fill-opacity:0"
+       id="rect3028"
+       width="238"
+       height="94"
+       x="109.5"
+       y="384.36218"
+       rx="14.292993"
+       ry="14.458333" />
+    <rect
+       style="fill:#000000;fill-opacity:0"
+       id="rect3798"
+       width="245.5"
+       height="94.5"
+       x="108.5"
+       y="384.36218"
+       rx="14.292993"
+       ry="14.458333" />
+    <rect
+       style="fill:#000000;fill-opacity:0"
+       id="rect3800"
+       width="272.5"
+       height="127"
+       x="103.5"
+       y="388.36218"
+       rx="14.292993"
+       ry="14.458333" />
+    <path
+       sodipodi:type="arc"
+       style="fill:#e7ff20;fill-opacity:0.99685992;stroke:none"
+       id="path3821"
+       sodipodi:cx="130.28156"
+       sodipodi:cy="102.59126"
+       sodipodi:rx="101.65632"
+       sodipodi:ry="95.41748"
+       d="m 231.93787,102.59126 a 101.65632,95.41748 0 1 1 -203.312633,0 101.65632,95.41748 0 1 1 203.312633,0 z"
+       transform="matrix(0.88786382,0,0,0.90292021,-3.322113,-19.229784)"
+       inkscape:export-filename="/Users/dougtangren/Desktop/2014-logo.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="direction-text"
+     style="display:inline"
+     transform="translate(5.9849075,46.645817)">
+    <text
+       xml:space="preserve"
+       style="font-size:124px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:0.99685992;stroke:none;font-family:Montserrat;-inkscape-font-specification:Montserrat Bold"
+       x="-3.7889075"
+       y="55.362183"
+       id="text2987"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/Users/dougtangren/Desktop/2014-logo.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         id="tspan2989"
+         x="-3.7889075"
+         y="55.362183">north</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:124px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:0.99685992;stroke:none;font-family:Montserrat;-inkscape-font-specification:Montserrat Bold"
+       x="86.431091"
+       y="136.36218"
+       id="text2991"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/Users/dougtangren/Desktop/2014-logo.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         id="tspan2993"
+         x="86.431091"
+         y="136.36218">east</tspan></text>
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer9"
+     inkscape:label="ne-dot"
+     style="display:inline"
+     transform="translate(5.9849075,46.645817)">
+    <text
+       xml:space="preserve"
+       style="font-size:80px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:0.99685992;stroke:none;font-family:Montserrat;-inkscape-font-specification:Montserrat"
+       x="330.06604"
+       y="-16.220366"
+       id="text3804"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/Users/dougtangren/Desktop/2014-logo.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         id="tspan3806"
+         x="330.06604"
+         y="-16.220366">.</tspan></text>
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer8"
+     inkscape:label="symp-text"
+     style="display:inline"
+     transform="translate(5.9849075,46.645817)">
+    <text
+       xml:space="preserve"
+       style="font-size:50px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:justify;line-height:50%;letter-spacing:13px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:0.99685992;stroke:none;font-family:Signika;-inkscape-font-specification:Signika Light"
+       x="2.1650925"
+       y="189.42346"
+       id="text4162"
+       sodipodi:linespacing="50%"
+       inkscape:export-filename="/Users/dougtangren/Desktop/2014-logo.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         id="tspan4164"
+         x="2.1650925"
+         y="189.42346">symposium</tspan></text>
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer10"
+     inkscape:label="scala-text"
+     transform="translate(5.9849075,46.645817)"
+     style="display:inline">
+    <text
+       xml:space="preserve"
+       style="font-size:80px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:0.99685992;stroke:none;font-family:Montserrat;-inkscape-font-specification:Montserrat Bold"
+       x="353.61166"
+       y="47.138836"
+       id="text3805"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/Users/dougtangren/Desktop/2014-logo.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         id="tspan3807"
+         x="353.61166"
+         y="47.138836">scala</tspan></text>
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer1"
+     inkscape:label="div"
+     style="display:inline"
+     transform="translate(5.9849075,46.645817)">
+    <rect
+       style="fill:#000000;fill-opacity:0.99685992;stroke:none"
+       id="rect3801"
+       width="131.9301"
+       height="2.2019417"
+       x="98.093201"
+       y="146.867"
+       inkscape:export-filename="/Users/dougtangren/Desktop/2014-logo.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer7"
+     inkscape:label="res-text"
+     style="display:none"
+     transform="translate(5.9849075,46.645817)"
+     sodipodi:insensitive="true">
+    <text
+       xml:space="preserve"
+       style="font-size:40px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:0.99685992;stroke:none;font-family:Inconsolata;-inkscape-font-specification:Inconsolata Medium"
+       x="5.1320267"
+       y="230.65927"
+       id="text4101"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/Users/dougtangren/Desktop/2014-logo.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         id="tspan4103"
+         x="5.1320267"
+         y="230.65927">res0: Int = 2014</tspan></text>
+    <flowRoot
+       xml:space="preserve"
+       id="flowRoot4105"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"><flowRegion
+         id="flowRegion4107"><rect
+           id="rect4109"
+           width="54.5"
+           height="50.5"
+           x="143.5"
+           y="36.862183" /></flowRegion><flowPara
+         id="flowPara4111" /></flowRoot>  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer5"
+     inkscape:label="legs"
+     style="display:inline"
+     transform="translate(5.9849075,46.645817)">
+    <rect
+       style="fill:#000000;fill-opacity:0.99685992;stroke:none"
+       id="rect4077"
+       width="3.2201977"
+       height="21.799875"
+       x="446.37482"
+       y="-44.497131"
+       transform="matrix(0.93142228,0.36394029,-0.3510886,0.93634224,0,0)"
+       rx="4.2935967"
+       ry="4.3599749"
+       inkscape:export-filename="/Users/dougtangren/Desktop/2014-logo.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <rect
+       style="fill:#000000;fill-opacity:0.99685992;stroke:none"
+       id="rect4079"
+       width="3.4900484"
+       height="19.611696"
+       x="375.92963"
+       y="293.16443"
+       transform="matrix(0.91997913,-0.39196735,0.3784467,0.92562308,0,0)"
+       rx="4.295445"
+       ry="4.3581543"
+       inkscape:export-filename="/Users/dougtangren/Desktop/2014-logo.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <rect
+       style="fill:#000000;fill-opacity:0.99685992;stroke:none"
+       id="rect4081"
+       width="3.0555074"
+       height="31.279037"
+       x="71.1502"
+       y="430.73428"
+       transform="matrix(0.60391849,-0.79704608,0.90837682,0.41815254,0,0)"
+       inkscape:transform-center-y="6.0901791"
+       inkscape:transform-center-x="0.75078002"
+       inkscape:export-filename="/Users/dougtangren/Desktop/2014-logo.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <rect
+       style="fill:#000000;fill-opacity:0.99685992;stroke:none"
+       id="rect4085"
+       width="3.3334792"
+       height="23.576521"
+       x="327.03268"
+       y="-373.34964"
+       transform="matrix(0.37237657,0.92808173,-0.87349737,0.48682886,0,0)"
+       inkscape:export-filename="/Users/dougtangren/Desktop/2014-logo.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       sodipodi:type="arc"
+       style="fill:#000000;fill-opacity:0.99685992;stroke:none"
+       id="path4087"
+       sodipodi:cx="273.5"
+       sodipodi:cy="452.73718"
+       sodipodi:rx="2.25"
+       sodipodi:ry="2.375"
+       d="m 275.75,452.73718 a 2.25,2.375 0 1 1 -4.5,0 2.25,2.375 0 1 1 4.5,0 z"
+       transform="matrix(2.1410496,0,0,2.1856339,-145.27807,-875.69481)"
+       inkscape:export-filename="/Users/dougtangren/Desktop/2014-logo.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer4"
+     inkscape:label="tower"
+     style="display:inline"
+     transform="translate(5.9849075,46.645817)">
+    <rect
+       style="fill:#000000;fill-opacity:0.99685992"
+       id="rect4033"
+       width="42.390621"
+       height="42.500607"
+       x="423.96744"
+       y="76.197807"
+       inkscape:export-filename="/Users/dougtangren/Desktop/2014-logo.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       sodipodi:type="arc"
+       style="fill:#000000;fill-opacity:0.99685992;stroke:#ffffff;stroke-opacity:1"
+       id="path4055"
+       sodipodi:cx="273.65033"
+       sodipodi:cy="450.26077"
+       sodipodi:rx="7.0710678"
+       sodipodi:ry="4.5961943"
+       d="m 280.7214,450.26077 a 7.0710678,4.5961943 0 1 1 -14.14214,0 7.0710678,4.5961943 0 1 1 14.14214,0 z"
+       transform="matrix(2.9974692,0,0,2.1856339,-375.03619,-864.36889)"
+       inkscape:export-filename="/Users/dougtangren/Desktop/2014-logo.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       sodipodi:type="arc"
+       style="fill:#000000;fill-opacity:0.99685992;stroke:#ffffff;stroke-opacity:1"
+       id="path4057"
+       sodipodi:cx="275.2413"
+       sodipodi:cy="436.11862"
+       sodipodi:rx="10.076272"
+       sodipodi:ry="5.6568542"
+       d="m 285.31757,436.11862 a 10.076272,5.6568542 0 1 1 -20.15254,0 10.076272,5.6568542 0 1 1 20.15254,0 z"
+       transform="matrix(2.1410496,0,0,2.1856339,-145.27807,-875.69481)"
+       inkscape:export-filename="/Users/dougtangren/Desktop/2014-logo.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="fill:#000000;fill-opacity:0.99685992;fill-rule:evenodd;stroke:none"
+       d="m 427.94462,75.3023 15.59309,-17.454111 17.52085,18.600124 0,3e-6 z"
+       id="path4068"
+       inkscape:path-effect="#path-effect4070"
+       inkscape:original-d="m 427.94462,75.3023 15.59309,-17.454111 17.52085,18.600127 z"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/Users/dougtangren/Desktop/2014-logo.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       sodipodi:type="arc"
+       style="fill:#000000;fill-opacity:0.99685992;stroke:none"
+       id="path4074"
+       sodipodi:cx="275.5"
+       sodipodi:cy="453.48718"
+       sodipodi:rx="9.5"
+       sodipodi:ry="4.875"
+       d="m 285,453.48718 a 9.5,4.875 0 1 1 -19,0 9.5,4.875 0 1 1 19,0 z"
+       transform="matrix(2.2395685,0,0,2.4658434,-171.75018,-1001.127)"
+       inkscape:export-filename="/Users/dougtangren/Desktop/2014-logo.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       sodipodi:type="arc"
+       style="fill:#000000;fill-opacity:0.99685992;stroke:#ffffff;stroke-opacity:1"
+       id="path4089"
+       sodipodi:cx="275.83481"
+       sodipodi:cy="449.63809"
+       sodipodi:rx="9.9297018"
+       sodipodi:ry="3.6028121"
+       d="m 285.76451,449.63809 a 9.9297018,3.6028121 0 1 1 -19.8594,0 9.9297018,3.6028121 0 1 1 19.8594,0 z"
+       transform="matrix(2.1806189,0,0,2.1856339,-155.79981,-880.06607)"
+       inkscape:export-filename="/Users/dougtangren/Desktop/2014-logo.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       sodipodi:type="arc"
+       style="fill:#000000;fill-opacity:0.99685992;stroke:none"
+       id="path4093"
+       sodipodi:cx="275.51068"
+       sodipodi:cy="445.57382"
+       sodipodi:rx="9.5689316"
+       sodipodi:ry="3.7592232"
+       d="m 285.07961,445.57382 a 9.5689316,3.7592232 0 1 1 -19.13786,0 9.5689316,3.7592232 0 1 1 19.13786,0 z"
+       transform="matrix(2.2383608,0.01617905,0.11099306,2.4928569,-220.74579,-1014.7108)"
+       inkscape:export-filename="/Users/dougtangren/Desktop/2014-logo.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer6"
+     inkscape:label="water-spout"
+     style="display:inline"
+     transform="translate(5.9849075,46.645817)">
+    <path
+       sodipodi:type="arc"
+       style="fill:#ffffff;fill-opacity:0.99685992;stroke:none"
+       id="path4098"
+       sodipodi:cx="267.48682"
+       sodipodi:cy="446.34283"
+       sodipodi:rx="0.52724081"
+       sodipodi:ry="0.659051"
+       d="m 268.01406,446.34283 a 0.52724081,0.659051 0 1 1 -1.05448,0 0.52724081,0.659051 0 1 1 1.05448,0 z"
+       transform="matrix(2.1410496,0,0,2.1856339,-145.27807,-875.69481)"
+       inkscape:export-filename="/Users/dougtangren/Desktop/2014-logo.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer11"
+     inkscape:label="glow"
+     transform="translate(5.9849075,46.645817)"
+     style="display:inline">
+    <path
+       sodipodi:type="arc"
+       style="fill:#fdffdb;fill-opacity:0.50847461;stroke:none"
+       id="path5258"
+       sodipodi:cx="47.70874"
+       sodipodi:cy="10.109708"
+       sodipodi:rx="89.545631"
+       sodipodi:ry="88.811653"
+       d="m 137.25437,10.109708 a 89.545631,88.811653 0 1 1 -179.091261,0 89.545631,88.811653 0 1 1 179.091261,0 z"
+       transform="matrix(1.3618954,0,0,1.4109821,83.262914,77.147036)"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"
+       inkscape:export-filename="/Users/dougtangren/Desktop/2014-logo.png" />
+  </g>
+</svg>

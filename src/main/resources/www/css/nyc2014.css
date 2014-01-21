@@ -435,3 +435,7 @@ a.circle {
 .links p {
   margin:0;
 }
+
+a.logo {
+  border:none;
+}
