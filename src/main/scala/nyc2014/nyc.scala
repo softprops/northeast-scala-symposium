@@ -43,4 +43,12 @@ object Nyc extends Templates {
         )
     }
   }
+
+  private def api: unfiltered.Cycle.Intent[Any, Any] = {
+    case GET(Path(Seg("2014" :: "rsvps" :: event :: Nil))) =>
+      Clock(s"fetching rsvp list for $event") {
+        JsonContent ~> ResponseString(
+          compact(render(Meetup.rsvps(event))))
+      }
+  }
 }

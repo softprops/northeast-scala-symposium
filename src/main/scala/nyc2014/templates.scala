@@ -128,7 +128,7 @@ trait Templates {
     <div class="grid" id="propose">
       <div class="unit whole">
         <h2>Speak up</h2>
-        <p>The deadline for submitting talk proposals is <strong>Jan 23</strong>.</p>
+        <p>The deadline for submitting talk proposals is <strong>Thurs Jan 23 at midnight</strong>.</p>
         <p>Speakers will be guaranteed a spot on the RSVP list, <strong>and</strong> a spot for a friend or colleague.</p>
       </div>
       <div id="propose-talk">
@@ -334,7 +334,7 @@ trait Templates {
         </a>
         <div class="center">
           <hr/>
-          <h4><a href="#where">New York, NY</a></h4>
+          <h4><a href="#whereone">New York, NY</a></h4>
           <h4>March 1 <span class="amp">&amp;</span> 2, 2014</h4>
         </div>
         </div>
@@ -360,13 +360,13 @@ trait Templates {
         <h2>One day of <strong>sharing</strong>.</h2>
         <p class="mute">Sat Mar 1, 8am to 6pm</p>
         <p>
-         <a href={dayoneLink}>Day 1</a> is back to basics with <a href="#where">one room</a>, <a href="/2014/talks">one track of talks</a>.
+         <a href={dayoneLink}>Day 1</a> is back to basics with <a href="#whereone">one room</a>, <a href="/2014/talks">one track of talks</a>.
         </p>
         <p>
-          If you wish to talk on day one, get your proposal in <a href="#propose">now</a>. The deadline for submitting talk proposals is <strong>Jan 23</strong>. Speakers will be guaranteed an RSVP spot, <strong>and</strong> a spot for a friend or colleague.
+          If you wish to talk on day one, get your proposal in <a href="#propose">now</a>. The deadline for submitting talk proposals is <strong>Jan 23 at Midnight</strong>. Speakers will be guaranteed an RSVP spot, <strong>and</strong> a spot for a friend or colleague.
         </p>
         <p>
-          Seating on day 1 is <strong>limited</strong>. The first block of RSVPs sold out instantly. The second and <strong>final</strong> block of 40 more tickets will open at <strong>10 AM Friday January 17</strong>. You can keep track of this status on <a href={dayoneLink}>Meetup</a>.
+          Seating on day 1 is <strong>limited</strong>. A final block of <strong>90 spots will be released this Thursday at 2 PM</strong>. You can keep track of this status on <a href={dayoneLink}>Meetup</a>.
         </p>
         <p>
           If you've got something you'd like to talk about, <a href="#propose">let us know</a>.
@@ -406,9 +406,9 @@ trait Templates {
       <div class="unit whole" id="where">
         <h2>Come. Find us.</h2>
           <p>
-          This year's symposium will be held @ <a target="_blank" href="http://meetup.com/">Meetup</a> <a href="http://www.gramfeed.com/instagram/tags#meetuphq">HQ</a>.
+          This year's symposium will be held @ <a target="_blank" href="http://www.cims.nyu.edu/">Courant Institute of Mathematical Sciences</a>.
           </p>
-          <iframe src="https://maps.google.com/maps?z=1&amp;f=q&amp;hl=en&amp;q=632+Broadway,+New+York,+NY,+10012,+us&amp;ie=UTF8&amp;hq=&amp;hnear=632+Broadway,+New+York,+10012&amp;ll=40.726166,-73.996023&amp;spn=0.002529,0.003578&amp;t=m&amp;z=14&amp;output=embed"></iframe>
+          <div id="where-iframe"></div>
       </div>
     </div>
   </section>

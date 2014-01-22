@@ -3,6 +3,56 @@
 
   $(function() {
 
+    var where = '<iframe src="https://maps.google.com/maps?z=1&amp;f=q&amp;hl=en&amp;q=251+Mercer+Street,+New+York,+NY,+10012,+us&amp;ie=UTF8&amp;hq=&amp;hnear=251+Mercer+St,+New+York,+10012&amp;t=m&amp;z=14&amp;ll=40.728771,-73.995752&amp;output=embed"></iframe>';
+    $("#where-iframe").append(where);
+
+    var fyates = function(a) {
+      var i = a.length, j, temp;
+      if(!i) return;
+      while(--i) {
+        j = Math.floor(Math.random() * (i+1));
+        temp = a[i]; a[i] = a[j]; a[j] = temp;
+      }
+      return a;
+    }
+    , photoPartioned = function(a) {
+        var w = [], wo = [], def = 'http://img1.meetupstatic.com/39194172310009655/img/noPhoto_50.gif';
+        for(var i = 0, l = a.length; i < l; i++) {
+            var r = a[i];
+            (r.photo === def ? wo : w).push(r);
+        }
+        return [w, wo];
+    };
+
+    // sprinkle on extra info about each day
+    $("div.day").each(function(){
+      var day = $(this), event = day.data().event;
+      $.get("/2014/rsvps/" + event, function(typers) {
+        var s = typers.length, ul = $(".rsvps", day)
+        , ext = $(".extra-rsvps", day),
+        template = function(t) {
+          return ['<li><a target="_blank" href="http://www.meetup.com/nescala/members/'
+                  , t.id
+                  , '"><span><img src="'
+                  , t.photo
+                  , '" title="'
+                  , t.name
+                  ,'"/></span></a></li>'].join('');
+        };
+        $(".tban", day).html("a sampling of the functional types attending");
+        var n = typers.length
+          , partioned = photoPartioned(typers)
+          , randomtypes = fyates(partioned[0]).concat(partioned[1]).splice(0, 120)
+          , buffer = [];
+        for(t in randomtypes) {
+          buffer.push(template(randomtypes[t]));
+        }
+        ul.append(buffer.join(''));
+        $('.rsvps li img', day).tipsy({fade:true, live:true, gravity:'sw'});
+      });
+    });
+
+
     // fancy pants character counting
     $("div.limited").on('focus', 'textarea', function(){
       var self = $(this);
