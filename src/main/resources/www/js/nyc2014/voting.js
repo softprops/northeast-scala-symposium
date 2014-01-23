@@ -1,6 +1,6 @@
 (function($){
   $(function(){
-    $(".ballot").live('submit', function(e) {
+    $("body").on('submit',".ballot", function(e) {
       e.preventDefault();
       var self = $(this)
         , action = self.attr("action");
@@ -13,9 +13,9 @@
           btn.attr('value', btn.hasClass('voted-yes') ? 'Withdraw Vote': 'Vote').removeAttr('disabled');
           $('input[name="action"]', self).attr('value', btn.hasClass('voted-yes') ? 'unvote': 'vote');
           switch(r.remaining) {
-          case 0: $('#votes-remaining').html('You have no votes remaining'); break;
-          case 1:  $('#votes-remaining').html('You have one vote remaining'); break;
-          default:  $('#votes-remaining').html('You have ' + r.remaining + ' votes remaining'); break;
+          case 0: $('#votes-remaining').html('You have <strong>no</strong> votes</strong> remaining'); break;
+          case 1: $('#votes-remaining').html('You have <strong>one</strong> vote</strong> remaining'); break;
+          default:$('#votes-remaining').html('You have <strong>' + r.remaining + ' votes</strong> remaining'); break;
           }         
           var unvoted = $('.ballot input[type="submit"]:not(".voted-yes")'); console.log(unvoted);
           if(r.remaining <= 0) {

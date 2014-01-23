@@ -10,12 +10,21 @@ import org.json4s._
 import org.json4s.JsonDSL._
 import org.json4s.native.JsonMethods._
 
+object Member {
+  def fromMap(id: String, data: Map[String, String]) =
+    Member(id: String, data("mu_name"), data("mu_photo"), data("mtime"), data.get("twttr"))
+}
+
+case class Member(id: String, name: String, photo: String, mtime: String, twttr: Option[String]) {
+  lazy val thumbPhoto = photo.replace("member_", "thumb_")
+}
+
 object Nyc extends Templates {
 
   def mukey(of: String) = s"nyc2014:members:$of"
 
   def site: unfiltered.Cycle.Intent[Any, Any] =
-    (index orElse talkProposals)
+    (index orElse talkProposals orElse voting)
 
   private def index: Cycle.Intent[Any, Any]  = {
     case r @ GET(Path(Seg(Nil))) => Clock("home") {
@@ -33,14 +42,21 @@ object Nyc extends Templates {
   private def talkProposals: Cycle.Intent[Any, Any] = 
     (Proposals.creating orElse Proposals.editing orElse Proposals.viewing)
 
-  private def proposals(r: RedisClient, mid: String): Seq[Map[String, String]] = {
+  private def voting: Cycle.Intent[Any, Any] =
+    Votes.intent
+
+  private def proposals(r: RedisClient, mid: String): Seq[Proposal] = {
     r.keys(s"nyc2014:proposals:$mid:*") match {
-      case None => Seq.empty[Map[String, String]]
+      case None => Seq.empty[Proposal]
       case Some(keys) =>
-        (Seq.empty[Map[String, String]] /: keys.filter(_.isDefined))(
-          (a, e) => a ++
-          r.hmget[String, String](e.get, "name", "desc", "kind").map(_ + ("id" -> e.get))
-        )
+        (List.empty[Proposal] /: keys.filter(_.isDefined)) {
+          (a, e) =>
+            r.hmget[String, String](
+              e.get, "name", "desc", "kind")
+             .map(_ + ("id" -> e.get)).map {
+               Proposal.fromMap(_) :: a
+             }.getOrElse(a)
+        }
     }
   }
 

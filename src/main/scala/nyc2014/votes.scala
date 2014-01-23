@@ -33,7 +33,7 @@ object Votes {
         // remove talk key from voters and decr counterKeys
         voters.map { voter =>
           s.srem(voter, talkKey)
-          s.decr("count:%s" format voter)
+          s.decr(s"count:$voter")
           s.hincrby(talkKey, "votes", -1)
           voter
         }
@@ -65,7 +65,7 @@ object Votes {
     case POST(Path(Seg("2014" :: "votes" :: Nil))) &
       AuthorizedToken(t) & Params(p) => Clock("voting for proposal") {
         val mid = t.memberId.get
-        if (!Meetup.has_rsvp(Meetup.Philly.eventId, t.token)) JsonContent ~> ResponseString(
+        if (!Meetup.has_rsvp(Meetup.Nyc2014.dayoneEventId, t.token)) JsonContent ~> ResponseString(
           errorJson("you must rsvp to vote")) else {
           val expected = for {
             vote <- lookup("vote") is required("vote is required")
@@ -75,33 +75,48 @@ object Votes {
             val votedfor = vote.get
             JsonContent ~> (votedfor match {
               case Talk(member, talkId) =>
-                Right(("nyc2014:talk_votes:%s" format mid,
-                       "count:nyc2014:talk_votes:%s" format mid))
+                Right((s"nyc2014:talk_votes:$mid",
+                       s"count:nyc2014:talk_votes:$mid"))
               case _ =>
                 Left("invalid kind of vote")
             }).fold({ err => ResponseString(errorJson(err)) }, { _ match {
               case (vkey, ckey) =>
                 Store { s =>
                   val maxvotes = MaxTalkVotes
-                  if(!s.exists(votedfor)) ResponseString(errorJson("invalid vote"))
-                  else action match {
+                  println(s"$vkey is attempting to vote for $votedfor count key $ckey")
+                  if (!s.exists(votedfor)) ResponseString(errorJson("invalid vote")) else action match {
                     case Some("vote") =>
+                      // member already voted for this
                       if (s.sismember(vkey, votedfor)) ResponseString(errorJson("vote exists"))
-                      else if (s.exists(ckey) && s.get(ckey).map(_.toInt).get >= maxvotes) ResponseString(
-                        errorJson("max votes of %d exceeded" format maxvotes)
+                      // member exceeded max votes
+                      else if (s.get(ckey).map(_.toInt).filter(_ >= maxvotes).isDefined) ResponseString(
+                        errorJson(s"max votes of $maxvotes exceeded")
                       ) else {
-                        s.hincrby(votedfor, "votes", 1)
-                        println("voted: %s now has %s vote(s), %s has (%s - 1) remaining" format(votedfor, s.hmget(votedfor, "votes"), ckey, s.get(ckey)))
-                        s.sadd(vkey, votedfor)
-                        ResponseString(remainingJson(
-                          maxvotes - s.incr(ckey).get))
+                        // capture vote
+                        ResponseString(remainingJson(s.pipeline { pl =>
+                          pl.hincrby(votedfor, "votes", 1)
+                          pl.sadd(vkey, votedfor)
+                          pl.incr(ckey)
+                        }.map( _ match {
+                          case totalVotes :: Some(currentCount) :: _ :: Nil =>
+                            println(s"voted: $votedfor now has $totalVotes vote(s), $ckey has $currentCount votes")
+                            maxvotes - currentCount.asInstanceOf[Long]
+                          case _ =>
+                            maxvotes
+                        }).getOrElse(maxvotes)))
                       }
                     case Some("unvote") =>
-                      s.hincrby(votedfor, "votes", -1)
-                      println("unvoted: %s now has %s vote(s), %s has (%s + 1) remaining" format(votedfor, s.hmget(votedfor, "votes"), ckey, s.get(ckey)))
-                      s.srem(vkey, votedfor)
-                      ResponseString(remainingJson(
-                        maxvotes - s.decr(ckey).get))
+                      ResponseString(remainingJson(s.pipeline { pl =>
+                        pl.hincrby(votedfor, "votes", -1)
+                        pl.decr(ckey)
+                        pl.srem(vkey, votedfor)
+                      }.map( _ match {
+                        case totalVotes :: Some(currentCount) :: _ :: Nil =>
+                          println(s"unvoted: $votedfor now has $totalVotes vote(s), $ckey has $currentCount votes")
+                          maxvotes - currentCount.asInstanceOf[Long]
+                        case _ => maxvotes
+                      }).getOrElse(maxvotes)))
+                      
                     case _ =>
                       ResponseString(errorJson("invalid action"))
                   }

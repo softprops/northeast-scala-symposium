@@ -15,7 +15,7 @@ trait Templates {
     (authed: Boolean,
      keynote: Map[String, String] = Map.empty[String,String],
      talks: Seq[Map[String, String]] = Nil,
-     proposals: Seq[Map[String, String]] = Nil) =
+     proposals: Seq[Proposal] = Nil) =
     layout(Nil)(
     <script type="text/javascript" src="/js/jquery.scrollTo.min.js"></script>
     <script type="text/javascript" src="/js/nyc2014/nyc.js"></script>
@@ -25,10 +25,10 @@ trait Templates {
 
   def talkListing
     (authed: Boolean,
-     proposals: Seq[Map[String, String]],
+     proposals: Seq[Proposal],
      canVote: Boolean = false,
-     votes: Seq[String] = Seq.empty[String]) = layout(Nil
-    /*<script type="text/javascript" src="/js/nyc2014/voting.js"></script> */)(Nil)({
+     votes: Seq[String] = Seq.empty[String]) = layout(
+    <script type="text/javascript" src="/js/nyc2014/voting.js"></script>)(Nil)({
       head(canVote, "vote")
     } ++ (<section>
       <div class="grid">
@@ -57,11 +57,12 @@ trait Templates {
           </div>
         </div>
         <div class="unit whole center">{
-          if (canVote) <div id="votes-remaining">You have { Votes.MaxTalkVotes - votes.size match {
+          if (canVote) <div id="votes-remaining">You have <strong>{ Votes.MaxTalkVotes - votes.size match {
             case 0 => " no votes"
             case 1 => " one vote"
-            case n => " %d votes" format n
-          } } remaining</div>
+            case n => s" $n votes"
+          } }</strong> remaining</div> else <div>
+          </div>
         }
         </div>
       </div>
@@ -70,37 +71,37 @@ trait Templates {
      <div class="grid">
       <ul>{
         proposals.map { p =>
-        <li class="unit whole talk" id={ p("id").split(":")(3) }>
+        <li class="unit whole talk" id={ p.domId }>
           <div class="grid">
             <div class="unit one-fifth">
-              <a href={ s"http://meetup.com/nescala/members/${p("id").split(":")(2)}"} class="circle">
-                <img height="70" width="70" src={ p("mu_photo").replace("member_", "thumb_") } alt="member" />
+              <a href={ s"http://meetup.com/nescala/members/${p.memberId}"} class="circle">
+                <img height="70" width="70" src={ p.member.get.thumbPhoto } alt="member" />
               </a>
               <div class="links">
-                <p><a class="primary" href={ s"http://meetup.com/nescala/members/${p("id").split(":")(2)}" }
-                         target="_blank">{ p("mu_name") } </a></p>{ if(p.isDefinedAt("twttr")) {
-                           <p><a class="twttr small" href={ s"http://twitter.com/${p("twttr").drop(1)}" } target="_blank">{ p("twttr") }</a></p>
+                <p><a class="primary" href={ s"http://meetup.com/nescala/members/${p.memberId}" }
+                         target="_blank">{ p.member.get.name } </a></p>{ if (p.member.get.twttr.isDefined) {
+                           <p><a class="twttr small" href={ s"http://twitter.com/${p.member.get.twttr.get.drop(1)}" } target="_blank">{ p.member.get.twttr.get }</a></p>
                          } else <span></span>
                  }
-              </div><div class="mute">{ p("kind") match {
+              </div><div class="mute">{ p.kind match {
                 case "medium" => "45 minutes"
                 case "short" => "30 minutes"
                 case  "lightning" => "15 minutes"
               }}</div>{ if (canVote) {
               <div>
                      <form class="ballot" action="/2014/votes" method="POST">
-                       <input type="hidden" name="vote" value={ p("id") }/>
-                       <input type="hidden" name="action" value={ if (votes.contains(p("id"))) "unvote" else "vote" }/>
-                       <input type="submit" class={ "voting btn%s" format(if (votes.contains(p("id"))) " voted-yes" else "") }
-                         value={ if(votes.contains(p("id"))) "Withdraw Vote" else "Vote" } disabled={
-                           if (votes.size >= Votes.MaxTalkVotes && !votes.contains(p("id"))) Some(xml.Text("disabled")) else None } />
+                       <input type="hidden" name="vote" value={ p.id }/>
+                       <input type="hidden" name="action" value={ if (votes.contains(p.id)) "unvote" else "vote" }/>
+                       <input type="submit" class={ "voting btn%s" format(if (votes.contains(p.id)) " voted-yes" else "") }
+                         value={ if (votes.contains(p.id)) "Withdraw Vote" else "Vote" } disabled={
+                           if (votes.size >= Votes.MaxTalkVotes && !votes.contains(p.id)) Some(xml.Text("disabled")) else None } />
                      </form>
                </div>
                } }
              </div>
              <div class="unit four-fifths">
-               <h2><a href={ "#"+p("id").split(":")(3) }>{ p("name") }</a></h2>
-               <p class="desc">{ p("desc") }</p>
+               <h2><a href={ "#"+p.domId }>{ p.name }</a></h2>
+               <p class="desc">{ p.desc }</p>
              </div>
           </div>
           <hr/>
@@ -111,7 +112,7 @@ trait Templates {
    </section>)
   )
 
-  def proposing(authed: Boolean, proposals: Seq[Map[String, String]] = Nil): xml.NodeSeq =
+  def proposing(authed: Boolean, proposals: Seq[Proposal] = Nil): xml.NodeSeq =
     if (authed) propose(proposals) else <section>
       <div class="grid" id="propose">
         <div class="unit whole">
@@ -124,7 +125,7 @@ trait Templates {
       </div>
     </section>
 
-  def propose(proposals: Seq[Map[String, String]]): xml.NodeSeq = (<section>
+  def propose(proposals: Seq[Proposal]): xml.NodeSeq = (<section>
     <div class="grid" id="propose">
       <div class="unit whole">
         <h2>Speak up</h2>
@@ -197,46 +198,46 @@ trait Templates {
     </div>
   </section>)
 
-  def proposalList(props: Seq[Map[String, String]]) =
+  def proposalList(props: Seq[Proposal]) =
     listOf(props, "proposals", Proposals.MaxTalkName,
            Proposals.MaxTalkDesc, "Your talk proposals", "Edit Talk", "#propose-form")
 
-  def listOf(props: Seq[Map[String, String]], kind: String, maxName: Int,
+  def listOf(props: Seq[Proposal], kind: String, maxName: Int,
              maxDesc: Int, listTitle: String, editLabel: String, sourceForm: String) =
     <div id={ kind }>
       <h2 class="proposal-header">{ listTitle }</h2>
        <ul id={ "%s-list" format kind }>{ if (props.isEmpty) { <li id="no-proposals" class="instruct">None yet</li>} }
        {
          props.map { p =>
-         <li id={ p("id") }>
-           <form action={"/2014/%s/%s" format (kind, encode(p("id"), "utf8")) }
+         <li id={ p.id }>
+           <form action={"/2014/%s/%s" format (kind, encode(p.id, "utf8")) }
                     method="POST" class="propose-edit-form">
              <div>
                <h3>
-                 <a href="#" class="toggle name" data-val={ p("name") }>{ p("name") }</a>
+                 <a href="#" class="toggle name" data-val={ p.name }>{ p.name }</a>
                </h3>
-               <input type="text" name="name" maxlength={ maxName + "" } value={ p("name") } />
+               <input type="text" name="name" maxlength={ maxName + "" } value={ p.name } />
              </div>
              <div class="preview">
                <div class="controls clearfix">
-                 <a href="#" class="edit-proposal" data-proposal={ p("id") }>
+                 <a href="#" class="edit-proposal" data-proposal={ p.id }>
                     Make some quick changes
-                  </a> or <a href={"mailto:doug@meetup.com?subject=please withdraw talk %s" format p("id") }>
+                  </a> or <a href={"mailto:doug@meetup.com?subject=please withdraw talk %s" format p.id }>
                     Email us
                   </a> if you wish to withdraw this talk.
                </div>
                <div>
                  <p>
                     This is a <select class="edit-kind" name="kind" disabled="disabled">
-                    <option value="medium" selected={ Option(p("kind")).filter(_ == "medium").map( _ => "selected").orNull }>Medium (45 min)</option>
-                    <option value="short" selected={ Option(p("kind")).filter(_ == "short").map( _ => "selected").orNull }>Short (30 min)</option>
-                    <option value="lightning" selected={ Option(p("kind")).filter(_ == "lightning").map( _ => "selected").orNull }>Lightning (15 min)</option>
+                    <option value="medium" selected={ Option(p.kind).filter(_ == "medium").map( _ => "selected").orNull }>Medium (45 min)</option>
+                    <option value="short" selected={ Option(p.kind).filter(_ == "short").map( _ => "selected").orNull }>Short (30 min)</option>
+                    <option value="lightning" selected={ Option(p.kind).filter(_ == "lightning").map( _ => "selected").orNull }>Lightning (15 min)</option>
                     </select> length talk.
                  </p>
                </div>
-               <p class="linkify desc" data-val={ p("desc") }>{ p("desc") }</p>
+               <p class="linkify desc" data-val={ p.desc }>{ p.desc }</p>
                <div class="edit-desc limited">
-                  <textarea data-limit={ maxDesc + "" } name="desc">{ p("desc") }</textarea>
+                  <textarea data-limit={ maxDesc + "" } name="desc">{ p.desc }</textarea>
                   <div class="limit-label"></div>
                   <div class="form-extras">
                     <div class="edit-controls clearfix">
@@ -261,7 +262,7 @@ trait Templates {
         <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1"/>
         <title>&#8663;northeast scala symposium</title>
-        <link href="http://fonts.googleapis.com/css?family=Source+Code+Pro|Montserrat:700|Open+Sans:300italic,400italic,700italic,400,300,700" rel="stylesheet" type="text/css"/>
+        <link href="http://fonts.googleapis.com/css?family=Source+Code+Pro|Montserrat:400,700|Open+Sans:300italic,400italic,700italic,400,300,700" rel="stylesheet" type="text/css"/>
         <link rel="stylesheet" type="text/css" href="/css/gridism.css" />
         <link rel="stylesheet" type="text/css" href="/css/normalize.css" />
         <link rel="stylesheet" type="text/css" href="/css/nyc2014.css" />

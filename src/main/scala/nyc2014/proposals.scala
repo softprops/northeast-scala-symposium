@@ -7,6 +7,16 @@ import unfiltered.request._
 import unfiltered.request.QParams._
 import unfiltered.response._
 
+object Proposal {
+  def fromMap(data: Map[String, String]) =
+    Proposal(data("id"), data("name"), data("desc"), data("kind"))
+}
+case class Proposal(
+  id: String, name: String, desc: String, kind: String, member: Option[Member] = None) {
+  lazy val domId = id.split(":")(3)
+  lazy val memberId = id.split(":")(2)
+}
+
 object Proposals extends Templates {
   val TalkTime = 30
   val MaxProposals = 3
@@ -22,13 +32,12 @@ object Proposals extends Templates {
     }
     val Withdrawing = """nyc2014:proposals:(.*):(.*)""".r
     (Store { s =>
-      if (!s.exists(key)) Left("proposal did not exist")
-      else {
+      if (!s.exists(key)) Left("proposal did not exist") else {
         key match {
           case Withdrawing(who, id) =>
             if (mid.equals(who)) {
               s.del(key).map( stat => if(stat > 0) s.decr(
-                "count:nyc2014:proposals:%s" format who
+                s"count:nyc2014:proposals:$who"
               ))
               Right(key)
             } else Left("not authorized to withdraw this proposal")
@@ -49,9 +58,9 @@ object Proposals extends Templates {
         // count:{city}:proposals:{memberId} stores the number of proposals a member submitted
         // {city}:proposals:ids stores an atomicly incremented int used to generate proposals ids
         // {city}:proposals:{memberId}:{nextId} stores a map of name, desc, and votes for a proposal
-        val mkey = "nyc2014:proposals:%s" format mid
-        val mukey = "nyc2014:members:%s" format mid
-        val ckey = "count:%s" format mkey
+        val mkey = s"nyc2014:proposals:$mid"
+        val mukey = s"nyc2014:members:$mid"
+        val ckey = s"count:$mkey"
         val proposed = s.get(ckey).getOrElse("0").toInt
         if (proposed + 1 > MaxProposals) Left("Exceeded max proposals") else {
           if (!s.exists(mukey)) {
@@ -84,22 +93,22 @@ object Proposals extends Templates {
   def currentProposals = {
     val proposals = Store { s =>
       s.keys("nyc2014:proposals:*:*") match {
-        case None => Seq.empty[Map[String, String]]
+        case None => Seq.empty[Proposal]
         case Some(keys) =>
-          (Seq.empty[Map[String, String]] /: keys.filter(_.isDefined)){
-            (a, e) => a ++
-              s.hmget[String, String](e.get,
-                                      "name",
-                                      "desc",
-                                      "kind")
-                .map(_ + ("id" -> e.get))
+          (List.empty[Proposal] /: keys.filter(_.isDefined)){
+            (a, e) =>
+              s.hmget[String, String](
+                e.get, "name", "desc", "kind")
+                .map(_ + ("id" -> e.get)).map {
+                   Proposal.fromMap(_) :: a
+                }.getOrElse(a)
           }
       }
     }
 
     val Proposing = """nyc2014:proposals:(.*):(.*)""".r
     val pids = (proposals.map {
-      _("id") match {
+      _.id match {
         case Proposing(who, _) =>
           who
       }
@@ -113,7 +122,7 @@ object Proposals extends Templates {
       def refresh(key: String) = s.exists(key) && stale(key).getOrElse(true)
       pids.filter( p => refresh(Nyc.mukey(p)))
     }
-    val members: Map[String, Map[String, String]] = (if (!stale.isEmpty) {
+    val members: Map[String, Member] = (if (!stale.isEmpty) {
       val cached = pids.filterNot(stale.contains)
       val ms = Meetup.members(stale)
       Store { s =>
@@ -124,32 +133,35 @@ object Proposals extends Templates {
             "mtime" -> System.currentTimeMillis.toString
           ) ++ m.twttr.map("twttr" -> _)
           s.hmset(Nyc.mukey(m.id), data)
-          m.id -> data
+          m.id -> Member.fromMap(m.id, data)
         } ++ cached.map { p =>
-          p -> s.hmget[String, String](
-            Nyc.mukey(p),
-            "mu_name",
-            "mu_photo",
-            "twttr").get
+          val data = s.hmget[String, String](
+            Nyc.mukey(p), "mu_name", "mu_photo", "twttr").get
+           p -> Member.fromMap(p, data)
         }
       }
     } else {
       Store { s =>
-        pids.map { p =>
-          p -> s.hmget[String, String](
+        pids.map { p =>          
+          val data = s.hmget[String, String](
             Nyc.mukey(p),
             "mu_name",
             "mu_photo",
+            "mtime",
             "twttr").get
+          p -> Member.fromMap(p, data)
         }
       }
     }).toMap
 
-    (proposals /: members)((a, e) => e match {
-      case (key, value) =>          
-        val (matching, notmatching) = a.partition(_("id").matches(s"""nyc2014:proposals:$key:(.*)"""))
-        matching.map(_ ++ value) ++ notmatching
-    })
+    (proposals /: members) {
+      (a, e) => e match {
+        case (memberId, member) =>          
+          val (matching, notmatching) =
+            a.partition(_.id.matches(s"""nyc2014:proposals:$memberId:(.*)"""))
+          matching.map(_.copy(member = Some(member))) ++ notmatching
+      }
+    }
   }
 
   val viewing: Cycle.Intent[Any, Any] = {
@@ -157,15 +169,22 @@ object Proposals extends Templates {
       val (authed, canVote, votes) =  req match {
         case AuthorizedToken(t)
           if (Meetup.has_rsvp(Meetup.Nyc2014.dayoneEventId, t.token)) =>
+            println("has rsvp and logged in")
             val mid = t.memberId.get
-            (true, false/*no one can vote right now*/, Store {
-              _.smembers(s"nyc2014:talk_votes:$mid")
+            val votekey = s"nyc2014:talk_votes:$mid"
+            println(s"fetching votes for $votekey")
+            val currentVotes = Store {
+              _.smembers(votekey)
                .map(_.filter(_.isDefined).map(_.get).toSeq)
                .getOrElse(Nil)
-            })
+            }
+            println(s"current votes $currentVotes")
+            (true, true, currentVotes)
         case AuthorizedToken(t) =>
+          println("logged in without rsvp")
           (true, false, Nil)
         case _ =>
+          println("alien")
           (false, false, Nil)
       }
       talkListing(authed,

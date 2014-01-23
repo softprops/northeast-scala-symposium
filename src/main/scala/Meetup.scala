@@ -65,9 +65,11 @@ object Meetup extends Config {
   def http = Http
 
   def has_rsvp(eventId: String, token: RequestToken): Boolean = {
-    val body = http(
-      host / "2" / "event" / eventId <<? Map("fields" -> "self", "only" -> "self") <@(consumer, token)
-      > as.json4s.Json).apply()
+    val body = Clock("checking rsvp") {
+      http(
+        host / "2" / "event" / eventId <<? Map("fields" -> "self", "only" -> "self.rsvp.response") <@(consumer, token)
+        > as.json4s.Json).apply()
+    }
     (for (JString(resp) <- body \ "self" \ "rsvp" \ "response") yield resp)
     .headOption.filter(_ == "yes").isDefined
   }
