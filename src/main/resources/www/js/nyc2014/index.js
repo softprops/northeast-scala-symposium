@@ -82,7 +82,6 @@
     });
 
     var notify = function(msg, err, selector) {
-       console.log("notify " + msg + " err " + err + " sel " + selector);
       $(selector || "#proposal-notification")
          .empty()
          .hide()
@@ -103,8 +102,8 @@
       function (e) {
       e.preventDefault();
       var self = $(this), href = self.attr('href');
-      if(confirm("Are you sure you want to withdraw this?")) {
-          $.post(href, {}, function(e){
+      if (confirm("Are you sure you want to withdraw this?")) {
+          $.post(href, {}, function(e) {
           switch(e.status) {
           case 200:
             // surely there is a better way to peek up the family chain

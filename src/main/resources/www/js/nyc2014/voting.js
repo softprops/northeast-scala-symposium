@@ -10,15 +10,15 @@
         case 200:
           var btn = $('.btn', self);
           btn.toggleClass('voted-yes');
-          btn.attr('value', btn.hasClass('voted-yes') ? 'Withdraw Vote': 'Vote').removeAttr('disabled');
+          btn.attr('value', btn.hasClass('voted-yes') ? 'Change your mind?': "Let's make this happen").removeAttr('disabled');
           $('input[name="action"]', self).attr('value', btn.hasClass('voted-yes') ? 'unvote': 'vote');
           switch(r.remaining) {
           case 0: $('#votes-remaining').html('You have <strong>no</strong> votes</strong> remaining'); break;
           case 1: $('#votes-remaining').html('You have <strong>one</strong> vote</strong> remaining'); break;
           default:$('#votes-remaining').html('You have <strong>' + r.remaining + ' votes</strong> remaining'); break;
           }         
-          var unvoted = $('.ballot input[type="submit"]:not(".voted-yes")'); console.log(unvoted);
-          if(r.remaining <= 0) {
+          var unvoted = $('.ballot input[type="submit"]:not(".voted-yes")');
+          if (r.remaining <= 0) {
              unvoted.attr('disabled', 'disabled')
           } else {
             unvoted.removeAttr('disabled');

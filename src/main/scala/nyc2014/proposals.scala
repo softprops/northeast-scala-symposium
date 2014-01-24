@@ -48,7 +48,8 @@ object Proposals extends Templates {
    })
   }
 
-  def create(mid: String, name: String, desc: String, kind: String) = {
+  // decommissioned
+  private def create(mid: String, name: String, desc: String, kind: String) = {
     val (n, d) = (name.trim, desc.trim)
     Store { s =>
       if (n.size > MaxTalkName || d.size > MaxTalkDesc) Left("Talk contents were too long")
@@ -189,8 +190,8 @@ object Proposals extends Templates {
       }
       talkListing(authed,
                   scala.util.Random.shuffle(currentProposals),
-                  canVote = false,
-                  votes = Nil)
+                  canVote = canVote,
+                  votes   = votes)
     }
   }
 

@@ -40,7 +40,7 @@ object Nyc extends Templates {
   }
 
   private def talkProposals: Cycle.Intent[Any, Any] = 
-    (Proposals.creating orElse Proposals.editing orElse Proposals.viewing)
+    (Proposals.editing orElse Proposals.viewing)
 
   private def voting: Cycle.Intent[Any, Any] =
     Votes.intent

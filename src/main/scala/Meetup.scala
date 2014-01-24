@@ -75,9 +75,11 @@ object Meetup extends Config {
   }
 
   def members(ids: Traversable[String]): List[SimpleMember] = {
-    val body = http(
-      host / "2" / "members" <<? Map("key" -> apiKey, "member_id" -> ids.mkString(","))
-      > as.json4s.Json).apply()
+    val body = Clock("fetching members") {
+      http(
+        host / "2" / "members" <<? Map("key" -> apiKey, "member_id" -> ids.mkString(","))
+        > as.json4s.Json).apply()
+    }
     for {
       JObject(fields) <- body
       ("results", JArray(ary))     <- fields
@@ -100,16 +102,20 @@ object Meetup extends Config {
   }
 
   def member_id(token: RequestToken): Int = {
-    val body = http(
-      host / "2" / "member" / "self" <<? Map("only" -> "id") <@(consumer, token)
-      > as.json4s.Json).apply()
+    val body = Clock("fetching member") {
+      http(
+        host / "2" / "member" / "self" <<? Map("only" -> "id") <@(consumer, token)
+        > as.json4s.Json).apply()
+    }
     (for (JInt(id) <- body \ "id") yield id.toInt).headOption.getOrElse(0)
   }
 
   def photos(eventId: String) = {
-    val body = http(
-      host / "2" / "photos" <<? Map("key" -> apiKey, "event_id" -> eventId)
-      > as.json4s.Json).apply()
+    val body = Clock("fetching photos") {
+      http(
+        host / "2" / "photos" <<? Map("key" -> apiKey, "event_id" -> eventId)
+        > as.json4s.Json).apply()
+    }
     for {
       JObject(resp) <- body
       ("results", JArray(ary)) <- resp

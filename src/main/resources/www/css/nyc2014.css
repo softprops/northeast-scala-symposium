@@ -78,6 +78,15 @@ header p {
   margin: 2em 0;
 }
 
+.lead p {
+  margin: .25em 0;
+  line-height:1.25em;
+}
+
+.lead .amp {
+  margin:0;
+}
+
 h2 strong {
   /*text-decoration:underline;*/
   border-bottom:3px solid #ccc;
@@ -86,10 +95,6 @@ h2 strong {
 
 .lead {
   font-size: 1.5em;
-}
-
-.lead p {
-  line-height:.25em;
 }
 
 p, pre, label {
@@ -270,7 +275,7 @@ hr {
 }
 
 .btn {
-  font-size:24px;
+  font-size:1.25em;
   padding:.15em .25em;
   color:#fff;
   text-shadow:0 1px #g30A7DF;
@@ -342,7 +347,6 @@ hr {
 }
 
 .btn.voted-yes {
-  font-size:24px;
   padding:.15em .25em;
   color:#fff;
   text-shadow:0 1px #g30A7DF;
@@ -362,7 +366,7 @@ hr {
 }
 
 .btn.voted-yes:hover {
-   background-image: -moz-linear-gradient(top, #7FE000, #72BD10);
+  background-image: -moz-linear-gradient(top, #7FE000, #72BD10);
   background-image: -webkit-gradient(linear, center top, center bottom, from(#7FE000), to(#72BD10));
   background-image: -o-linear-gradient(top, #7FE000, #13CAEE);
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#7FE000', endColorstr='#72BD10');
@@ -438,4 +442,8 @@ a.circle {
 
 a.logo {
   border:none;
+}
+
+.ballot {
+  display:inline;
 }

@@ -34,7 +34,7 @@ trait Templates {
       <div class="grid">
         <div class="unit whole center">
           <h2>
-            { proposals.size } Scala campfire { if (proposals.size == 1) "story" else "stories" } submitted so far
+            { proposals.size } Scala campfire { if (proposals.size == 1) "story" else "stories" } submitted
           </h2>
          </div>
          <div class="unit whole center lead">
@@ -43,105 +43,119 @@ trait Templates {
           </p>
           <div class="grid">
             <div class="unit one-third">
-              Med (45 min)
+              <a href="#medium-proposals">Med</a> (45 min)
               <p class="small mute">3 slots</p>
             </div>
             <div class="unit one-third">
-              Short (30 min)
+              <a href="#short-proposals">Short</a> (30 min)
               <p class="small mute">4 slots</p>
             </div>
             <div class="unit one-third">
-              Lightning (15 min)
+              <a href="#lightning-proposals">Lightning</a> (15 min)
               <p class="small mute">6 slots</p>
             </div>
           </div>
         </div>
-        <div class="unit whole center">{
-          if (canVote) <div id="votes-remaining">You have <strong>{ Votes.MaxTalkVotes - votes.size match {
+        <div class="unit whole center" id="proposed">{
+          if (canVote) <p id="votes-remaining">You have <strong>{ Votes.MaxTalkVotes - votes.size match {
             case 0 => " no votes"
             case 1 => " one vote"
             case n => s" $n votes"
-          } }</strong> remaining</div> else <div>
-          </div>
+          } }</strong> remaining</p> else <p>
+            Attendees of <a href={dayoneLink}>Day 1</a> may <a href="/login?then=vote" class="small btn">Login</a> with Meetup to select this years talks.
+          </p>
         }
         </div>
       </div>
     </section>
     <section>
-     <div class="grid">
-      <ul>{
-        proposals.map { p =>
-        <li class="unit whole talk" id={ p.domId }>
-          <div class="grid">
-            <div class="unit one-fifth">
-              <a href={ s"http://meetup.com/nescala/members/${p.memberId}"} class="circle">
-                <img height="70" width="70" src={ p.member.get.thumbPhoto } alt="member" />
-              </a>
-              <div class="links">
-                <p><a class="primary" href={ s"http://meetup.com/nescala/members/${p.memberId}" }
-                         target="_blank">{ p.member.get.name } </a></p>{ if (p.member.get.twttr.isDefined) {
-                           <p><a class="twttr small" href={ s"http://twitter.com/${p.member.get.twttr.get.drop(1)}" } target="_blank">{ p.member.get.twttr.get }</a></p>
-                         } else <span></span>
-                 }
-              </div><div class="mute">{ p.kind match {
-                case "medium" => "45 minutes"
-                case "short" => "30 minutes"
-                case  "lightning" => "15 minutes"
-              }}</div>{ if (canVote) {
-              <div>
-                     <form class="ballot" action="/2014/votes" method="POST">
-                       <input type="hidden" name="vote" value={ p.id }/>
-                       <input type="hidden" name="action" value={ if (votes.contains(p.id)) "unvote" else "vote" }/>
-                       <input type="submit" class={ "voting btn%s" format(if (votes.contains(p.id)) " voted-yes" else "") }
-                         value={ if (votes.contains(p.id)) "Withdraw Vote" else "Vote" } disabled={
-                           if (votes.size >= Votes.MaxTalkVotes && !votes.contains(p.id)) Some(xml.Text("disabled")) else None } />
-                     </form>
-               </div>
-               } }
-             </div>
-             <div class="unit four-fifths">
-               <h2><a href={ "#"+p.domId }>{ p.name }</a></h2>
-               <p class="desc">{ p.desc }</p>
-             </div>
-          </div>
-          <hr/>
-        </li>
+     <div class="grid">{
+        proposals.groupBy(_.kind).map {
+          case (kind, ps) =>
+            <p id={s"$kind-proposals"} class="unit whole">{ps.size} <strong>{ kind }</strong> length proposals</p>
+            <ul>{ ps.map(proposal(canVote, votes)) }</ul>
         }
-      }</ul>
+     }
     </div>
    </section>)
   )
+
+  def proposal(canVote: Boolean, votes: Seq[String])(p: Proposal)  =
+   <li class="unit whole talk" id={ p.domId }>
+    <div class="grid">
+      <div class="unit one-fifth">
+        <div class="half">
+          <a href={ s"http://meetup.com/nescala/members/${p.memberId}"} class="circle">
+            <img height="70" width="70" src={ p.member.get.thumbPhoto } alt="member" />
+          </a>
+        </div>
+        <div class="half">
+          <div class="links">
+            <p>
+              <a class="primary" href={ s"http://meetup.com/nescala/members/${p.memberId}" }
+                target="_blank">{ p.member.get.name }
+              </a>
+            </p>{
+              if (p.member.get.twttr.isDefined)
+                <p><a class="twttr small" href={ s"http://twitter.com/${p.member.get.twttr.get.drop(1)}" } target="_blank">{ p.member.get.twttr.get }</a></p>
+              else <span></span> }
+          </div>
+          
+        </div>
+        </div>
+        <div class="unit four-fifths">
+          <h2><a href={ "#"+p.domId }>{ p.name }</a></h2>
+          <div>
+            <span class="mute">{ p.kind match {
+              case "medium" => "45 minutes"
+              case "short" => "30 minutes"
+              case "lightning" => "15 minutes"
+            } }
+            </span>
+            { if (canVote)
+               <form class="ballot" action="/2014/votes" method="POST">
+                 <input type="hidden" name="vote" value={ p.id }/>
+                 <input type="hidden" name="action" value={ if (votes.contains(p.id)) "unvote" else "vote" }/>
+                 <input type="submit" class={ "voting btn%s" format(if (votes.contains(p.id)) " voted-yes" else "") }
+                   value={ if (votes.contains(p.id)) "Change my mind?" else "Let's make this happen" } disabled={
+                     if (votes.size >= Votes.MaxTalkVotes && !votes.contains(p.id)) Some(xml.Text("disabled")) else None } />
+               </form>
+           }
+          </div>          
+          <p class="desc">{ p.desc }</p>
+        </div>
+      </div>
+      <hr/>
+    </li>
 
   def proposing(authed: Boolean, proposals: Seq[Proposal] = Nil): xml.NodeSeq =
     if (authed) propose(proposals) else <section>
       <div class="grid" id="propose">
         <div class="unit whole">
           <h2>Speak up</h2>
-          <p>The deadline for submitting talk proposals is <strong>Jan 23</strong>.</p>
-          <p>Speakers will be guaranteed a spot on the RSVP list, <strong>and</strong> a spot for a friend or colleague.</p>
-          <p>In order to submit a talk proposal, we need to know a little more about you.</p>
-          <p><a href="/login?then=talk" class="btn">Login to talk</a></p>
+          <p>
+           The deadline for submitting <a href="/2014/talks">talk proposals</a> is now passed.
+          </p>
+          <p>
+           Attendees of <a href={dayoneLink}>Day 1</a> may still <a href="/login?then=vote" class="btn">Login to vote</a>
+          </p>
+          <p>
+            Remember, Selected speakers will be guaranteed a spot on the RSVP list, <strong>and</strong> a spot for a friend or colleague.
+          </p>
         </div>
       </div>
     </section>
-
-  def propose(proposals: Seq[Proposal]): xml.NodeSeq = (<section>
-    <div class="grid" id="propose">
-      <div class="unit whole">
-        <h2>Speak up</h2>
-        <p>The deadline for submitting talk proposals is <strong>Thurs Jan 23 at midnight</strong>.</p>
-        <p>Speakers will be guaranteed a spot on the RSVP list, <strong>and</strong> a spot for a friend or colleague.</p>
-      </div>
-      <div id="propose-talk">
-        <div class="unit one-third">{ if (proposals.size < Proposals.MaxProposals)
-          <p class="instruct">
-            Please provide a brief single-paragraph description of your proposed talk.
-          </p>
-          <p class="instruct">
-            Speakers may enter <a href="http://www.meetup.com/account/services/">Twitter usernames</a> and other biographical
-            information on their
-            <a target="_blank" href="http://www.meetup.com/account/">
-              Meetup member profile
+    
+  def newProposalsLeft(proposals: Seq[Proposal]) = 
+   (<div class="unit one-third">{ if (proposals.size < Proposals.MaxProposals)
+     <p class="instruct">
+       Please provide a brief single-paragraph description of your proposed talk.
+     </p>
+     <p class="instruct">
+       Speakers may enter <a href="http://www.meetup.com/account/services/">Twitter usernames</a> and other biographical
+       information on their
+       <a target="_blank" href="http://www.meetup.com/account/">
+         Meetup member profile
             </a>.
           </p>
           <p class="instruct">
@@ -149,52 +163,63 @@ trait Templates {
           </p>
         else
           <p class="instruct">You have used up all your talk proposals</p>
-       }</div>
-        <div id="propose-container" class="unit two-thirds">{ if (proposals.size < Proposals.MaxProposals)
-          <form action="/2014/proposals" method="POST" id="propose-form" class="proposing">
-            <div id="proposal-notifications">
-              <div id="proposal-notification"></div>
-              <div id="proposal-edit-notification"></div>
-            </div>
-            <div class="grid">
-              <div class="unit half">
-                 <label for="kind">How long do you intend to woo us?</label>
-              </div>
-              <div class="unit half">
-                <select name="kind">
-                 <option value="medium">Medium (45 min)</option>
-                 <option value="short">Short (30 min)</option>
-                 <option value="lightning">Lightning (15 min)</option>
-                </select>
-              </div>
-            </div>
-            <div class="grid">
-              <div class="unit whole">
-                 <label for="name">What's your talk called?</label>
-              </div>
-              <div class="unit whole">
-                <input type="text" name="name" maxlength={ Proposals.MaxTalkName + "" } placeholder="How I learned to love my type system" />
-              </div>
-            </div>
-            <div class="grid">
-              <div class="unit whole">
-                <label for="desc">What's your talk is about?</label>
-              </div>
-              <div class="unit whole">
-                <div class="limited">
-                  <textarea name="desc" data-limit={ Proposals.MaxTalkDesc + "" }
-                    placeholder={ "Say it in %s characters or less" format(
-                    Proposals.MaxTalkDesc) }></textarea>
-                </div>
-                <div class="limit-label"></div>
-              </div>
-              <input type="submit" value="Propose Talk" class="btn" />
-            </div>
-          </form> else proposalList(proposals) }
+       }</div>)
+
+  def newProposalForm =
+    <form action="/2014/proposals" method="POST" id="propose-form" class="proposing">
+      <div id="proposal-notifications">
+        <div id="proposal-notification"></div>
+        <div id="proposal-edit-notification"></div>
+      </div>
+      <div class="grid">
+        <div class="unit half">
+          <label for="kind">How long do you intend to woo us?</label>
         </div>
-      </div>{ if (proposals.size < Proposals.MaxProposals)
-        <div class="unit whole">{ proposalList(proposals) }</div> else <span></span>
-       }
+        <div class="unit half">
+          <select name="kind">
+            <option value="medium">Medium (45 min)</option>
+            <option value="short">Short (30 min)</option>
+            <option value="lightning">Lightning (15 min)</option>
+          </select>
+        </div>
+      </div>
+      <div class="grid">
+        <div class="unit whole">
+          <label for="name">What's your talk called?</label>
+        </div>
+        <div class="unit whole">
+          <input type="text" name="name" maxlength={ Proposals.MaxTalkName + "" } placeholder="How I learned to love my type system" />
+        </div>
+      </div>
+      <div class="grid">
+        <div class="unit whole">
+          <label for="desc">What's your talk is about?</label>
+        </div>
+        <div class="unit whole">
+          <div class="limited">
+            <textarea name="desc" data-limit={ Proposals.MaxTalkDesc + "" }
+              placeholder={ "Say it in %s characters or less" format(
+                  Proposals.MaxTalkDesc) }></textarea>
+          </div>
+          <div class="limit-label"></div>
+        </div>
+        <input type="submit" value="Propose Talk" class="btn" />
+      </div>
+    </form>
+
+  def propose(proposals: Seq[Proposal]): xml.NodeSeq = (<section>
+    <div class="grid" id="propose">
+      <div class="unit whole">
+        <h2>Speak up</h2>
+        <p>The deadline for submitting <strong>new</strong> <a href="/2014/talks">talk proposals</a> is now passed.</p>{
+          if (proposals.isEmpty) <p>Attendees may still get their voice heard. Attendees select the speakers by <a href="/2014/talks">voting</a>. Selected speakers will be guaranteed a spot on the RSVP list.</p> else <p>Selected speakers will be guaranteed a spot on the RSVP list, <strong>and</strong> a spot for a friend or colleague.</p>
+        }
+      </div>
+      <div id="propose-talk">
+        <div id="propose-container" class="unit two-thirds">
+          { if (proposals.nonEmpty) proposalList(proposals) else <span></span> }
+        </div>
+      </div>
     </div>
   </section>)
 
@@ -361,7 +386,7 @@ trait Templates {
         <h2>One day of <strong>sharing</strong>.</h2>
         <p class="mute">Sat Mar 1, 8am to 6pm</p>
         <p>
-         <a href={dayoneLink}>Day 1</a> is back to basics with <a href="#whereone">one room</a>, <a href="/2014/talks">one track of talks</a>.
+         <a href={dayoneLink}>Day 1</a> is back to <strong>basics</strong> with <a href="#whereone">one room</a>, <a href="/2014/talks">one track of talks</a>.
         </p>
         <p>
           If you wish to talk on day one, get your proposal in <a href="#propose">now</a>. The deadline for submitting talk proposals is <strong>Jan 23 at Midnight</strong>. Speakers will be guaranteed an RSVP spot, <strong>and</strong> a spot for a friend or colleague.
@@ -404,7 +429,7 @@ trait Templates {
 
   val where = <section>
     <div class="grid">
-      <div class="unit whole" id="where">
+      <div class="unit whole" id="whereone">
         <h2>Come. Find us.</h2>
           <p>
           This year's symposium will be held @ <a target="_blank" href="http://www.cims.nyu.edu/">Courant Institute of Mathematical Sciences</a>.

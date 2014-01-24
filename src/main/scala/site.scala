@@ -47,9 +47,9 @@ object NESS extends Config {
         after <- lookup("then") is optional[String, String]
       } yield {
         CookieToken(req).map { rt =>
-          Meetup.AuthExchange.fetchAccessToken(rt.token, verifier.get).apply().fold({
-            ResponseString(_)
-          }, { at =>
+          Meetup.AuthExchange
+            .fetchAccessToken(rt.token, verifier.get)
+            .apply().fold(ResponseString(_), { at =>
             val mid = Some(Meetup.member_id(at).toString)
             SetCookies(
               Cookie("token",
@@ -61,12 +61,11 @@ object NESS extends Config {
                        verifier,
                        mid).toCookieString,
                      httpOnly = true)) ~> Redirect(after.get match {
-                case Some("vote") => "/2014/talks#proposed"
-                  case Some("talk") => "/#propose-talk"
-                  case Some("proposals") => "/2014/talk_tally"
-                  case Some("panel_proposals") => "/2014/panel_tally"
-                  case other => "/"
-                })
+                      case Some("vote") => "/2014/talks#proposed"
+                      case Some("talk") => "/#propose-talk"
+                      case Some("proposals") => "/2014/talk_tally"
+                      case other => "/"
+                    })
           })
         }.getOrElse(sys.error("could not find request token"))
       }
