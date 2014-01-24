@@ -95,8 +95,8 @@ object Votes {
                         // capture vote
                         ResponseString(remainingJson(s.pipeline { pl =>
                           pl.hincrby(votedfor, "votes", 1)
-                          pl.sadd(vkey, votedfor)
                           pl.incr(ckey)
+                          pl.sadd(vkey, votedfor)
                         }.map( _ match {
                           case totalVotes :: Some(currentCount) :: _ :: Nil =>
                             println(s"voted: $votedfor now has $totalVotes vote(s), $ckey has $currentCount votes")
