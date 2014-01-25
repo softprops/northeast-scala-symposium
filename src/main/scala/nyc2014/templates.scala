@@ -65,6 +65,9 @@ trait Templates {
             Attendees of <a href={dayoneLink}>Day 1</a> may <a href="/login?then=vote" class="small btn">Login</a> with Meetup to select this years talks.
           </p>
         }
+          <p>
+          The deadline for voting on your favorite talk ends <strong>Sunday Feb 2</strong> at <strong>midnight</strong>.
+          </p>
         </div>
       </div>
     </section>
@@ -80,14 +83,17 @@ trait Templates {
    </section>)
   )
 
+  def avatar(p: Proposal) = 
+    <a href={ s"http://meetup.com/nescala/members/${p.memberId}"}
+      class="circle" style={s"background-image:url(${p.member.get.thumbPhoto}); background-size: cover; background-position: 50%"}>
+    </a>
+
   def proposal(canVote: Boolean, votes: Seq[String])(p: Proposal)  =
    <li class="unit whole talk" id={ p.domId }>
     <div class="grid">
       <div class="unit one-fifth">
         <div class="half">
-          <a href={ s"http://meetup.com/nescala/members/${p.memberId}"} class="circle">
-            <img height="70" width="70" src={ p.member.get.thumbPhoto } alt="member" />
-          </a>
+          { avatar(p) }
         </div>
         <div class="half">
           <div class="links">
@@ -211,7 +217,7 @@ trait Templates {
     <div class="grid" id="propose">
       <div class="unit whole">
         <h2>Speak up</h2>
-        <p>The deadline for submitting <strong>new</strong> <a href="/2014/talks">talk proposals</a> is now passed.</p>{
+        <p>The deadline for submitting <strong>new</strong> <a href="/2014/talks">talk proposals</a> has now passed.</p>{
           if (proposals.isEmpty) <p>Attendees may still get their voice heard. Attendees select the speakers by <a href="/2014/talks">voting</a>. Selected speakers will be guaranteed a spot on the RSVP list.</p> else <p>Selected speakers will be guaranteed a spot on the RSVP list, <strong>and</strong> a spot for a friend or colleague.</p>
         }
       </div>
@@ -389,7 +395,11 @@ trait Templates {
          <a href={dayoneLink}>Day 1</a> is back to <strong>basics</strong> with <a href="#whereone">one room</a>, <a href="/2014/talks">one track of talks</a>.
         </p>
         <p>
-          If you wish to talk on day one, get your proposal in <a href="#propose">now</a>. The deadline for submitting talk proposals is <strong>Jan 23 at Midnight</strong>. Speakers will be guaranteed an RSVP spot, <strong>and</strong> a spot for a friend or colleague.
+          The deadline for submitting talk proposals has now passed.
+        </p>
+        <p>{ if (!authed) <span> Attendees of <a href={dayoneLink}>Day 1</a> may <a href="/login?then=vote">login</a> with Meetup to select this years talks. </span> else <span>You may still <a href="/2014/talks">vote</a> for your favorite talks.</span> }
+          The dealine for voting ends <strong>Sunday Feb 2</strong> at <strong>midnight</strong>.        
+          Speakers will be guaranteed an RSVP spot, <strong>and</strong> a spot for a friend or colleague.
         </p>
         <p>
           Seating on day 1 is <strong>limited</strong>. A final block of <strong>90 spots will be released this Thursday at 2 PM</strong>. You can keep track of this status on <a href={dayoneLink}>Meetup</a>.

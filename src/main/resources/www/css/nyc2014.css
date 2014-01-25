@@ -416,22 +416,26 @@ ul { list-style:none; margin:0; padding:0; }
   line-height: 0;/* remove line-height */ 
   display: inline-block;/* circle wraps image */
   margin: 5px;
-  border: 5px solid rgba(218,218,218,0.4);
+  border: 5px solid rgba(218,218,218,0.8);
   border-radius: 50%;/* relative value */
   /*box-shadow: 0px 0px 5px rgba(0,0,0,0.4);*/
   transition: linear 0.25s;
   height: 70px;
   width: 70px;
+  overflow:hidden;
 }
+
 .circle img {
    border-radius: 50%;/* relative value for
                              adjustable image size */
 }
+
 .circle:hover {
-  transition: ease-out 0.2s;
-  border: 5px solid rgba(218,218,218,0.8);
-  -webkit-transition: ease-out 0.2s;
+  transition: ease-out 0.1s;
+  border: 5px solid rgba(218,218,218,0.2);
+  -webkit-transition: ease-out 0.1s;
 }
+
 a.circle {
   color: transparent;
 } /* IE fix: removes blue border */
