@@ -362,7 +362,7 @@ trait Templates {
     <div class="grid">
       <div class="unit whole center title">
         <a href="/" class="logo">
-          <img src="/images/2014-logo.svg" alt="north east scala symposium logo"></img>
+          <img class="two-thirds" src="/images/2014-logo.svg" alt="north east scala symposium logo"></img>
         </a>
         <div class="center">
           <hr/>
