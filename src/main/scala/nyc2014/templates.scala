@@ -20,7 +20,7 @@ trait Templates {
     <script type="text/javascript" src="/js/jquery.scrollTo.min.js"></script>
     <script type="text/javascript" src="/js/nyc2014/nyc.js"></script>
     <script type="text/javascript" src="/js/nyc2014/index.js"></script>)(
-      head(authed) ++ blurb(authed) ++ proposing(authed, proposals) ++ where
+      head(authed) ++ blurb(authed) ++ proposing(authed, proposals) ++ where ++ kindness
     )
 
   def talkListing
@@ -441,11 +441,29 @@ trait Templates {
     <div class="grid">
       <div class="unit whole" id="whereone">
         <h2>Come. Find us.</h2>
-          <p>
+        <p>
           This year's symposium will be held @ <a target="_blank" href="http://www.cims.nyu.edu/">Courant Institute of Mathematical Sciences</a>.
-          </p>
-          <div id="where-iframe"></div>
+        </p>
+        <div id="where-iframe"></div>
       </div>
+    </div>
+  </section>
+
+  val kindness = <section id="kindness">
+    <div class="grid">
+      <h2>Be kind.</h2>
+      <p>
+        Nobody likes a jerk, so show respect for those around you.
+      </p>
+      <p>
+       NE Scala is dedicated to providing a harassment-free conference experience for everyone, regardless of gender, gender identity and expression, sexual orientation, disability, physical appearance, body size, race, or religion (or lack thereof). We do not tolerate harassment of conference participants in any form.
+      </p>
+      <p>
+        All communication should be appropriate for a professional audience including people of many different backgrounds. Sexual language, innuendo, and imagery is not appropriate for any conference venue, including talks.
+      </p>
+      <p>
+        Conference participants violating these rules may be asked to leave the conference without a refund at the sole discretion of the conference organizers.
+      </p>
     </div>
   </section>
 
