@@ -466,7 +466,8 @@ trait Templates {
           <li class="clearfix" title={ e.member.get.name } id={ s"e-${e.id}" }
               data-score={ ((e.votes.toDouble / total) * 100).toString }>
            <p>
-             <a class="circle" style={s"background-image:url(${e.member.get.thumbPhoto}); background-size: cover; background-position: 50%"}>
+             <a class="circle" style={s"background-image:url(${e.member.get.thumbPhoto}); background-size: cover; background-position: 50%"}
+                href={ s"/2014/talks#${e.domId}" }>
              </a>
              <strong>{ e.votes }</strong> { e.name }
            </p>
