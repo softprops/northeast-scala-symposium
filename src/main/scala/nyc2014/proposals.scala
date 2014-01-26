@@ -9,10 +9,17 @@ import unfiltered.response._
 
 object Proposal {
   def fromMap(data: Map[String, String]) =
-    Proposal(data("id"), data("name"), data("desc"), data("kind"))
+    Proposal(data("id"), data("name"),
+             // we don't always fetch the desc
+             data.getOrElse("desc", ""),
+             data("kind"),
+             data.getOrElse("votes", "0").toInt)
 }
 case class Proposal(
-  id: String, name: String, desc: String, kind: String, member: Option[Member] = None) {
+  id: String, name: String,
+  desc: String, kind: String,
+  votes: Int = 0,
+  member: Option[Member] = None) {
   lazy val domId = id.split(":")(3)
   lazy val memberId = id.split(":")(2)
 }

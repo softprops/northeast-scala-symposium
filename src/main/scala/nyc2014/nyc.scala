@@ -12,7 +12,8 @@ import org.json4s.native.JsonMethods._
 
 object Member {
   def fromMap(id: String, data: Map[String, String]) =
-    Member(id: String, data("mu_name"), data("mu_photo"), data("mtime"), data.get("twttr"))
+    Member(id: String, data("mu_name"), data("mu_photo"),
+           data("mtime"), data.get("twttr"))
 }
 
 case class Member(id: String, name: String, photo: String, mtime: String, twttr: Option[String]) {
@@ -24,7 +25,7 @@ object Nyc extends Templates {
   def mukey(of: String) = s"nyc2014:members:$of"
 
   def site: unfiltered.Cycle.Intent[Any, Any] =
-    (index orElse talkProposals orElse voting)
+    (index orElse talkProposals orElse voting orElse Tally.talks)
 
   private def index: Cycle.Intent[Any, Any]  = {
     case r @ GET(Path(Seg(Nil))) => Clock("home") {
