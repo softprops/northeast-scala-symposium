@@ -461,7 +461,7 @@ trait Templates {
   def talliedKind(total: Int)(el: (String, Seq[Proposal])): xml.NodeSeq = {
     val (kind, entries) = el
     <div class="unit whole">
-      <h2>{ kind } votes</h2>
+      <h2>{ s"${entries.map(_.votes).sum} $kind" } votes</h2>
         <ul data-total={ total.toString } id="tallies">{ entries map { e =>
           <li class="clearfix" title={ e.member.get.name } id={ s"e-${e.id}" }
               data-score={ ((e.votes.toDouble / total) * 100).toString }>
