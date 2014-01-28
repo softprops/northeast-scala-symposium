@@ -146,7 +146,7 @@ trait Templates {
            Attendees of <a href={dayoneLink}>Day 1</a> may still <a href="/login?then=vote" class="btn">Login to vote</a>
           </p>
           <p>
-            Remember, Selected speakers will be guaranteed a spot on the RSVP list, <strong>and</strong> a spot for a friend or colleague.
+            Remember, selected speakers are guaranteed a spot on the RSVP list, <strong>and</strong> a spot for a friend or colleague.
           </p>
         </div>
       </div>
@@ -218,7 +218,7 @@ trait Templates {
       <div class="unit whole">
         <h2>Speak up</h2>
         <p>The deadline for submitting <strong>new</strong> <a href="/2014/talks">talk proposals</a> has now passed.</p>{
-          if (proposals.isEmpty) <p>Attendees may still get their voice heard. Attendees select the speakers by <a href="/2014/talks">voting</a>. Selected speakers will be guaranteed a spot on the RSVP list.</p> else <p>Selected speakers will be guaranteed a spot on the RSVP list, <strong>and</strong> a spot for a friend or colleague.</p>
+          if (proposals.isEmpty) <p>Attendees may still get their voice heard. Attendees select the speakers by <a href="/2014/talks">voting</a>. Selected speakers are guaranteed a spot on the RSVP list.</p> else <p>Selected speakers are guaranteed a spot on the RSVP list, <strong>and</strong> a spot for a friend or colleague.</p>
         }
       </div>
       <div id="propose-talk">
@@ -398,11 +398,12 @@ trait Templates {
           The deadline for submitting talk proposals has now passed.
         </p>
         <p>{ if (!authed) <span> Attendees of <a href={dayoneLink}>Day 1</a> may <a href="/login?then=vote">login</a> with Meetup to select this years talks. </span> else <span>You may still <a href="/2014/talks">vote</a> for your favorite talks.</span> }
-          The dealine for voting ends <strong>Sunday Feb 2</strong> at <strong>midnight</strong>.        
-          Speakers will be guaranteed an RSVP spot, <strong>and</strong> a spot for a friend or colleague.
+          The deadline for voting is <strong>Sunday Feb 2</strong> at <strong>midnight</strong>.        
+          Winners will be announced soon afterwards.
+          Speakers are guaranteed an RSVP spot, <strong>and</strong> a spot for a friend or colleague.
         </p>
         <p>
-          Seating on day 1 is <strong>limited</strong>. A final block of <strong>90 spots will be released this Thursday at 2 PM</strong>. You can keep track of this status on <a href={dayoneLink}>Meetup</a>.
+          Seating on day 1 is <strong>limited</strong> and is now sold out. (Join the <a href={dayoneLink}>day 1</a> waiting list to be notified when a spot opens if someone cancels.)
         </p>
         <p>
           If you've got something you'd like to talk about, <a href="#propose">let us know</a>.
