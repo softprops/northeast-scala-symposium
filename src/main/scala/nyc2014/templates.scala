@@ -447,7 +447,7 @@ trait Templates {
         </p>
         <div id="whereone-iframe"></div>
         <p id="wheretwo">
-          Day one will be followed by an unconfernance hosted @ <a target="_blank" href="http://meetup.com">Meetup</a> HQ on <a href={daytwoLink}>day two</a>.
+          Day one will be followed by an unconference hosted @ <a target="_blank" href="http://meetup.com">Meetup</a> HQ on <a href={daytwoLink}>day two</a>.
         </p>
         <div id="wheretwo-iframe"></div>
       </div>
