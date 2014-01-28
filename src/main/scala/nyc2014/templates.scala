@@ -366,7 +366,7 @@ trait Templates {
         </a>
         <div class="center">
           <hr/>
-          <h4><a href="#whereone">New York, NY</a></h4>
+          <h4><a href="#where">New York, NY</a></h4>
           <h4>March 1 <span class="amp">&amp;</span> 2, 2014</h4>
         </div>
         </div>
@@ -413,8 +413,8 @@ trait Templates {
         <h2>One day of <strong>pairing</strong>.</h2>
         <p class="mute">Sun Mar 2, 9am to 5pm</p>
         <p>
-          <a href={daytwoLink}>Day 2</a> is a free-to-attend, hands-on <a href="http://en.wikipedia.org/wiki/Unconference">unconference</a>,
-          self-organized on the spot by whoever shows up. (Trust us, this works.)
+          <a href={daytwoLink}>Day 2</a> is a free-to-attend, hands-on <a href="http://en.wikipedia.org/wiki/Unconference">unconference</a> 
+          self-organized on the spot by whoever shows up hosted @ <a href="#wheretwo">Meetup HQ</a>.
         </p>
         <p>
           In past years we've had workshops, panels, talks that didn't make it into day 1, debates, group hugs (well, not really).
@@ -440,12 +440,16 @@ trait Templates {
 
   val where = <section>
     <div class="grid">
-      <div class="unit whole" id="whereone">
+      <div class="unit whole" id="where">
         <h2>Come. Find us.</h2>
-        <p>
-          This year's symposium will be held @ <a target="_blank" href="http://www.cims.nyu.edu/">Courant Institute of Mathematical Sciences</a>.
+        <p id="whereone">
+          This year's talk symposium will be held @ <a target="_blank" href="http://www.cims.nyu.edu/">Courant Institute of Mathematical Sciences</a>.
         </p>
-        <div id="where-iframe"></div>
+        <div id="whereone-iframe"></div>
+        <p id="wheretwo">
+          Day one will be followed by an unconfernance hosted @ <a target="_blank" href="http://meetup.com">Meetup</a> HQ on <a href={daytwoLink}>day two</a>.
+        </p>
+        <div id="wheretwo-iframe"></div>
       </div>
     </div>
   </section>
