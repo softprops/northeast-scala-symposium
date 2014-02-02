@@ -9,13 +9,13 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="278.94312"
-   height="192.30875"
+   width="114.01963"
+   height="161.76062"
    id="svg2"
    version="1.1"
    inkscape:version="0.48.4 r9939"
    sodipodi:docname="logo-sqr.svg"
-   inkscape:export-filename="/Users/dougtangren/code/scala/projects/northeast-scala-symposium/src/main/resources/www/images/2014-logo.png"
+   inkscape:export-filename="logo-sqr.png"
    inkscape:export-xdpi="90"
    inkscape:export-ydpi="90">
   <defs
@@ -49,17 +49,17 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="8.0000002"
-     inkscape:cx="133.01292"
-     inkscape:cy="72.928224"
+     inkscape:zoom="2.8284272"
+     inkscape:cx="116.07111"
+     inkscape:cy="58.16897"
      inkscape:document-units="px"
      inkscape:current-layer="layer4"
      showgrid="false"
-     inkscape:window-width="1280"
-     inkscape:window-height="733"
-     inkscape:window-x="166"
-     inkscape:window-y="29"
-     inkscape:window-maximized="0"
+     inkscape:window-width="1920"
+     inkscape:window-height="1056"
+     inkscape:window-x="0"
+     inkscape:window-y="24"
+     inkscape:window-maximized="1"
      fit-margin-top="10"
      fit-margin-left="10"
      fit-margin-right="10"
@@ -72,7 +72,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -81,7 +81,7 @@
      id="layer3"
      inkscape:label="background"
      style="display:inline"
-     transform="translate(8.8189075,22.752431)">
+     transform="translate(4.1078106,-4.0968122)">
     <rect
        style="fill:#000000;fill-opacity:0"
        id="rect3026"
@@ -127,31 +127,17 @@
        sodipodi:rx="101.65632"
        sodipodi:ry="95.41748"
        d="m 231.93787,102.59126 c 0,52.69762 -45.51308,95.41748 -101.65631,95.41748 -56.143239,0 -101.656323,-42.71986 -101.656323,-95.41748 0,-52.697617 45.513084,-95.4174777 101.656323,-95.4174777 56.14323,0 101.65631,42.7198607 101.65631,95.4174777 z"
-       transform="matrix(0.39052007,0,0,0.41718498,-11.28654,-2.895982)"
-       inkscape:export-filename="/Users/dougtangren/Desktop/2014-logo.png"
-       inkscape:export-xdpi="90"
-       inkscape:export-ydpi="90" />
+       transform="matrix(0.39052007,0,0,0.41718498,-5.28654,11.104018)"
+       inkscape:export-filename="logo-sqr.pnng.png"
+       inkscape:export-xdpi="360.12244"
+       inkscape:export-ydpi="360.12244" />
   </g>
   <g
      inkscape:groupmode="layer"
      id="layer2"
      inkscape:label="direction-text"
      style="display:inline"
-     transform="translate(8.8189075,22.752431)">
-    <text
-       xml:space="preserve"
-       style="font-size:35px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:0.99685992;stroke:none;font-family:Montserrat;-inkscape-font-specification:Montserrat Bold"
-       x="-7.788908"
-       y="39.362183"
-       id="text2987"
-       sodipodi:linespacing="125%"
-       inkscape:export-filename="/Users/dougtangren/Desktop/2014-logo.png"
-       inkscape:export-xdpi="90"
-       inkscape:export-ydpi="90"><tspan
-         sodipodi:role="line"
-         id="tspan2989"
-         x="-7.788908"
-         y="39.362183">nescala</tspan></text>
+     transform="translate(4.1078106,-4.0968122)">
     <text
        xml:space="preserve"
        style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
@@ -167,119 +153,36 @@
   </g>
   <g
      inkscape:groupmode="layer"
-     id="layer9"
-     inkscape:label="ne-dot"
-     style="display:none"
-     transform="translate(8.8189075,22.752431)"
-     sodipodi:insensitive="true">
-    <text
-       xml:space="preserve"
-       style="font-size:80px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:0.99685992;stroke:none;font-family:Montserrat;-inkscape-font-specification:Montserrat"
-       x="170.06604"
-       y="23.779634"
-       id="text3804"
-       sodipodi:linespacing="125%"
-       inkscape:export-filename="/Users/dougtangren/Desktop/2014-logo.png"
-       inkscape:export-xdpi="90"
-       inkscape:export-ydpi="90"><tspan
-         sodipodi:role="line"
-         id="tspan3806"
-         x="170.06604"
-         y="23.779634">.</tspan></text>
-  </g>
-  <g
-     inkscape:groupmode="layer"
      id="layer8"
      inkscape:label="symp-text"
      style="display:inline"
-     transform="translate(8.8189075,22.752431)">
-    <text
-       xml:space="preserve"
-       style="font-size:20px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:justify;line-height:50%;letter-spacing:4px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:0.99685992;stroke:none;font-family:Signika;-inkscape-font-specification:Signika Light"
-       x="-3.8349075"
-       y="55.423462"
-       id="text4162"
-       sodipodi:linespacing="50%"
-       inkscape:export-filename="/Users/dougtangren/Desktop/2014-logo.png"
-       inkscape:export-xdpi="90"
-       inkscape:export-ydpi="90"><tspan
-         sodipodi:role="line"
-         id="tspan4164"
-         x="-3.8349075"
-         y="55.423462">symposium</tspan></text>
-  </g>
+     transform="translate(4.1078106,-4.0968122)" />
   <g
      inkscape:groupmode="layer"
      id="layer10"
      inkscape:label="scala-text"
-     transform="translate(8.8189075,22.752431)"
+     transform="translate(4.1078106,-4.0968122)"
      style="display:inline"
      sodipodi:insensitive="true" />
-  <g
-     inkscape:groupmode="layer"
-     id="layer1"
-     inkscape:label="div"
-     style="display:none"
-     transform="translate(8.8189075,22.752431)">
-    <rect
-       style="fill:#000000;fill-opacity:0.99685992;stroke:none"
-       id="rect3801"
-       width="131.9301"
-       height="2.2019417"
-       x="98.093201"
-       y="146.867"
-       inkscape:export-filename="/Users/dougtangren/Desktop/2014-logo.png"
-       inkscape:export-xdpi="90"
-       inkscape:export-ydpi="90" />
-  </g>
-  <g
-     inkscape:groupmode="layer"
-     id="layer7"
-     inkscape:label="res-text"
-     style="display:none"
-     transform="translate(8.8189075,22.752431)"
-     sodipodi:insensitive="true">
-    <text
-       xml:space="preserve"
-       style="font-size:40px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:0.99685992;stroke:none;font-family:Inconsolata;-inkscape-font-specification:Inconsolata Medium"
-       x="5.1320267"
-       y="230.65927"
-       id="text4101"
-       sodipodi:linespacing="125%"
-       inkscape:export-filename="/Users/dougtangren/Desktop/2014-logo.png"
-       inkscape:export-xdpi="90"
-       inkscape:export-ydpi="90"><tspan
-         sodipodi:role="line"
-         id="tspan4103"
-         x="5.1320267"
-         y="230.65927">res0: Int = 2014</tspan></text>
-    <flowRoot
-       xml:space="preserve"
-       id="flowRoot4105"
-       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"><flowRegion
-         id="flowRegion4107"><rect
-           id="rect4109"
-           width="54.5"
-           height="50.5"
-           x="143.5"
-           y="36.862183" /></flowRegion><flowPara
-         id="flowPara4111" /></flowRoot>  </g>
   <g
      inkscape:groupmode="layer"
      id="layer5"
      inkscape:label="legs"
      style="display:inline"
-     transform="translate(8.8189075,22.752431)" />
+     transform="translate(4.1078106,-4.0968122)" />
   <g
      inkscape:groupmode="layer"
      id="layer4"
      inkscape:label="tower"
      style="display:inline"
-     transform="translate(8.8189075,22.752431)">
+     transform="translate(4.1078106,-4.0968122)">
     <g
        style="display:inline"
        id="g4417"
-       transform="matrix(0.59616045,0,0,0.66930021,-218.90271,15.276602)">
+       transform="matrix(1.4512427,0,0,1.6292881,-715.79918,-98.05863)"
+       inkscape:export-filename="logo-sqr.pnng.png"
+       inkscape:export-xdpi="360.12244"
+       inkscape:export-ydpi="360.12244">
       <path
          id="rect4077-6-0"
          d="m 523.75415,141.30213 -3.65625,9.84375 c -0.84803,2.26167 -0.86212,4.33162 -0.0312,4.65625 0.83082,0.32463 2.18322,-1.23833 3.03125,-3.5 l 0.46875,-1.28125 10.0625,-5.625 c -1.59772,-0.31781 -3.10297,-0.73787 -4.5,-1.25 l -3.78125,2.09375 1.1875,-3.21875 c -1.0183,-0.51468 -1.95459,-1.10298 -2.7813,-1.71875 z"
@@ -314,28 +217,8 @@
   </g>
   <g
      inkscape:groupmode="layer"
-     id="layer6"
-     inkscape:label="water-spout"
-     style="display:inline"
-     transform="translate(8.8189075,22.752431)" />
-  <g
-     inkscape:groupmode="layer"
      id="layer11"
      inkscape:label="glow"
-     transform="translate(8.8189075,22.752431)"
-     style="display:inline">
-    <path
-       sodipodi:type="arc"
-       style="fill:#fdffdb;fill-opacity:0.50847461;stroke:none"
-       id="path5258"
-       sodipodi:cx="47.70874"
-       sodipodi:cy="10.109708"
-       sodipodi:rx="89.545631"
-       sodipodi:ry="88.811653"
-       d="m 137.25437,10.109708 c 0,49.049321 -40.090943,88.811653 -89.54563,88.811653 -49.4546864,0 -89.545631,-39.762332 -89.545631,-88.811653 0,-49.049322 40.0909446,-88.811653 89.545631,-88.811653 49.454687,0 89.54563,39.762331 89.54563,88.811653 z"
-       transform="matrix(0.70252858,0,0,0.72661081,19.413601,29.850656)"
-       inkscape:export-xdpi="90"
-       inkscape:export-ydpi="90"
-       inkscape:export-filename="/Users/dougtangren/Desktop/2014-logo.png" />
-  </g>
+     transform="translate(4.1078106,-4.0968122)"
+     style="display:inline" />
 </svg>
