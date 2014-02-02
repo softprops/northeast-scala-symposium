@@ -13,7 +13,7 @@
    height="259.17221"
    id="svg2"
    version="1.1"
-   inkscape:version="0.48.2 r9819"
+   inkscape:version="0.48.4 r9939"
    sodipodi:docname="logo.svg"
    inkscape:export-filename="/Users/dougtangren/code/scala/projects/northeast-scala-symposium/src/main/resources/www/images/2014-logo.png"
    inkscape:export-xdpi="90"
@@ -49,17 +49,17 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1.4142136"
-     inkscape:cx="213.00682"
-     inkscape:cy="134.66892"
+     inkscape:zoom="4.0000001"
+     inkscape:cx="451.04986"
+     inkscape:cy="109.72744"
      inkscape:document-units="px"
-     inkscape:current-layer="g3078"
+     inkscape:current-layer="layer4"
      showgrid="false"
-     inkscape:window-width="1280"
-     inkscape:window-height="733"
-     inkscape:window-x="5"
-     inkscape:window-y="26"
-     inkscape:window-maximized="0"
+     inkscape:window-width="1920"
+     inkscape:window-height="1056"
+     inkscape:window-x="0"
+     inkscape:window-y="24"
+     inkscape:window-maximized="1"
      fit-margin-top="10"
      fit-margin-left="10"
      fit-margin-right="10"
@@ -72,7 +72,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -433,183 +433,54 @@
      id="layer5"
      inkscape:label="legs"
      style="display:inline"
-     transform="translate(5.9849075,48.848755)">
-    <rect
-       style="fill:#000000;fill-opacity:0.99685992;stroke:none"
-       id="rect4077"
-       width="3.2201977"
-       height="21.799875"
-       x="446.37479"
-       y="-44.497116"
-       transform="matrix(0.93142228,0.36394029,-0.3510886,0.93634224,0,0)"
-       rx="4.2935967"
-       ry="4.3599749"
-       inkscape:export-filename="/Users/dougtangren/Desktop/2014-logo.png"
-       inkscape:export-xdpi="90"
-       inkscape:export-ydpi="90" />
-    <rect
-       style="fill:#000000;fill-opacity:0.99685992;stroke:none"
-       id="rect4079"
-       width="3.4900484"
-       height="19.611696"
-       x="375.92966"
-       y="293.16434"
-       transform="matrix(0.91997913,-0.39196735,0.3784467,0.92562308,0,0)"
-       rx="4.295445"
-       ry="4.3581543"
-       inkscape:export-filename="/Users/dougtangren/Desktop/2014-logo.png"
-       inkscape:export-xdpi="90"
-       inkscape:export-ydpi="90" />
-    <rect
-       style="fill:#000000;fill-opacity:0.99685992;stroke:none"
-       id="rect4081"
-       width="3.0555074"
-       height="31.279037"
-       x="71.150177"
-       y="430.73416"
-       transform="matrix(0.60391849,-0.79704608,0.90837682,0.41815254,0,0)"
-       inkscape:transform-center-y="6.0901791"
-       inkscape:transform-center-x="0.75078002"
-       inkscape:export-filename="/Users/dougtangren/Desktop/2014-logo.png"
-       inkscape:export-xdpi="90"
-       inkscape:export-ydpi="90" />
-    <rect
-       style="fill:#000000;fill-opacity:0.99685992;stroke:none"
-       id="rect4085"
-       width="3.3334792"
-       height="23.576521"
-       x="327.03281"
-       y="-373.34955"
-       transform="matrix(0.37237657,0.92808173,-0.87349737,0.48682886,0,0)"
-       inkscape:export-filename="/Users/dougtangren/Desktop/2014-logo.png"
-       inkscape:export-xdpi="90"
-       inkscape:export-ydpi="90" />
-    <path
-       sodipodi:type="arc"
-       style="fill:#000000;fill-opacity:0.99685992;stroke:none"
-       id="path4087"
-       sodipodi:cx="273.5"
-       sodipodi:cy="452.73718"
-       sodipodi:rx="2.25"
-       sodipodi:ry="2.375"
-       d="m 275.75,452.73718 c 0,1.31168 -1.00736,2.375 -2.25,2.375 -1.24264,0 -2.25,-1.06332 -2.25,-2.375 0,-1.31167 1.00736,-2.375 2.25,-2.375 1.24264,0 2.25,1.06333 2.25,2.375 z"
-       transform="matrix(2.1410496,0,0,2.1856339,-145.27807,-875.69481)"
-       inkscape:export-filename="/Users/dougtangren/Desktop/2014-logo.png"
-       inkscape:export-xdpi="90"
-       inkscape:export-ydpi="90" />
-  </g>
+     transform="translate(5.9849075,48.848755)" />
   <g
      inkscape:groupmode="layer"
      id="layer4"
      inkscape:label="tower"
      style="display:inline"
      transform="translate(5.9849075,48.848755)">
-    <rect
-       style="fill:#000000;fill-opacity:0.99685992"
-       id="rect4033"
-       width="42.390621"
-       height="42.500607"
-       x="423.96744"
-       y="76.197807"
-       inkscape:export-filename="/Users/dougtangren/Desktop/2014-logo.png"
-       inkscape:export-xdpi="90"
-       inkscape:export-ydpi="90" />
-    <path
-       sodipodi:type="arc"
-       style="fill:#000000;fill-opacity:0.99685992;stroke:#ffffff;stroke-opacity:1"
-       id="path4055"
-       sodipodi:cx="273.65033"
-       sodipodi:cy="450.26077"
-       sodipodi:rx="7.0710678"
-       sodipodi:ry="4.5961943"
-       d="m 280.7214,450.26077 c 0,2.53841 -3.16583,4.5962 -7.07107,4.5962 -3.90524,0 -7.07107,-2.05779 -7.07107,-4.5962 0,-2.53841 3.16583,-4.59619 7.07107,-4.59619 3.90524,0 7.07107,2.05778 7.07107,4.59619 z"
-       transform="matrix(2.9974692,0,0,2.1856339,-375.03619,-864.36889)"
-       inkscape:export-filename="/Users/dougtangren/Desktop/2014-logo.png"
-       inkscape:export-xdpi="90"
-       inkscape:export-ydpi="90" />
-    <path
-       sodipodi:type="arc"
-       style="fill:#000000;fill-opacity:0.99685992;stroke:#ffffff;stroke-opacity:1"
-       id="path4057"
-       sodipodi:cx="275.2413"
-       sodipodi:cy="436.11862"
-       sodipodi:rx="10.076272"
-       sodipodi:ry="5.6568542"
-       d="m 285.31757,436.11862 c 0,3.1242 -4.5113,5.65686 -10.07627,5.65686 -5.56497,0 -10.07627,-2.53266 -10.07627,-5.65686 0,-3.12419 4.5113,-5.65685 10.07627,-5.65685 5.56497,0 10.07627,2.53266 10.07627,5.65685 z"
-       transform="matrix(2.1410496,0,0,2.1856339,-145.27807,-875.69481)"
-       inkscape:export-filename="/Users/dougtangren/Desktop/2014-logo.png"
-       inkscape:export-xdpi="90"
-       inkscape:export-ydpi="90" />
-    <path
-       style="fill:#000000;fill-opacity:0.99685992;fill-rule:evenodd;stroke:none"
-       d="m 427.94462,75.3023 15.59309,-17.454111 17.52085,18.600124 0,3e-6 z"
-       id="path4068"
-       inkscape:path-effect="#path-effect4070"
-       inkscape:original-d="m 427.94462,75.3023 15.59309,-17.454111 17.52085,18.600127 z"
-       inkscape:connector-curvature="0"
-       inkscape:export-filename="/Users/dougtangren/Desktop/2014-logo.png"
-       inkscape:export-xdpi="90"
-       inkscape:export-ydpi="90" />
-    <path
-       sodipodi:type="arc"
-       style="fill:#000000;fill-opacity:0.99685992;stroke:none"
-       id="path4074"
-       sodipodi:cx="275.5"
-       sodipodi:cy="453.48718"
-       sodipodi:rx="9.5"
-       sodipodi:ry="4.875"
-       d="m 285,453.48718 c 0,2.69239 -4.25329,4.875 -9.5,4.875 -5.24671,0 -9.5,-2.18261 -9.5,-4.875 0,-2.69239 4.25329,-4.875 9.5,-4.875 5.24671,0 9.5,2.18261 9.5,4.875 z"
-       transform="matrix(2.2395685,0,0,2.4658434,-171.75018,-1001.127)"
-       inkscape:export-filename="/Users/dougtangren/Desktop/2014-logo.png"
-       inkscape:export-xdpi="90"
-       inkscape:export-ydpi="90" />
-    <path
-       sodipodi:type="arc"
-       style="fill:#000000;fill-opacity:0.99685992;stroke:#ffffff;stroke-opacity:1"
-       id="path4089"
-       sodipodi:cx="275.83481"
-       sodipodi:cy="449.63809"
-       sodipodi:rx="9.9297018"
-       sodipodi:ry="3.6028121"
-       d="m 285.76451,449.63809 c 0,1.98978 -4.44568,3.60281 -9.9297,3.60281 -5.48402,0 -9.9297,-1.61303 -9.9297,-3.60281 0,-1.98978 4.44568,-3.60281 9.9297,-3.60281 5.48402,0 9.9297,1.61303 9.9297,3.60281 z"
-       transform="matrix(2.1806189,0,0,2.1856339,-155.79981,-880.06607)"
-       inkscape:export-filename="/Users/dougtangren/Desktop/2014-logo.png"
-       inkscape:export-xdpi="90"
-       inkscape:export-ydpi="90" />
-    <path
-       sodipodi:type="arc"
-       style="fill:#000000;fill-opacity:0.99685992;stroke:none"
-       id="path4093"
-       sodipodi:cx="275.51068"
-       sodipodi:cy="445.57382"
-       sodipodi:rx="9.5689316"
-       sodipodi:ry="3.7592232"
-       d="m 285.07961,445.57382 c 0,2.07616 -4.28415,3.75923 -9.56893,3.75923 -5.28477,0 -9.56893,-1.68307 -9.56893,-3.75923 0,-2.07616 4.28416,-3.75922 9.56893,-3.75922 5.28478,0 9.56893,1.68306 9.56893,3.75922 z"
-       transform="matrix(2.2383608,0.01617905,0.11099306,2.4928569,-220.74579,-1014.7108)"
-       inkscape:export-filename="/Users/dougtangren/Desktop/2014-logo.png"
-       inkscape:export-xdpi="90"
-       inkscape:export-ydpi="90" />
+    <g
+       id="g4417"
+       transform="matrix(0.99269039,0,0,1.1144783,-92.547205,-32.165405)">
+      <path
+         id="rect4077-6-0"
+         d="m 523.75415,141.30213 -3.65625,9.84375 c -0.84803,2.26167 -0.86212,4.33162 -0.0312,4.65625 0.83082,0.32463 2.18322,-1.23833 3.03125,-3.5 l 0.46875,-1.28125 10.0625,-5.625 c -1.59772,-0.31781 -3.10297,-0.73787 -4.5,-1.25 l -3.78125,2.09375 1.1875,-3.21875 c -1.0183,-0.51468 -1.95459,-1.10298 -2.7813,-1.71875 z"
+         style="fill:#000000;fill-opacity:0.99685992;stroke:none;display:inline"
+         inkscape:connector-curvature="0" />
+      <path
+         id="rect4077-6-0-8"
+         d="m 557.77601,141.30213 3.65625,9.84375 c 0.84803,2.26167 0.86212,4.33162 0.0312,4.65625 -0.83082,0.32463 -2.18322,-1.23833 -3.03125,-3.5 l -0.46875,-1.28125 -10.0625,-5.625 c 1.59772,-0.31781 3.10297,-0.73787 4.5,-1.25 l 3.78125,2.09375 -1.1875,-3.21875 c 1.0183,-0.51468 1.95459,-1.10298 2.7813,-1.71875 z"
+         style="fill:#000000;fill-opacity:0.99685992;stroke:none;display:inline"
+         inkscape:connector-curvature="0" />
+      <path
+         inkscape:connector-curvature="0"
+         id="path4074-6"
+         d="m 562.07758,120.12 c -2.99811,4.77541 -11.46304,8.21875 -21.46875,8.21875 -9.67361,0 -17.90939,-3.22085 -21.15625,-7.75 l 0,7.75 0,2.71875 0,1 0,0.28125 c 0.26222,6.50973 9.69572,11.71875 21.28125,11.71875 11.58553,0 21.01903,-5.20902 21.28125,-11.71875 l 0.0625,0 0,-1.28125 0,-2.71875 0,-8.21875 z"
+         mask="none"
+         style="fill:#000000;fill-opacity:1;stroke:none;display:inline" />
+      <path
+         id="path4074-6-7"
+         transform="translate(-5.9849075,-48.848755)"
+         d="m 546.75,129.5625 -10.65625,8.6875 -10.65625,8.6875 c 0.93895,6.14705 10.06111,10.96875 21.1875,10.96875 11.12639,0 20.24855,-4.8217 21.1875,-10.96875 l 0.25,0 L 557.40625,138.25 546.75,129.5625 z"
+         mask="none"
+         style="fill:#000000;fill-opacity:1;stroke:none;display:inline"
+         inkscape:connector-curvature="0" />
+      <path
+         id="path4074-6-71"
+         transform="translate(-5.9849075,-48.848755)"
+         d="m 568.0625,151.46875 c -2.99811,4.77541 -11.46304,8.21875 -21.46875,8.21875 -9.67361,0 -17.90939,-3.22085 -21.15625,-7.75 l 0,7.75 0,2.71875 0,1 0,0.28125 c 0.26222,6.50974 9.69572,11.71875 21.28125,11.71875 11.58553,0 21.01903,-5.20901 21.28125,-11.71875 l 0.0625,0 0,-1.28125 0,-2.71875 0,-8.21875 z m -38.3125,11 c 0.62345,0 1.125,0.67321 1.125,1.46875 0,0.79554 -0.50155,1.4375 -1.125,1.4375 -0.62345,0 -1.125,-0.64196 -1.125,-1.4375 0,-0.79554 0.50155,-1.46875 1.125,-1.46875 z"
+         mask="none"
+         style="fill:#000000;fill-opacity:1;stroke:none;display:inline"
+         inkscape:connector-curvature="0" />
+    </g>
   </g>
   <g
      inkscape:groupmode="layer"
      id="layer6"
      inkscape:label="water-spout"
      style="display:inline"
-     transform="translate(5.9849075,48.848755)">
-    <path
-       sodipodi:type="arc"
-       style="fill:#ffffff;fill-opacity:0.99685992;stroke:none"
-       id="path4098"
-       sodipodi:cx="267.48682"
-       sodipodi:cy="446.34283"
-       sodipodi:rx="0.52724081"
-       sodipodi:ry="0.659051"
-       d="m 268.01406,446.34283 c 0,0.36399 -0.23606,0.65906 -0.52724,0.65906 -0.29119,0 -0.52724,-0.29507 -0.52724,-0.65906 0,-0.36398 0.23605,-0.65905 0.52724,-0.65905 0.29118,0 0.52724,0.29507 0.52724,0.65905 z"
-       transform="matrix(2.1410496,0,0,2.1856339,-145.27807,-875.69481)"
-       inkscape:export-filename="/Users/dougtangren/Desktop/2014-logo.png"
-       inkscape:export-xdpi="90"
-       inkscape:export-ydpi="90" />
-  </g>
+     transform="translate(5.9849075,48.848755)" />
   <g
      inkscape:groupmode="layer"
      id="layer11"
