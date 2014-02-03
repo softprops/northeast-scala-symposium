@@ -57,7 +57,7 @@ trait Templates {
         </div>
         <div class="unit whole center" id="proposed">
           <p>
-          The deadline for voting on your favorite talk is not over. Results will be announced soon.
+          The deadline for voting on your favorite talk is now over. Results will be announced soon.
           </p>
         </div>
       </div>
