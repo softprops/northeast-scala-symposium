@@ -136,7 +136,7 @@
         , select = $('select[name="kind"]', self)
         , kind = select.val()
         , data = self.serialize()
-        , fields = $('input,textarea,select', self);
+        , fields = $('input,textarea', self);
 
       if (!name.length || !desc.length) {
           notify('<strong>Name</strong> and <strong>talk</strong> description are required',
@@ -188,7 +188,7 @@
       editDesc.show();
       nameIn.show();
       descIn.show();
-      kind.removeAttr('disabled');
+      //kind.removeAttr('disabled');
 
       cancel.click(function(e) {
         e.preventDefault();
