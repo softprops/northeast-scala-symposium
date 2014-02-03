@@ -6,23 +6,47 @@ import unfiltered._
 import unfiltered.request._
 import unfiltered.request.QParams._
 import unfiltered.response._
+import java.util.Date
 
 object Proposal {
   def fromMap(data: Map[String, String]) =
-    Proposal(data("id"), data("name"),
+    Proposal(data("id"),
+             data("name"),
              // we don't always fetch the desc
              data.getOrElse("desc", ""),
              data("kind"),
              data.getOrElse("votes", "0").toInt)
 }
+
 case class Proposal(
-  id: String, name: String,
-  desc: String, kind: String,
+  id: String,
+  name: String,
+  desc: String,
+  kind: String,
   votes: Int = 0,
   member: Option[Member] = None) {
   lazy val domId = id.split(":")(3)
   lazy val memberId = id.split(":")(2)
 }
+
+object Talk {
+  def fromMap(data: Map[String, String]) =
+    Talk(data("id"),
+         data("name"),
+         // we don't always fetch the desc
+         data.getOrElse("desc", ""),
+         data("kind"),
+         data.get("slot").map(s => new Date(s.toLong)).getOrElse(new Date))
+}
+
+case class Talk(
+  id: String,
+  name: String,
+  desc: String,
+  kind: String,
+  slot: Date,
+  member: Option[Member] = None
+)
 
 object Proposals extends Templates {
   val TalkTime = 30
@@ -97,6 +121,40 @@ object Proposals extends Templates {
       }
     }
   }
+
+  def promote(proposal: String, slot: Date) =
+    Store { s =>
+      val Promoting = """nyc2014:proposals:(.*):(.*)""".r
+      if (!s.exists(proposal)) Left(s"proposal $proposal does not exist")
+      else proposal match {
+        case Promoting(who, id) =>
+          val talkKey = s"nyc2014:talks:$who:$id"
+          if (s.exists(talkKey)) Left(s"already promoted to $talkKey") else {
+            val prop = s.hmget(proposal, "name", "desc", "kind")
+              .map(_ + ("id" -> proposal)).map {
+                Proposal.fromMap(_)
+              }
+            prop.map { p =>
+              s.hmset(talkKey, Map(
+                "name" -> p.name,
+                "desc" -> p.desc,
+                "kind" -> p.kind,
+                "slot" -> slot.getTime.toString
+              ))
+            }.getOrElse(Left(s"failed to resolve proposal info for $proposal"))
+          }
+        case invalid => Left(s"invalid proposal $invalid")
+      }
+    }
+
+  def demote(talk: String) = 
+    Store { s =>
+      val Talking = """nyc2014:talks:(.*):(.*)""".r
+      if (!s.exists(talk)) Left(s"talk $talk does not exist") else talk match {
+        case Talking(_, _) => Right(s.del(talk))
+        case _ => Left(s"$talk is not a valid key")
+      }
+    }
 
   def currentProposals = {
     val proposals = Store { s =>

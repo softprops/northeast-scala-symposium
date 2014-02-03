@@ -13,14 +13,13 @@ trait Templates {
 
   def indexPage
     (authed: Boolean,
-     keynote: Map[String, String] = Map.empty[String,String],
-     talks: Seq[Map[String, String]] = Nil,
+     talks: Seq[Talk] = Nil,
      proposals: Seq[Proposal] = Nil) =
     layout(Nil)(
     <script type="text/javascript" src="/js/jquery.scrollTo.min.js"></script>
     <script type="text/javascript" src="/js/nyc2014/nyc.js"></script>
     <script type="text/javascript" src="/js/nyc2014/index.js"></script>)(
-      head(authed) ++ blurb(authed) ++ proposing(authed, proposals) ++ where ++ kindness
+      head ++ blurb(authed) ++ proposing(authed, proposals) ++ schedule(authed, talks) ++ where ++ kindness
     )
 
   def talkListing
@@ -29,7 +28,7 @@ trait Templates {
      canVote: Boolean = false,
      votes: Seq[String] = Seq.empty[String]) = layout(
     <script type="text/javascript" src="/js/nyc2014/voting.js"></script>)(Nil)({
-      head(canVote, "vote")
+      head
     } ++ (<section>
       <div class="grid">
         <div class="unit whole center">
@@ -56,17 +55,9 @@ trait Templates {
             </div>
           </div>
         </div>
-        <div class="unit whole center" id="proposed">{
-          if (canVote) <p id="votes-remaining">You have <strong>{ Votes.MaxTalkVotes - votes.size match {
-            case 0 => " no votes"
-            case 1 => " one vote"
-            case n => s" $n votes"
-          } }</strong> remaining</p> else <p>
-            Attendees of <a href={dayoneLink}>Day 1</a> may <a href="/login?then=vote" class="small btn">Login</a> with Meetup to select this years talks.
-          </p>
-        }
+        <div class="unit whole center" id="proposed">
           <p>
-          The deadline for voting on your favorite talk ends <strong>Sunday Feb 2</strong> at <strong>midnight</strong>.
+          The deadline for voting on your favorite talk is not over. Results will be announced soon.
           </p>
         </div>
       </div>
@@ -103,36 +94,38 @@ trait Templates {
               </a>
             </p>{
               if (p.member.get.twttr.isDefined)
-                <p><a class="twttr small" href={ s"http://twitter.com/${p.member.get.twttr.get.drop(1)}" } target="_blank">{ p.member.get.twttr.get }</a></p>
-              else <span></span> }
-          </div>
-          
-        </div>
-        </div>
-        <div class="unit four-fifths">
-          <h2><a href={ "#"+p.domId }>{ p.name }</a></h2>
-          <div>
-            <span class="mute">{ p.kind match {
-              case "medium" => "45 minutes"
-              case "short" => "30 minutes"
-              case "lightning" => "15 minutes"
-            } }
-            </span>
-            { if (canVote)
-               <form class="ballot" action="/2014/votes" method="POST">
-                 <input type="hidden" name="vote" value={ p.id }/>
-                 <input type="hidden" name="action" value={ if (votes.contains(p.id)) "unvote" else "vote" }/>
-                 <input type="submit" class={ "voting btn%s" format(if (votes.contains(p.id)) " voted-yes" else "") }
-                   value={ if (votes.contains(p.id)) "Change my mind?" else "Let's make this happen" } disabled={
-                     if (votes.size >= Votes.MaxTalkVotes && !votes.contains(p.id)) Some(xml.Text("disabled")) else None } />
-               </form>
-           }
+                <p>
+                  <a class="twttr small" href={ s"http://twitter.com/${p.member.get.twttr.get.drop(1)}" }
+                    target="_blank">{ p.member.get.twttr.get }</a>
+                </p>
+              else <span></span>
+            }
           </div>          
-          <p class="desc">{ p.desc }</p>
         </div>
       </div>
-      <hr/>
-    </li>
+      <div class="unit four-fifths">
+        <h2><a href={ "#"+p.domId }>{ p.name }</a></h2>
+        <div>
+          <span class="mute">{ p.kind match {
+            case "medium" => "45 minutes"
+            case "short" => "30 minutes"
+            case "lightning" => "15 minutes"
+          } }
+          </span>
+          { if (canVote && votes.contains(p.id))
+            <form class="ballot" action="/2014/votes" method="POST">
+             <input type="hidden" name="vote" value={ p.id }/>
+             <input type="hidden" name="action" value={ if (votes.contains(p.id)) "unvote" else "vote" }/>
+             <input type="submit" class="voting btn"
+              value="This got your vote" disabled="disabled"/>
+            </form>
+          }
+        </div>          
+        <p class="desc">{ p.desc }</p>
+      </div>
+    </div>
+    <hr/>
+  </li>
 
   def proposing(authed: Boolean, proposals: Seq[Proposal] = Nil): xml.NodeSeq =
     if (authed) propose(proposals) else <section>
@@ -151,6 +144,16 @@ trait Templates {
         </div>
       </div>
     </section>
+
+  def schedule(authed: Boolean, talks: Seq[Talk] = Nil): xml.NodeSeq =
+    <section id="schedule">
+      <div class="grid">
+        <div class="unit whole">
+          <h2>Schedule</h2>
+          <p>Coming soon</p>
+        </div>
+      </div>
+    </section>
     
   def newProposalsLeft(proposals: Seq[Proposal]) = 
    (<div class="unit one-third">{ if (proposals.size < Proposals.MaxProposals)
@@ -158,7 +161,7 @@ trait Templates {
        Please provide a brief single-paragraph description of your proposed talk.
      </p>
      <p class="instruct">
-       Speakers may enter <a href="http://www.meetup.com/account/services/">Twitter usernames</a> and other biographical
+       Selected speakers may enter <a href="http://www.meetup.com/account/services/">Twitter usernames</a> and other biographical
        information on their
        <a target="_blank" href="http://www.meetup.com/account/">
          Meetup member profile
@@ -223,7 +226,7 @@ trait Templates {
       </div>
       <div id="propose-talk">
         <div id="propose-container" class="unit two-thirds">
-          { if (proposals.nonEmpty) proposalList(proposals) else <span></span> }
+          { if (proposals.nonEmpty) <p>You may make changes to your proposals below</p> ++ proposalList(proposals) else <span></span> }
         </div>
       </div>
     </div>
@@ -233,16 +236,22 @@ trait Templates {
     listOf(props, "proposals", Proposals.MaxTalkName,
            Proposals.MaxTalkDesc, "Your talk proposals", "Edit Talk", "#propose-form")
 
-  def listOf(props: Seq[Proposal], kind: String, maxName: Int,
-             maxDesc: Int, listTitle: String, editLabel: String, sourceForm: String) =
+  def listOf(
+    props: Seq[Proposal],
+    kind: String,
+    maxName: Int,
+    maxDesc: Int,
+    listTitle: String,
+    editLabel: String,
+    sourceForm: String) =
     <div id={ kind }>
       <h2 class="proposal-header">{ listTitle }</h2>
        <ul id={ "%s-list" format kind }>{ if (props.isEmpty) { <li id="no-proposals" class="instruct">None yet</li>} }
        {
          props.map { p =>
          <li id={ p.id }>
-           <form action={"/2014/%s/%s" format (kind, encode(p.id, "utf8")) }
-                    method="POST" class="propose-edit-form">
+           <form action={ s"/2014/$kind/${encode(p.id, "utf8")}" }
+                 method="POST" class="propose-edit-form">
              <div>
                <h3>
                  <a href="#" class="toggle name" data-val={ p.name }>{ p.name }</a>
@@ -347,17 +356,7 @@ trait Templates {
     <a href="https://twitter.com/nescalas" class="twitter-follow-button" data-show-count="false" data-size="large">Follow @nescalas</a>
   }
 
-  /*def login(authed: Boolean, after: String = "") =
-   if (!authed) <div id="auth-bar" class="unit whole">
-      <div>
-        <div class="l">Just who are you anyway?</div>
-        <div class="r">
-          <a href={ "/login%s" format(if (after.isEmpty) "" else s"?then=$after") } class="btn login">Log in with Meetup</a>
-        </div>
-      </div>
-    </div> else <span></span> */
-
-  def head(authed: Boolean, afterlogin: String = "") =
+  def head =
    <header>
     <div class="grid">
       <div class="unit whole center title">
@@ -395,18 +394,13 @@ trait Templates {
          <a href={dayoneLink}>Day 1</a> is back to <strong>basics</strong> with <a href="#whereone">one room</a>, <a href="/2014/talks">one track of talks</a>.
         </p>
         <p>
-          The deadline for submitting talk proposals has now passed.
+          The deadline for submitting talk proposals and voting has now passed. Results will be posted soon
         </p>
-        <p>{ if (!authed) <span> Attendees of <a href={dayoneLink}>Day 1</a> may <a href="/login?then=vote">login</a> with Meetup to select this years talks. </span> else <span>You may still <a href="/2014/talks">vote</a> for your favorite talks.</span> }
-          The deadline for voting is <strong>Sunday Feb 2</strong> at <strong>midnight</strong>.        
-          Winners will be announced soon afterwards.
-          Speakers are guaranteed an RSVP spot, <strong>and</strong> a spot for a friend or colleague.
+        <p>
+          Selected speakers are guaranteed an RSVP spot, <strong>and</strong> a spot for a friend or colleague.
         </p>
         <p>
           Seating on day 1 is <strong>limited</strong> and is now sold out. (Join the <a href={dayoneLink}>day 1</a> waiting list to be notified when a spot opens if someone cancels.)
-        </p>
-        <p>
-          If you've got something you'd like to talk about, <a href="#propose">let us know</a>.
         </p>
       </div>
       <div class="unit half">
@@ -501,7 +495,7 @@ trait Templates {
 
   def tallied(authed: Boolean, total: Int, entries: Map[String, Seq[Proposal]]) =
     (layout(Nil)(Nil)
-      ({ head(authed) } ++ <div class="grid">{
+      ({ head } ++ <div class="grid">{
         <div class="unit whole">
           <p><strong>{ total }</strong> votes submitted so far</p>
         </div>++ {

@@ -25,16 +25,16 @@ object Nyc extends Templates {
   def mukey(of: String) = s"nyc2014:members:$of"
 
   def site: unfiltered.Cycle.Intent[Any, Any] =
-    (index orElse talkProposals orElse voting orElse Tally.talks)
+    (index orElse talkProposals orElse Tally.talks)
 
   private def index: Cycle.Intent[Any, Any]  = {
     case r @ GET(Path(Seg(Nil))) => Clock("home") {
       AuthorizedToken(r) match {
         case Some(t) =>
-          println(s"logged in as ${t.memberId.get}")
-          Store { s => indexPage(true, proposals = proposals(s, t.memberId.get)) }
+          Store { s =>
+            indexPage(true, proposals = proposals(s, t.memberId.get))
+          }
         case _ =>
-          println("alien")
           indexPage(false)          
       }      
     }
@@ -42,9 +42,6 @@ object Nyc extends Templates {
 
   private def talkProposals: Cycle.Intent[Any, Any] = 
     (Proposals.editing orElse Proposals.viewing)
-
-  private def voting: Cycle.Intent[Any, Any] =
-    Votes.intent
 
   private def proposals(r: RedisClient, mid: String): Seq[Proposal] = {
     r.keys(s"nyc2014:proposals:$mid:*") match {
