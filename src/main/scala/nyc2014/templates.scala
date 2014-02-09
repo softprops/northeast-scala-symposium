@@ -1,7 +1,7 @@
 package nescala.nyc2014
 
 import java.text.SimpleDateFormat
-import java.util.Date
+import java.util.{ Date, TimeZone }
 import nescala.Meetup
 import java.net.URLEncoder.encode
 
@@ -148,12 +148,19 @@ trait Templates {
       </div>
     </section>
 
+  def dateFormat(pat: String) = {
+    val s = new SimpleDateFormat(pat)
+    s.setTimeZone(TimeZone.getTimeZone(
+        "US/Eastern"))
+    s
+  }
+
   def formatTime(d: Date) =
-    (if (d.getMinutes > 0) new SimpleDateFormat("h:mm")
-     else new SimpleDateFormat("h")).format(d)
+    (if (d.getMinutes > 0) dateFormat("h:mm")
+     else dateFormat("h")).format(d)
 
   def ampm(d: Date) =
-    new SimpleDateFormat("aa").format(d).toLowerCase
+    dateFormat("aa").format(d).toLowerCase
 
   def scheduleItem(slot: Slot): xml.NodeSeq = slot match {
     case NonPresentation(time, title, content) =>
@@ -524,7 +531,6 @@ trait Templates {
       </div>
     </div>
   </section>
-
 
   def talliedKind(total: Int)(el: (String, Seq[Proposal])): xml.NodeSeq = {
     val (kind, entries) = el
