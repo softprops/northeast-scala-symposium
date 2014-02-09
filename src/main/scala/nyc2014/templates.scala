@@ -201,7 +201,7 @@ trait Templates {
         <div class="unit whole">
           <h2>Schedule</h2>
         </div>
-        <div class="unit whole">
+        <div class="unit whole" id="saturday">
           <h3>Saturday / 2nd</h3>
         </div>{
           sched.map(_.slots.map(scheduleItem))
@@ -551,10 +551,17 @@ trait Templates {
           <h2>A little help from our friends</h2>
         </div>
         <div class="unit whole">
+          <h3><a href="http://www.sports195.com">SPORT195</a></h3>
+          <img src="/images/Sports195.jpg"/>
+          <p>
+            <a href="http://www.sports195.com">SPORT195</a> sponsoring the Friday night drink-up.
+          </p>
+        </div>
+        <div class="unit whole">
           <h3><a href="https://thenewcircle.com?utm_campaign=nescala_2014">NewCircle</a></h3>
           <img src="http://photos1.meetupstatic.com/photos/sponsor/a/0/5/c/iab120x90_2081052.jpeg"/>
           <p>
-            <a href="https://thenewcircle.com?utm_campaign=nescala_2014">NewCircle</a> Videos of Day 1. Training in open source development.
+            <a href="https://thenewcircle.com?utm_campaign=nescala_2014">NewCircle</a> Videos of <a href="/#saturday">Day 1</a>. Training in open source development.
           </p>
         </div>
       </div>
