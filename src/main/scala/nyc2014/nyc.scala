@@ -40,8 +40,10 @@ object Nyc extends Templates {
         case _ =>
           indexPage(false,
                     sched = Schedule.get)
-      }      
+      }
     }
+    case GET(Path(Seg("2014" :: "friends" :: Nil))) =>
+      friendsPage
   }
 
   private def talkProposals: Cycle.Intent[Any, Any] = 

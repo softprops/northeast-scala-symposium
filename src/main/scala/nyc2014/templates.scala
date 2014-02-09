@@ -374,7 +374,7 @@ trait Templates {
                 <a href="http://www.meetup.com/boston-scala/">Boston</a>,
                 <a href="http://www.meetup.com/scala-phase/">Philadelphia</a>,
                 and <a href="http://www.meetup.com/ny-scala/">New York</a> scala enthusiasts and, of course, of all of
-                <a href="http://www.meetup.com/nescala/photos/">you</a>.
+                <a href="http://www.meetup.com/nescala/photos/">you</a> with a little help from <a href="/2014/friends">our friends</a>.
               </div>
             </div>
             <div class="unit whole">
@@ -543,6 +543,22 @@ trait Templates {
        } }</ul>
     </div>
   }
+
+  def friendsPage =
+    layout(Nil)(Nil) {
+      head ++ <div class="grid">
+        <div class="unit whole">
+          <h2>A little help from our friends</h2>
+        </div>
+        <div class="unit whole">
+          <h3><a href="https://thenewcircle.com?utm_campaign=nescala_2014">NewCircle</a></h3>
+          <img src="http://photos1.meetupstatic.com/photos/sponsor/a/0/5/c/iab120x90_2081052.jpeg"/>
+          <p>
+            <a href="https://thenewcircle.com?utm_campaign=nescala_2014">NewCircle</a> Videos of Day 1. Training in open source development.
+          </p>
+        </div>
+      </div>
+    }
 
   def tallied(authed: Boolean, total: Int, entries: Map[String, Seq[Proposal]]) =
     (layout(Nil)(Nil)
