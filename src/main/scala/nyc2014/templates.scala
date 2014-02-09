@@ -209,7 +209,7 @@ trait Templates {
           <h2>Schedule</h2>
         </div>
         <div class="unit whole" id="saturday">
-          <h3>Saturday / 2nd</h3>
+          <h3>Saturday / 1st</h3>
         </div>{
           sched.map(_.slots.map(scheduleItem))
                 .getOrElse(<span></span>)
