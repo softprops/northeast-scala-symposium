@@ -554,16 +554,24 @@ trait Templates {
           <h3><a href="http://www.sports195.com">SPORT195</a></h3>
           <img src="/images/Sports195.jpg"/>
           <p>
-            <a href="http://www.sports195.com">SPORT195</a> sponsoring the Friday night drink-up.
+            <a href="http://www.sports195.com">SPORT195</a> will be sponsoring the Friday night drink-up.
           </p>
         </div>
         <div class="unit whole">
           <h3><a href="https://thenewcircle.com?utm_campaign=nescala_2014">NewCircle</a></h3>
           <img src="http://photos1.meetupstatic.com/photos/sponsor/a/0/5/c/iab120x90_2081052.jpeg"/>
           <p>
-            <a href="https://thenewcircle.com?utm_campaign=nescala_2014">NewCircle</a> Videos of <a href="/#saturday">Day 1</a>. Training in open source development.
+            <a href="https://thenewcircle.com?utm_campaign=nescala_2014">NewCircle</a> will be providing videos for <a href="/#saturday">Day 1</a>. NewCircle provides training in open source development.
           </p>
         </div>
+        <div class="unit whole">
+          <h3><a href="https://foursquare.com/">Foursquare</a></h3>
+          <img src="https://ss0.4sqi.net/img/chrome/logo-de7fc2f067289aee69031144ced1736e.png"/>
+          <p>
+            <a href="https://foursquare.com/">Fourquare</a> will be sponsoring the happy hour Saturday.
+          </p>
+        </div>
+
       </div>
     }
 
