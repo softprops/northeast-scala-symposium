@@ -451,3 +451,29 @@ a.logo {
 .ballot {
   display:inline;
 }
+
+#schedule h3 {
+  margin:0;
+}
+
+#schedule p {
+  margin:.25em 0;
+}
+
+.time {
+
+}
+
+.ampm {
+  color:#ccc;
+  font-size:smaller;
+}
+
+.slot {
+  border-bottom:1px solid #eee;
+  padding:1em 10px;
+}
+
+.fa-twitter {
+  color:#33ccff;
+}

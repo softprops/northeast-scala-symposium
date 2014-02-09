@@ -9,13 +9,15 @@ import unfiltered.response._
 import java.util.Date
 
 object Proposal {
+  val Pattern = """nyc2014:proposals:(.*):(.*)""".r
   def fromMap(data: Map[String, String]) =
     Proposal(data("id"),
              data("name"),
              // we don't always fetch the desc
              data.getOrElse("desc", ""),
              data("kind"),
-             data.getOrElse("votes", "0").toInt)
+             votes = data.getOrElse("votes", "0").toInt,
+             time = data.get("time").map(t => new Date(t.toLong)))
 }
 
 case class Proposal(
@@ -24,29 +26,11 @@ case class Proposal(
   desc: String,
   kind: String,
   votes: Int = 0,
-  member: Option[Member] = None) {
+  member: Option[Member] = None,
+  val time: Option[Date] = None) {
   lazy val domId = id.split(":")(3)
   lazy val memberId = id.split(":")(2)
 }
-
-object Talk {
-  def fromMap(data: Map[String, String]) =
-    Talk(data("id"),
-         data("name"),
-         // we don't always fetch the desc
-         data.getOrElse("desc", ""),
-         data("kind"),
-         data.get("slot").map(s => new Date(s.toLong)).getOrElse(new Date))
-}
-
-case class Talk(
-  id: String,
-  name: String,
-  desc: String,
-  kind: String,
-  slot: Date,
-  member: Option[Member] = None
-)
 
 object Proposals extends Templates {
   val TalkTime = 30
@@ -61,11 +45,10 @@ object Proposals extends Templates {
       case Nil    => println("talk %s had no votes" format key)
       case votes  => println("remove votes %s for talk %s" format(votes, key))
     }
-    val Withdrawing = """nyc2014:proposals:(.*):(.*)""".r
     (Store { s =>
       if (!s.exists(key)) Left("proposal did not exist") else {
         key match {
-          case Withdrawing(who, id) =>
+          case Proposal.Pattern(who, id) =>
             if (mid.equals(who)) {
               s.del(key).map( stat => if(stat > 0) s.decr(
                 s"count:nyc2014:proposals:$who"
@@ -124,36 +107,40 @@ object Proposals extends Templates {
 
   def promote(proposal: String, slot: Date) =
     Store { s =>
-      val Promoting = """nyc2014:proposals:(.*):(.*)""".r
-      if (!s.exists(proposal)) Left(s"proposal $proposal does not exist")
-      else proposal match {
-        case Promoting(who, id) =>
-          val talkKey = s"nyc2014:talks:$who:$id"
-          if (s.exists(talkKey)) Left(s"already promoted to $talkKey") else {
-            val prop = s.hmget(proposal, "name", "desc", "kind")
-              .map(_ + ("id" -> proposal)).map {
-                Proposal.fromMap(_)
-              }
-            prop.map { p =>
-              s.hmset(talkKey, Map(
-                "name" -> p.name,
-                "desc" -> p.desc,
-                "kind" -> p.kind,
-                "slot" -> slot.getTime.toString
-              ))
-            }.getOrElse(Left(s"failed to resolve proposal info for $proposal"))
-          }
+      if (!s.exists(proposal)) Left(
+        s"proposal $proposal does not exist") else proposal match {
+        case Proposal.Pattern(who, id) =>
+          Right(s.zadd("nyc2014:talks", slot.getTime().toDouble, proposal))
         case invalid => Left(s"invalid proposal $invalid")
       }
     }
 
   def demote(talk: String) = 
     Store { s =>
-      val Talking = """nyc2014:talks:(.*):(.*)""".r
       if (!s.exists(talk)) Left(s"talk $talk does not exist") else talk match {
-        case Talking(_, _) => Right(s.del(talk))
+        case Proposal.Pattern(_, _) => Right(s.zrem("2014:talks", talk))
         case _ => Left(s"$talk is not a valid key")
       }
+    }
+
+  def talks: Seq[Proposal] =
+    Store { s =>
+      s.zrangeWithScore[String]("nyc2014:talks").map { xs =>
+        (List.empty[Proposal] /: xs) {
+          case (a, (key, slot)) =>
+            s.hmget[String, String](
+              key, "name", "desc", "kind")
+              .map(_ ++ Map("id" -> key, "time" -> slot.toLong.toString)).map {
+                Proposal.fromMap(_) :: a
+              }.getOrElse(a)
+        }
+      }.map { 
+        _.map { p =>
+          val data = s.hmget[String, String](
+            Nyc.mukey(p.memberId), "mtime", "mu_name", "mu_photo", "twttr").get
+          p.copy(member = Some(Member.fromMap(p.memberId, data)))
+        }
+      }.getOrElse(Nil)
     }
 
   def currentProposals = {
@@ -172,13 +159,7 @@ object Proposals extends Templates {
       }
     }
 
-    val Proposing = """nyc2014:proposals:(.*):(.*)""".r
-    val pids = (proposals.map {
-      _.id match {
-        case Proposing(who, _) =>
-          who
-      }
-    }).toSet.toSeq
+    val pids = proposals.map(_.memberId).toSet.toSeq
 
     val stale = Store { s =>
       val tenMinutesAgo = System.currentTimeMillis - (60 * 1000 * 10)
@@ -298,11 +279,9 @@ object Proposals extends Templates {
         val (n, d, k) = (name.get.trim, desc.get.trim, kind.get)
         (if (n.size > MaxTalkName || d.size > MaxTalkDesc) Left("Talk contents were too long")
         else {
-          val Pkey = """nyc2014:proposals:(.*):(.*)""".r
           id match {
-            case Pkey(who, pid) =>
-              if(!who.equals(mid)) Left("Invalid id")
-              else {
+            case Proposal.Pattern(who, pid) =>
+              if(!who.equals(mid)) Left("Invalid id") else {
                 Store { s =>
                   if(!s.exists(id)) Left("Invalid proposal %s" format id)
                   else {

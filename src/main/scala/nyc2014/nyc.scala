@@ -32,10 +32,14 @@ object Nyc extends Templates {
       AuthorizedToken(r) match {
         case Some(t) =>
           Store { s =>
-            indexPage(true, proposals = proposals(s, t.memberId.get))
+            indexPage(
+              true,
+              sched = Schedule.get,
+              proposals = proposals(s, t.memberId.get))
           }
         case _ =>
-          indexPage(false)          
+          indexPage(false,
+                    sched = Schedule.get)
       }      
     }
   }

@@ -1,5 +1,7 @@
 package nescala.nyc2014
 
+import java.text.SimpleDateFormat
+import java.util.Date
 import nescala.Meetup
 import java.net.URLEncoder.encode
 
@@ -13,13 +15,13 @@ trait Templates {
 
   def indexPage
     (authed: Boolean,
-     talks: Seq[Talk] = Nil,
+     sched: Option[Schedule] = None,
      proposals: Seq[Proposal] = Nil) =
     layout(Nil)(
     <script type="text/javascript" src="/js/jquery.scrollTo.min.js"></script>
     <script type="text/javascript" src="/js/nyc2014/nyc.js"></script>
     <script type="text/javascript" src="/js/nyc2014/index.js"></script>)(
-      head ++ blurb(authed) ++ proposing(authed, proposals) ++ schedule(authed, talks) ++ where ++ kindness
+      head ++ blurb(authed) ++ schedule(authed, sched, proposals) ++ where ++ kindness
     )
 
   def talkListing
@@ -74,34 +76,35 @@ trait Templates {
    </section>)
   )
 
-  def avatar(p: Proposal) = 
+  def links(proposal: Proposal) =
+    (<div class="links">
+     <a class="primary" href={ s"http://meetup.com/nescala/members/${proposal.memberId}" } target="_blank">
+       { proposal.member.get.name }
+     </a>
+      {
+        if (proposal.member.get.twttr.isDefined) (
+          <p>
+            <i class="fa fa-twitter"></i>
+            <a class="twttr small" href={ s"http://twitter.com/${proposal.member.get.twttr.get.drop(1)}"} target="_blank">
+             { proposal.member.get.twttr.get }
+            </a>
+          </p>
+        )
+      }
+    </div>)
+
+  def avatar(p: Proposal) =
     <a href={ s"http://meetup.com/nescala/members/${p.memberId}"}
       class="circle" style={s"background-image:url(${p.member.get.thumbPhoto}); background-size: cover; background-position: 50%"}>
     </a>
+
+  def personal(p: Proposal): xml.NodeSeq = avatar(p) ++ links(p)
 
   def proposal(canVote: Boolean, votes: Seq[String])(p: Proposal)  =
    <li class="unit whole talk" id={ p.domId }>
     <div class="grid">
       <div class="unit one-fifth">
-        <div class="half">
-          { avatar(p) }
-        </div>
-        <div class="half">
-          <div class="links">
-            <p>
-              <a class="primary" href={ s"http://meetup.com/nescala/members/${p.memberId}" }
-                target="_blank">{ p.member.get.name }
-              </a>
-            </p>{
-              if (p.member.get.twttr.isDefined)
-                <p>
-                  <a class="twttr small" href={ s"http://twitter.com/${p.member.get.twttr.get.drop(1)}" }
-                    target="_blank">{ p.member.get.twttr.get }</a>
-                </p>
-              else <span></span>
-            }
-          </div>          
-        </div>
+        { personal(p) }
       </div>
       <div class="unit four-fifths">
         <h2><a href={ "#"+p.domId }>{ p.name }</a></h2>
@@ -145,15 +148,66 @@ trait Templates {
       </div>
     </section>
 
-  def schedule(authed: Boolean, talks: Seq[Talk] = Nil): xml.NodeSeq =
-    <section id="schedule">
+  def formatTime(d: Date) =
+    (if (d.getMinutes > 0) new SimpleDateFormat("h:mm")
+     else new SimpleDateFormat("h")).format(d)
+
+  def ampm(d: Date) =
+    new SimpleDateFormat("aa").format(d).toLowerCase
+
+  def scheduleItem(slot: Slot): xml.NodeSeq = slot match {
+    case NonPresentation(time, title, content) =>
+      <div class="unit whole slot">
+        <div class="grid">
+          <h3 class="unit one-fifth">
+            <span class="time">{ formatTime(time) }</span>
+            <span class="ampm">{ ampm(time) }</span>
+          </h3>
+          <h3 class="unit four-fifths">{ title }</h3>
+        </div>
+        <div class="grid">
+          <p class="unit one-fifth"></p>
+          <p class="unit four-fifths">{ content }</p>
+        </div>
+      </div>
+    case p @ Presentation(proposal) =>
+      <div class="unit whole slot" id={ s"talk-${proposal.domId}" }>
+        <div class="grid">
+          <h3 class="unit one-fifth">
+            <span class="time">{ formatTime(p.time) }</span>
+            <span class="ampm">{ ampm(p.time) }</span>
+          </h3>
+          <h3 class="unit four-fifths">
+            <a href={s"#talk-${proposal.domId}"}>{ p.title }</a>
+          </h3>
+        </div>
+        <div class="grid">
+          <div class="unit one-fifth">
+            <p>{ personal(proposal) }</p>
+          </div>
+          <div class="unit four-fifths">
+            <p>{ p.content }</p>
+          </div>
+        </div>
+      </div>
+  }
+
+  def schedule(
+    authed: Boolean,
+    sched: Option[Schedule] = None,
+    proposals: Seq[Proposal]): xml.NodeSeq =
+    (<section id="schedule">
       <div class="grid">
         <div class="unit whole">
           <h2>Schedule</h2>
-          <p>Coming soon</p>
         </div>
-      </div>
-    </section>
+        <div class="unit whole">
+          <h3>Saturday / 2nd</h3>
+        </div>{
+          sched.map(_.slots.map(scheduleItem))
+                .getOrElse(<span></span>)
+       }</div>
+    </section>)
     
   def newProposalsLeft(proposals: Seq[Proposal]) = 
    (<div class="unit one-third">{ if (proposals.size < Proposals.MaxProposals)
@@ -306,6 +360,7 @@ trait Templates {
         <link rel="stylesheet" type="text/css" href="/css/gridism.css" />
         <link rel="stylesheet" type="text/css" href="/css/normalize.css" />
         <link rel="stylesheet" type="text/css" href="/css/nyc2014.css" />
+        <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet"/>
         <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
         { head }
       </head>
@@ -391,13 +446,7 @@ trait Templates {
         <h2>One day of <strong>sharing</strong>.</h2>
         <p class="mute">Sat Mar 1, 8am to 6pm</p>
         <p>
-         <a href={dayoneLink}>Day 1</a> is back to <strong>basics</strong> with <a href="#whereone">one room</a>, <a href="/2014/talks">one track of talks</a>.
-        </p>
-        <p>
-          The deadline for submitting talk proposals and voting has now passed. Results will be posted soon
-        </p>
-        <p>
-          Selected speakers are guaranteed an RSVP spot, <strong>and</strong> a spot for a friend or colleague.
+         <a href={dayoneLink}>Day 1</a> is back to <strong>basics</strong> with <a href="#whereone">one room</a>, <a href="/#schedule">one track of talks</a>.
         </p>
         <p>
           Seating on day 1 is <strong>limited</strong> and is now sold out. (Join the <a href={dayoneLink}>day 1</a> waiting list to be notified when a spot opens if someone cancels.)
@@ -450,6 +499,7 @@ trait Templates {
 
   val kindness = <section id="kindness">
     <div class="grid">
+      <div class="unit whole">
       <h2>Be kind.</h2>
       <p>
         Nobody likes a jerk, so show respect for those around you.
@@ -463,6 +513,7 @@ trait Templates {
       <p>
         Conference participants violating these rules may be asked to leave the conference without a refund at the sole discretion of the conference organizers.
       </p>
+      </div>
     </div>
   </section>
 
