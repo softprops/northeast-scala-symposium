@@ -208,6 +208,24 @@ trait Templates {
         <div class="unit whole">
           <h2>Schedule</h2>
         </div>
+        <div class="unit whole" id="friday">
+          <h3>Friday / 28th</h3>
+        </div>
+        <div class="unit whole slot">
+         <div class="grid">
+           <h3 class="unit one-fifth">
+             <span class="time">8</span>
+             <span class="ampm">pm</span>
+           </h3>
+           <h3 class="unit four-fifths">Pre-Symposium Drink-up</h3>
+         </div>
+         <div class="grid">
+           <p class="unit one-fifth"></p>
+           <p class="unit four-fifths">
+             Grab a drink and share some stories at <a href="https://foursquare.com/v/thom-bar/3fd66200f964a52034e61ee3">Thom Bar</a>.
+           </p>
+         </div>
+        </div>
         <div class="unit whole" id="saturday">
           <h3>Saturday / 1st</h3>
         </div>{
@@ -557,17 +575,17 @@ trait Templates {
           <h2>A little help from our friends</h2>
         </div>
         <div class="unit whole">
-          <h3><a href="http://www.sports195.com">SPORT195</a></h3>
+          <h3><a href="http://www.sports195.com">SPORTS195</a></h3>
           <img src="/images/Sports195.jpg"/>
           <p>
-            <a href="http://www.sports195.com">SPORT195</a> will be sponsoring the Friday night drink-up.
+            <a href="http://www.sports195.com">SPORTS195</a> will be sponsoring the Friday night drink-up.
           </p>
         </div>
         <div class="unit whole">
-          <h3><a href="https://thenewcircle.com?utm_campaign=nescala_2014">NewCircle</a></h3>
+          <h3><a href={"https://thenewcircle.com/?utm_campaign=nescala_2014&utm_source=nescala_website&utm_medium=referral"}>NewCircle</a></h3>
           <img src="http://photos1.meetupstatic.com/photos/sponsor/a/0/5/c/iab120x90_2081052.jpeg"/>
           <p>
-            <a href="https://thenewcircle.com?utm_campaign=nescala_2014">NewCircle</a> will be providing videos for <a href="/#saturday">Day 1</a>. NewCircle provides training in open source development.
+            <a href={"https://thenewcircle.com/?utm_campaign=nescala_2014&utm_source=nescala_website&utm_medium=referral"}>NewCircle</a> will be providing videos for <a href="/#saturday">Day 1</a>. NewCircle provides training in open source development.
           </p>
         </div>
         <div class="unit whole">
