@@ -222,7 +222,7 @@ trait Templates {
          <div class="grid">
            <p class="unit one-fifth"></p>
            <p class="unit four-fifths">
-             Grab a drink and share some stories at <a href="https://foursquare.com/v/thom-bar/3fd66200f964a52034e61ee3">Thom Bar</a>.
+             Grab a drink and share some stories at <a href="http://goo.gl/maps/51FRJ">Thom Bar</a>.
            </p>
          </div>
         </div>
