@@ -3,8 +3,8 @@
 
   $(function() {
     var wherezoom = 15
-      , whereone = '<iframe src="https://maps.google.com/maps?f=q&amp;hl=en&amp;q=251+Mercer+Street,+New+York,+NY,+10012,+us&amp;ie=UTF8&amp;hq=&amp;hnear=251+Mercer+St,+New+York,+10012&amp;t=m&amp;z='+wherezoom+'&amp;ll=40.728771,-73.995752&amp;output=embed&amp;iwloc=near"></iframe>'
-      , wheretwo = '<iframe src="https://maps.google.com/maps?f=q&amp;hl=en&amp;q=632+Broadway,+New+York,+NY,+10012,+us&amp;ie=UTF8&amp;hq=&amp;hnear=632+Broadway,+New+York,+10012&amp;t=m&amp;z='+wherezoom+'&amp;ll=40.726166,-73.996023&amp;output=embed&amp;iwloc=near"></iframe>';
+      , whereone = '<iframe src="https://maps.google.com/maps?f=q&amp;hl=en&amp;q=251+Mercer+Street,+New+York,+NY,+10012,+us&amp;ie=UTF8&amp;hq=&amp;hnear=251+Mercer+St,+New+York,+10012&amp;t=m&amp;z='+wherezoom+'&amp;ll=40.728771,-73.995752&amp;output=embed&amp;iwloc=near" scrolling="no"></iframe>'
+      , wheretwo = '<iframe src="https://maps.google.com/maps?f=q&amp;hl=en&amp;q=632+Broadway,+New+York,+NY,+10012,+us&amp;ie=UTF8&amp;hq=&amp;hnear=632+Broadway,+New+York,+10012&amp;t=m&amp;z='+wherezoom+'&amp;ll=40.726166,-73.996023&amp;output=embed&amp;iwloc=near" scrolling="no"></iframe>';
     $("#whereone-iframe").append(whereone);
     $("#wheretwo-iframe").append(wheretwo);
 

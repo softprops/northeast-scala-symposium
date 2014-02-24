@@ -281,9 +281,9 @@ object Proposals extends Templates {
         else {
           id match {
             case Proposal.Pattern(who, pid) =>
-              if(!who.equals(mid)) Left("Invalid id") else {
+              if (!who.equals(mid)) Left("Invalid id") else {
                 Store { s =>
-                  if(!s.exists(id)) Left("Invalid proposal %s" format id)
+                  if (!s.exists(id)) Left("Invalid proposal %s" format id)
                   else {
                     s.hset(id, "name", n)
                     s.hset(id, "desc", d)
