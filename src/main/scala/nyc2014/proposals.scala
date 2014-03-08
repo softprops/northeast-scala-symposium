@@ -17,7 +17,8 @@ object Proposal {
              data.getOrElse("desc", ""),
              data("kind"),
              votes = data.getOrElse("votes", "0").toInt,
-             time = data.get("time").map(t => new Date(t.toLong)))
+             time = data.get("time").map(t => new Date(t.toLong)),
+             slides = data.get("slides"))
 }
 
 case class Proposal(
@@ -27,7 +28,8 @@ case class Proposal(
   kind: String,
   votes: Int = 0,
   member: Option[Member] = None,
-  val time: Option[Date] = None) {
+  val time: Option[Date] = None,
+  slides: Option[String]= None) {
   lazy val domId = id.split(":")(3)
   lazy val memberId = id.split(":")(2)
 }
@@ -129,7 +131,7 @@ object Proposals extends Templates {
         (List.empty[Proposal] /: xs) {
           case (a, (key, slot)) =>
             s.hmget[String, String](
-              key, "name", "desc", "kind")
+              key, "name", "desc", "kind", "slides")
               .map(_ ++ Map("id" -> key, "time" -> slot.toLong.toString)).map {
                 Proposal.fromMap(_) :: a
               }.getOrElse(a)
@@ -266,6 +268,22 @@ object Proposals extends Templates {
       }
     }
   } 
+
+  def setSlides(key: String, link: String) =
+    Store { s =>
+      if (!s.exists(key)) Left(s"Invalid proposal $key") else {
+        s.hset(key, "slides", link)
+        Right(key)
+      }
+    }
+
+  def setVideo(key: String, link: String) =
+    Store { s =>
+      if (!s.exists(key)) Left(s"Invalid proposal $key") else {
+        s.hset(key, "video", link)
+        Right(key)
+      }
+    }
 
   val editing: Cycle.Intent[Any, Any] = {
     case POST(Path(Seg("2014" :: "proposals" :: UrlDecoded(id) :: Nil))) & Params(p) &

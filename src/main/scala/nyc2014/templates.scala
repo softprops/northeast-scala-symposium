@@ -194,6 +194,9 @@ trait Templates {
           </div>
           <div class="unit four-fifths">
             <p>{ p.content }</p>
+            <p>
+              { if (p.slides.isDefined) <a href={p.slides.get} target="_blank"><i class="fa fa-film"></i> Slides</a> }
+            </p>
           </div>
         </div>
       </div>

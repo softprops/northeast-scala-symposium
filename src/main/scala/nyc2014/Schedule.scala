@@ -14,6 +14,7 @@ case class Presentation(proposal: Proposal) extends Slot {
   val time = proposal.time.getOrElse(new Date)
   val title = proposal.name
   val content = proposal.desc
+  val slides = proposal.slides
 }
 
 case class Schedule(slots: Seq[Slot])
