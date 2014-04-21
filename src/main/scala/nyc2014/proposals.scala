@@ -117,7 +117,7 @@ object Proposals extends Templates {
       }
     }
 
-  def demote(talk: String) = 
+  def demote(talk: String) =
     Store { s =>
       if (!s.exists(talk)) Left(s"talk $talk does not exist") else talk match {
         case Proposal.Pattern(_, _) => Right(s.zrem("2014:talks", talk))
@@ -136,7 +136,7 @@ object Proposals extends Templates {
                 Proposal.fromMap(_) :: a
               }.getOrElse(a)
         }
-      }.map { 
+      }.map {
         _.map { p =>
           val data = s.hmget[String, String](
             Nyc.mukey(p.memberId), "mtime", "mu_name", "mu_photo", "twttr").get
@@ -191,7 +191,7 @@ object Proposals extends Templates {
       }
     } else {
       Store { s =>
-        pids.map { p =>          
+        pids.map { p =>
           val data = s.hmget[String, String](
             Nyc.mukey(p),
             "mu_name",
@@ -205,7 +205,7 @@ object Proposals extends Templates {
 
     (proposals /: members) {
       (a, e) => e match {
-        case (memberId, member) =>          
+        case (memberId, member) =>
           val (matching, notmatching) =
             a.partition(_.id.matches(s"""nyc2014:proposals:$memberId:(.*)"""))
           matching.map(_.copy(member = Some(member))) ++ notmatching
@@ -267,7 +267,7 @@ object Proposals extends Templates {
         ))
       }
     }
-  } 
+  }
 
   def setSlides(key: String, link: String) =
     Store { s =>
