@@ -197,6 +197,9 @@ trait Templates {
             <p>
               { if (p.slides.isDefined) <a href={p.slides.get} target="_blank"><i class="fa fa-film"></i> Slides</a> }
             </p>
+            <p>
+              { if (p.video.isDefined) <a href={p.video.get} target="_blank"><i class="fa fa-film"></i> Video</a> }
+            </p>
           </div>
         </div>
       </div>

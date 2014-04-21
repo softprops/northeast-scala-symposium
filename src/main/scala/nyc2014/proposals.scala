@@ -18,7 +18,8 @@ object Proposal {
              data("kind"),
              votes = data.getOrElse("votes", "0").toInt,
              time = data.get("time").map(t => new Date(t.toLong)),
-             slides = data.get("slides"))
+             slides = data.get("slides"),
+             video = data.get("video"))
 }
 
 case class Proposal(
@@ -29,7 +30,8 @@ case class Proposal(
   votes: Int = 0,
   member: Option[Member] = None,
   val time: Option[Date] = None,
-  slides: Option[String]= None) {
+  slides: Option[String]= None,
+  video: Option[String]= None) {
   lazy val domId = id.split(":")(3)
   lazy val memberId = id.split(":")(2)
 }
@@ -131,7 +133,7 @@ object Proposals extends Templates {
         (List.empty[Proposal] /: xs) {
           case (a, (key, slot)) =>
             s.hmget[String, String](
-              key, "name", "desc", "kind", "slides")
+              key, "name", "desc", "kind", "slides", "video")
               .map(_ ++ Map("id" -> key, "time" -> slot.toLong.toString)).map {
                 Proposal.fromMap(_) :: a
               }.getOrElse(a)

@@ -15,6 +15,7 @@ case class Presentation(proposal: Proposal) extends Slot {
   val title = proposal.name
   val content = <span>{proposal.desc}</span>
   val slides = proposal.slides
+  val video = proposal.video
 }
 
 case class Schedule(slots: Seq[Slot])
