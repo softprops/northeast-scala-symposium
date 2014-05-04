@@ -123,7 +123,7 @@ trait Templates {
               value="This got your vote" disabled="disabled"/>
             </form>
           }
-        </div>          
+        </div>
         <p class="desc">{ p.desc }</p>
       </div>
     </div>
@@ -197,6 +197,9 @@ trait Templates {
             <p>
               { if (p.slides.isDefined) <a href={p.slides.get} target="_blank"><i class="fa fa-film"></i> Slides</a> }
             </p>
+            <p>
+              { if (p.video.isDefined) <a href={p.video.get} target="_blank"><i class="fa fa-film"></i> Video</a> }
+            </p>
           </div>
         </div>
       </div>
@@ -236,8 +239,8 @@ trait Templates {
                 .getOrElse(<span></span>)
        }</div>
     </section>)
-    
-  def newProposalsLeft(proposals: Seq[Proposal]) = 
+
+  def newProposalsLeft(proposals: Seq[Proposal]) =
    (<div class="unit one-third">{ if (proposals.size < Proposals.MaxProposals)
      <p class="instruct">
        Please provide a brief single-paragraph description of your proposed talk.
@@ -484,7 +487,7 @@ trait Templates {
         <h2>One day of <strong>pairing</strong>.</h2>
         <p class="mute">Sun Mar 2, 9am to 5pm</p>
         <p>
-          <a href={daytwoLink}>Day 2</a> is a free-to-attend, hands-on <a href="http://en.wikipedia.org/wiki/Unconference">unconference</a> 
+          <a href={daytwoLink}>Day 2</a> is a free-to-attend, hands-on <a href="http://en.wikipedia.org/wiki/Unconference">unconference</a>
           self-organized on the spot by whoever shows up hosted @ <a href="#wheretwo">Meetup HQ</a>.
         </p>
         <p>
