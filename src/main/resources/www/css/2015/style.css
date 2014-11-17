@@ -1,0 +1,120 @@
+/* this years color is d34c65. http://www.color-hex.com/color/d34c65 */
+body {
+  background-color:#d34c65;
+  color: #fff;
+  font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  text-align:center;
+}
+
+.inverse {
+  background-color:#FFFCFC;
+  color:#d34c65;
+}
+
+.top {
+  /*height:100vh;*/
+  height:100%;
+}
+
+.striped {
+  /** http://css-tricks.com/stripes-css/ 
+      http://nimbupani.com/using-background-clip-for-text-with-css-fallback.html */
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-fill-color: transparent;
+   background:repeating-linear-gradient(145deg, transparent, transparent 10px, #fff 0px, #fff 45px);
+   background: -o-linear-gradient(transparent, transparent);  
+  -webkit-background-clip: text;
+}
+
+h1, h2, h3 {
+  font-family: "Montserrat", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  text-shadow:0 1px 1px #a92a41;
+}
+
+h1 {
+  font-size: 4em;
+}
+
+strong {
+  color:#a92a41;
+  text-shadow:none;
+  font-size:105%;
+}
+
+/** icon links */
+
+a.icon {
+  color:#fff;
+  background-color:#DB6E82;  
+  border-radius:4px;
+  text-align:center;
+  position:relative;
+  display:inline-block;
+  width:40px;
+  height:28px;
+  padding-top:12px;
+  margin:0 2px;
+  transition: all .5s;
+  -webkit-font-smoothing: antialiased;
+}
+
+a.icon:hover {
+ background:#ef92a3;
+}
+
+a.icon span {
+  color:#666;
+  position:absolute;
+  bottom:0;
+  left:-25px;
+  right:-25px;
+  padding:5px 7px;
+  z-index:-1;
+  font-size:14px;
+  border-radius:2px;
+  background:#fff;
+  visibility:hidden;
+  -o-transition:all .5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  -webkit-transition: all .5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  -moz-transition: all .5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  transition: all .5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+a.icon span:before {
+  content:'';
+  width: 0; 
+  height: 0; 
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid #fff;
+  position:absolute;
+  bottom:-5px;
+  left:40px;
+}
+
+a.icon:hover span {
+  bottom:50px;
+  visibility:visible;
+}
+
+a {
+  font-weight:bold;
+  color:#fff;
+  text-decoration:none;
+}
+
+footer {
+  color:#E2899A;
+  margin-top:1em;
+}
+
+hr {
+  border: 1px solid #eee;
+  margin: .75em auto;
+  opacity: 0.3;
+  width: 50px;
+}
+
+.communicate {
+  margin-top:90px;
+}

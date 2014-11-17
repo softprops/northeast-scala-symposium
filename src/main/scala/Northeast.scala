@@ -10,7 +10,7 @@ import com.ning.http.client.oauth.RequestToken
 import scala.concurrent.ExecutionContext.Implicits.global
 import nescala.request.UrlEncoded
 
-object NESS extends Config {
+object Northeast extends Config {
 
   def site: Intent[Any, Any] = {    
     case GET(Path(Seg("login" :: Nil))) & Params(p) =>
