@@ -3,7 +3,6 @@ body {
   background-color:#d34c65;
   color: #fff;
   font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  text-align:center;
 }
 
 .inverse {
@@ -14,6 +13,7 @@ body {
 .top {
   /*height:100vh;*/
   height:100%;
+  text-align:center;
 }
 
 .striped {
@@ -103,9 +103,14 @@ a {
   text-decoration:none;
 }
 
+.inverse a {
+  color:#d34c65;
+}
+
 footer {
   color:#E2899A;
   margin-top:1em;
+  text-align:center;
 }
 
 hr {
@@ -117,4 +122,9 @@ hr {
 
 .communicate {
   margin-top:90px;
+  padding:1em;
+}
+
+#map {
+  height: 200px;
 }
