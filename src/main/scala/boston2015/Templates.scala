@@ -30,7 +30,7 @@ trait Templates {
           <hr/>
           <div>northeast scala symposium 2015</div>
           <hr/>
-          <p>RSVP's open <a href="#when">Tuesday Nov 25 @ 2pm EST</a> | Presenter topic submissions open soon</p>
+          <p>RSVPs open <a href="#when">Tuesday Nov 25 @ 2pm EST</a> | Presenter topic submissions open soon</p>
           <div class="communicate">
             <a class="icon" href="http://twitter.com/nescalas" target="_blank"><i class="fa fa-twitter"></i><span>Listen for the bird call</span></a>
             <a href="http://www.meetup.com/nescala/" target="_blank" class="icon"><i class="icon-scala"></i><span>Join our community</span></a>
@@ -47,7 +47,7 @@ trait Templates {
                 Northeast Scala Symposium is a <a href="http://scala-lang.org/">Scala</a>-focused <strong>community</strong> gathering.
               </p>
               <p>
-                A uniquely-blended programming language deserves a uniquely-blended conference format. NE Scala offers a mix of speaker-oriented conference presentations with unconference-style round table discussions. All presenters are attendees and all attendees select presenters.
+                A uniquely-blended programming language deserves a uniquely-blended conference format. NE Scala offers a mix of speaker-oriented conference presentations with unconference-style sessions and discussions. All presenters are attendees and all attendees select presenters.
               </p>
             </div>
           </div>
@@ -70,7 +70,7 @@ trait Templates {
             <div class="unit whole">
               <h2>Where</h2>
               <p>
-                This year's symposium will be held will be held at <a href="http://districthallboston.org/spaces/">District Hall</a>, located in the <a href={"https://www.google.com/maps?f=q&hl=en&q=75+Northern+Ave.,+Boston,+MA,+us"}>heart of Boston</a>, a city where early Puritan colonists sought out a hide hidden <a href="http://www.mbta.com/uploadedfiles/Documents/Schedules_and_Maps/Rapid%20Transit%20w%20Key%20Bus.pdf">lambdas</a> in its public transit system.
+                This year's symposium will be held at <a href="http://districthallboston.org/spaces/">District Hall</a>, located in the <a href={"https://www.google.com/maps?f=q&hl=en&q=75+Northern+Ave.,+Boston,+MA,+us"}>heart of Boston</a>, a city where early Puritan colonists hid <a href="http://www.mbta.com/uploadedfiles/Documents/Schedules_and_Maps/Rapid%20Transit%20w%20Key%20Bus.pdf">lambdas</a> in the public transit system.
               </p>
             </div>
           </div>
@@ -95,7 +95,7 @@ trait Templates {
                 Participants violating these rules may be asked to leave without a refund at the sole discretion of the organizers.
               </p>
               <p>
-                Since this is a gathering of static typists, assume most offenders will most likey be caught at compile time.
+                Since this is a gathering of static typists, offenders will be caught at compile time.
               </p>
             </div>
           </div>
