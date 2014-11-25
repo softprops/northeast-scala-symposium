@@ -12,16 +12,65 @@ case class Proposal(
   time: Option[Date] = None)
 
 object Proposal {
-  def create(
-    member: Member, name: String, desc: String, king: String) =
+  val Pattern = """boston2015:proposals:(.*):(.*)""".r
+  val MaxTalkName = 200
+  val MaxTalkDesc = 600
+  val Max = 3
+
+  def trimmed(
+    name: String, desc: String): Either[String, (String, String)] = {
+    val (trimmedName, trimmedDesc) = (name.trim, desc.trim)
+    if (trimmedName.size > MaxTalkName || trimmedDesc.size > MaxTalkDesc) Left("Talk contents were too long")
+    else if (trimmedName.isEmpty || trimmedDesc.isEmpty) Left("Talk requires a name and description")
+    else Right((trimmedName, trimmedDesc))
+  }
+
+  def edit(
+    member: Member, key: String, name: String, desc: String, kind: String): Either[String, String] =
     Store { s =>
-      if (!member.exists) {
-        Meetup.members(Seq(member.id)).headOption.foreach {
-          case mem => Member.store(
-            Member(mem.id, mem.name, mem.photo,
-            System.currentTimeMillis.toString, mem.twttr))          
-        }        
+      trimmed(name, desc).right.flatMap {
+        case (trimmedName, trimmedDesc) =>
+          key match {
+            case Pattern(who, _) if who == member.id =>
+              if (s.exists(key)) {
+                s.hmset(key, Map(
+                  "name" -> trimmedName,
+                  "desc" -> trimmedDesc,
+                  "kind" -> kind))
+                Right(key)
+              } else Left("Invalid proposal")
+            case _ =>
+              Left("Invalid proposal")
+          }
       }
-      // todo: store proposal
+    }
+  
+  def create(
+    member: Member, name: String, desc: String, kind: String): Either[String, (Long, String)] =
+    Store { s =>
+      trimmed(name, desc).right.flatMap {
+        case (trimmedName, trimmedDesc) =>
+          val proposals = s"boston2015:proposals:${member.id}"
+          val counter = s"count:$proposals"
+          val proposed = s.get(counter).getOrElse("0").toInt
+          if (proposed + 1 > Max) Left("Exceeded max proposals") else {
+          if (!member.exists) {
+            Meetup.members(Seq(member.id)).headOption.foreach {
+              case mem => Member.store(
+                Member(mem.id, mem.name, mem.photo,
+                       System.currentTimeMillis.toString, mem.twttr))          
+            }
+          }
+          val nextId = s.incr("boston2015:proposals:ids").get
+          val nextKey = s"${Member.key(member.id)}:$nextId"
+          s.hmset(nextKey, Map(
+            "name"  -> trimmedName,
+            "desc"  -> trimmedDesc,
+            "kind"  -> kind,
+            "votes" -> "0"
+            ))
+          Right((s.incr(counter).get, nextKey))
+        }
+      }
     }
 }

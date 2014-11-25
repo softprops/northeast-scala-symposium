@@ -287,7 +287,7 @@ object Proposals extends Templates {
       }
     }
 
-  private val editing: Cycle.Intent[Any, Any] = {
+  val editing: Cycle.Intent[Any, Any] = {
     case POST(Path(Seg("2014" :: "proposals" :: UrlDecoded(id) :: Nil))) & Params(p) &
       AuthorizedToken(t) => Clock("editing nyc2014 proposal %s" format id) {
       val mid = t.memberId.get
