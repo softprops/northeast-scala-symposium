@@ -9,8 +9,13 @@ import scala.util.control.NonFatal
 
 case class Session
  (uuid: String, access: String, refresh: String) {
+
   lazy val memberId: Future[Int] = Meetup.memberId(this)
-  def stale = try Await.result(memberId, 3.seconds) < 1 catch {
+
+  def memberOf(group: Int): Boolean =
+    Meetup.memberOf(this, group)
+
+  def stale: Boolean = try Await.result(memberId, 3.seconds) < 1 catch {
     case NonFatal(_) => true
   }
 }

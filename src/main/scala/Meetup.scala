@@ -44,14 +44,24 @@ object Meetup extends Config {
   def authorize(callback: String, state: Option[String] = None): String =
     s"https://secure.meetup.com/oauth2/authorize?client_id=${consumer.getKey}&response_type=code&redirect_uri=$callback&state=${state.getOrElse("")}"
 
+  def sign(req: Req, session: Session) =
+    req <:< Map("Authorization" -> s"Bearer ${session.access}")
+
   def memberId(session: Session): Future[Int] =
-    http(url("https://api.meetup.com/2/member/self")
-         <:< Map("Authorization" -> s"Bearer ${session.access}")
+    http(sign(url("https://api.meetup.com/2/member/self"), session)
          <<? Map("only" -> "id") OK as.json4s.Json)
       .map( js => (for {
         JObject(member)  <- js
         ("id", JInt(id)) <- member
       } yield id.toInt).head)
+
+  def memberOf(session: Session, group: Int): Boolean =
+    http(sign(url(s"https://api.meetup.com/2/profile/$group/self"), session)
+         <<? Map("only" -> "id") OK as.String)
+      .map(_ => true).recover {
+        case NonFatal(_) =>
+          false
+      }.apply()
 
   def tokens(js: JValue): Option[(String, String)] =
     (for {
