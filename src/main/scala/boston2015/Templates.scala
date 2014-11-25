@@ -1,9 +1,10 @@
 package nescala.boston2015
 
+import nescala.SessionCookie
 import unfiltered.response.Html5
 
 trait Templates {
-  def indexPage = Html5(
+  def indexPage(session: Option[SessionCookie] = None) = Html5(
     <html>
       <head>
         <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />

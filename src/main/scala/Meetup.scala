@@ -7,6 +7,7 @@ import org.json4s._
 import org.json4s.JsonDSL._
 import scala.concurrent.{ Future, ExecutionContext }
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.util.control.NonFatal
 
 object Meetup extends Config {
 
@@ -36,6 +37,49 @@ object Meetup extends Config {
 
   lazy val consumer = new ConsumerKey(
     property("mu_consumer"), property("mu_consumer_secret"))  
+
+  lazy val consumerRedirectUri =
+    property("mu_redirect_uri")
+
+  def authorize(callback: String, state: Option[String] = None): String =
+    s"https://secure.meetup.com/oauth2/authorize?client_id=${consumer.getKey}&response_type=code&redirect_uri=$callback&state=${state.getOrElse("")}"
+
+  def memberId(session: Session): Future[Int] =
+    http(url("https://api.meetup.com/2/member/self")
+         <:< Map("Authorization" -> s"Bearer ${session.access}")
+         <<? Map("only" -> "id") OK as.json4s.Json)
+      .map( js => (for {
+        JObject(member)  <- js
+        ("id", JInt(id)) <- member
+      } yield id.toInt).head)
+
+  def tokens(js: JValue): Option[(String, String)] =
+    (for {
+      JObject(response)                   <- js
+      ("access_token", JString(access))   <- response
+      ("refresh_token", JString(refresh)) <- response
+    } yield (access, refresh)).headOption
+
+  def access(code: String, redirect: String): Option[(String, String)] =
+    http(url("https://secure.meetup.com/oauth2/access")
+         << Map("client_id"     -> consumer.getKey,
+                "client_secret" -> consumer.getSecret,
+                "grant_type"    -> "authorization_code",
+                "code"          -> code,
+                "redirect_uri"  -> redirect) OK as.json4s.Json)
+        .map(tokens).apply()
+  
+  def refresh(session: Session): Future[Session] =
+    http(url("https://secure.meetup.com/oauth2/access")
+         << Map("client_id"     -> consumer.getKey,
+                "client_secret" -> consumer.getSecret,
+                "grant_type"    -> "refresh_token",
+                "refresh_token" -> session.refresh) OK as.json4s.Json)
+      .map(tokens).map {
+        case Some((access, refresh)) =>
+          Session.delete(session.uuid)
+          Session.create(access, refresh)
+      }
 
   val AuthExchange = new dispatch.oauth.Exchange
     with SomeHttp with SomeConsumer with SomeEndpoints with SomeCallback {

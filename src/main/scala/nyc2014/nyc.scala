@@ -28,7 +28,7 @@ object Nyc extends Templates {
     (index orElse talkProposals orElse Tally.talks)
 
   private def index: Cycle.Intent[Any, Any]  = {
-    case r @ GET(Path(Seg(Nil))) => Clock("home") {
+    case r @ GET(Path(Seg("2014" :: Nil))) => Clock("home") {
       AuthorizedToken(r) match {
         case Some(t) =>
           Store { s =>
@@ -47,7 +47,7 @@ object Nyc extends Templates {
   }
 
   private def talkProposals: Cycle.Intent[Any, Any] = 
-    (Proposals.editing orElse Proposals.viewing)
+    Proposals.viewing
 
   private def proposals(r: RedisClient, mid: String): Seq[Proposal] = {
     r.keys(s"nyc2014:proposals:$mid:*") match {
