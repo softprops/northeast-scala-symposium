@@ -258,7 +258,7 @@ trait Templates {
         else
           <p class="instruct">You have used up all your talk proposals</p>
        }</div>)
-
+ 
   def newProposalForm =
     <form action="/2014/proposals" method="POST" id="propose-form" class="proposing">
       <div id="proposal-notifications">

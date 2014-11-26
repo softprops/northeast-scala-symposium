@@ -16,11 +16,20 @@ case class SessionCookie(session: Session, member: Int) {
     left: => ResponseFunction[Any],
     right: SessionCookie => ResponseFunction[Any]): ResponseFunction[Any] =
     if (session.stale) (Meetup.refresh(session).map {
-      refreshed => SessionCookie.drop(refreshed) ~> right(SessionCookie(refreshed, refreshed.memberId.apply()))
+      refreshed =>
+        println("refreshed session")
+        session.delete
+        SessionCookie.drop(refreshed) ~> right(SessionCookie(refreshed, refreshed.memberId.apply()))
     }.recover {
       case NonFatal(_) =>
+        println("session invalid, discarding...")
+        session.delete
         SessionCookie.discard ~> left
     }).apply() else right(this)
+
+  lazy val proposals = nescala.boston2015.Proposal.list(member)
+
+  lazy val nescalaMember = session.nescalaMember
 }
 
 object SessionCookie {

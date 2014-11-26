@@ -42,7 +42,7 @@ object Meetup extends Config {
     property("mu_redirect_uri")
 
   def authorize(callback: String, state: Option[String] = None): String =
-    s"https://secure.meetup.com/oauth2/authorize?client_id=${consumer.getKey}&response_type=code&redirect_uri=$callback&state=${state.getOrElse("")}"
+    s"https://secure.meetup.com/oauth2/authorize?scope=ageless&client_id=${consumer.getKey}&response_type=code&redirect_uri=$callback&state=${state.getOrElse("")}"
 
   def sign(req: Req, session: Session) =
     req <:< Map("Authorization" -> s"Bearer ${session.access}")
@@ -114,9 +114,10 @@ object Meetup extends Config {
   }
 
   def host = :/("api.meetup.com").secure
+
   def apiKey = property("api_key")
 
-  def http = Http
+  def http = new Http
 
   def has_rsvp(eventId: String, token: RequestToken): Boolean = {
     val body = Clock("checking rsvp") {

@@ -1,6 +1,7 @@
 package nescala.boston2015
 
-import nescala.Store
+import nescala.{ Meetup, Store }
+import com.redis.RedisClient
 
 case class Member(
   id: String,
@@ -34,13 +35,37 @@ object Member {
         member.attrs)
     }
 
+  def sync(id: String): Option[Member] =
+    Meetup.members(Seq(id)).headOption.map { m =>
+      val fresh = Member(m.id, m.name, m.photo, System.currentTimeMillis.toString, m.twttr)
+      store(fresh)
+      fresh
+    }
+
+  def getOrFetch(id: String): Option[Member] =
+    Store { s =>
+      stored(id)(s) match {
+        case None => Meetup.members(Seq(id))
+          .headOption.map { m =>
+            val fresh = Member(
+              m.id, m.name, m.photo,
+              System.currentTimeMillis.toString, m.twttr)
+            store(fresh)
+            fresh
+          }
+        case some => some
+      }
+    }
+
   def get(id: String): Option[Member] =
-    Store {
-      _.hmget[String, String](
+    Store(stored(id))
+
+  def stored(id: String)(store: RedisClient) =
+    store.hmget[String, String](
         key(id),
-        "name", "photo", "mtime", "twttr").map { attrs =>
+        "name", "photo", "mtime", "twttr").filter(_.nonEmpty).map { attrs =>
           Member(id, attrs("name"), attrs("photo"), attrs("mtime"),
                  attrs.get("twttr"))
         }
-    }
+
 }

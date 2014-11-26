@@ -15,8 +15,15 @@ case class Session
   def memberOf(group: Int): Boolean =
     Meetup.memberOf(this, group)
 
+  lazy val nescalaMember =
+    memberOf(2520282)
+
   def stale: Boolean = try Await.result(memberId, 3.seconds) < 1 catch {
     case NonFatal(_) => true
+  }
+
+  def delete() {
+    Session.delete(uuid)
   }
 }
 

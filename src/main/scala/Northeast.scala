@@ -17,6 +17,8 @@ object Northeast extends Config {
 
   val callback = s"${property("host")}/authenticated"
 
+  def index = Redirect("/")
+
   def site: Intent[Any, Any] = {    
 
     case GET(Path(Seg("login" :: Nil))) & Params(p) =>
@@ -28,20 +30,27 @@ object Northeast extends Config {
     case req @ GET(Path(Seg("authenticated" :: Nil))) & Params(params) =>
       params match {
         case Error(error) =>
-          Redirect("/")
+          index
         case Code(code) =>
           Meetup.access(code, callback).map {
             case (access, refresh) =>
-              SessionCookie.drop(Session.create(access, refresh)) ~>
-                Redirect("/")
+              val session = Session.create(access, refresh)
+              val member = nescala.boston2015.Member
+                .sync(session.memberId.apply().toString)
+              SessionCookie.drop(session) ~>
+                Redirect(State.unapply(params) match {
+                  case Some("propose") =>
+                    "/2015/talks"
+                  case _ =>
+                    "/"
+                })
             case _ =>
-              Redirect("/")
+              index
           }.getOrElse {
-            Redirect("/")
+            index
           }
         case _ =>
-          println(s"got neither code nor errorin params $params")
-          Redirect("/")
+          index
       }
   }
 
