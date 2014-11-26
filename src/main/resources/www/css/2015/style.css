@@ -291,14 +291,25 @@ input[type='text'], textarea {
   margin: 0 auto;
 }
 
-@media (min-width: 960px){
-    /*respond*/
-}
-
 .grid, .unit {
   -webkit-transition: all .25s ease-in-out;
   -moz-transition: all .25s ease-in-out;
   transition: all .25s ease-in-out;
+}
+
+@media (min-width: 960px) {
+  h1 {
+    font-size: 4em;
+  }
+  h2 {
+    font-size: 2.6em;
+  }
+  h3 {
+    font-size: 2em;
+  }
+  .lead {
+    font-size: 1.5em;
+  }
 }
 
 .small {

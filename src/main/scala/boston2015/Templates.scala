@@ -13,10 +13,10 @@ trait Templates {
         <div id="proposal-edit-notification"></div>
       </div>
       <div class="grid">
-        <div class="unit half right">
-          <label for="kind">Select a talk length</label>
+        <div class="unit half right center-on-mobiles">
+          <label for="kind"><i class="fa fa-clock-o"></i> Select a talk length</label>
         </div>
-        <div class="unit half left">
+        <div class="unit half left center-on-mobiles">
           <select name="kind">
             <option value="medium">Medium (45 min)</option>
             <option value="short">Short (30 min)</option>
@@ -60,14 +60,14 @@ trait Templates {
             <span>30 min</span>
           case "lightning" =>
             <span>15 min</span>
-        } } <i class="fa fa-clock-o"></i></span> { p.name } <a class="btn small">edit</a></h3>
+        } } <i class="fa fa-clock-o"></i></span> { p.name } <a class="btn small">Edit</a></h3>
       }
     }</span>)
 
   def propose(proposals: Iterable[Proposal]): xml.NodeSeq = (<section>
-    <div class="grid" id="propose">
+    <div class="grid center-on-mobiles" id="propose">
       <div class="unit whole">
-        <h2>Speak up</h2>
+        <h2><i class="fa fa-bullhorn"></i> Speak up</h2>
       </div>
       <div id="propose-talk">
         <div id="propose-container" class="unit">

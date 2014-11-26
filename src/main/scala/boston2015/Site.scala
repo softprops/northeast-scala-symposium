@@ -47,17 +47,18 @@ object Site extends Templates {
       }
     case POST(req) & Path(Seg("2015" :: "talks" :: UrlDecoded(id) :: Nil)) & Params(params) =>
       respond(req) {
-        case Some(member) =>
-          proposalPage()
+        case session @ Some(member) =>
+          // todo: fill me in
+          proposalPage(session)
         case _ =>
-          proposalPage()
+          talks
       }
   }
 
   def respond(req: HttpRequest[_])(handle: Option[SessionCookie] => ResponseFunction[Any]) =
     req match {
       case SessionCookie.Value(sc) =>
-        sc.fold(handle(None), { member => println(member.proposals); handle(Some(member)) })
+        sc.fold(handle(None), { member => handle(Some(member)) })
       case _ =>
         handle(None)
     }
