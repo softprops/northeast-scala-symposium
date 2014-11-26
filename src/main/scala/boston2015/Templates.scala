@@ -31,7 +31,24 @@ trait Templates {
           <hr/>
           <div>northeast scala symposium 2015</div>
           <hr/>
-          <p>RSVPs open <a href="#when">Tuesday Nov 25 @ 2pm EST</a> | Presenter topic submissions open soon</p>
+          <div class="grid">
+            <div class="unit half right center-on-mobiles">
+              <p>
+                RSVP on <a href="http://www.meetup.com/nescala/">Meetup</a>
+              </p>
+              <p>
+                <a href="http://www.meetup.com/nescala/events/218741329/">Day one</a> | <a href="http://www.meetup.com/nescala/events/218741348/">Day two</a>
+              </p>
+            </div>
+            <div class="left unit half center-on-mobiles">
+              <p>
+                Presenter topic submissions
+              </p>
+              <p>
+                Open soon
+              </p>
+            </div>        
+          </div>
           <div class="communicate">
             <a class="icon" href="http://twitter.com/nescalas" target="_blank"><i class="fa fa-twitter"></i><span>Listen for the bird call</span></a>
             <a href="http://www.meetup.com/nescala/" target="_blank" class="icon"><i class="icon-scala"></i><span>Join our community</span></a>
@@ -61,7 +78,7 @@ trait Templates {
                 Northeast Scala Symposium is held annually. In 2015, we will occupy the greater Boston area on <a href="http://www.meetup.com/nescala/events/218741329/">Friday, January 30</a> and <a href="http://www.meetup.com/nescala/events/218741348/">Saturday, January 31</a>.
               </p>
               <p>
-                Attendance RSVPs open <strong>Tuesday, Nov 25 @ 2pm EST</strong> so mark your calendars.
+                Attendance requires a RSVP.
               </p>
             </div>
           </div>

@@ -16,6 +16,14 @@ body {
   text-align:center;
 }
 
+.left {
+  text-align:left;
+}
+
+.right {
+  text-align:right;
+}
+
 .striped {
   /** http://css-tricks.com/stripes-css/ 
       http://nimbupani.com/using-background-clip-for-text-with-css-fallback.html */
