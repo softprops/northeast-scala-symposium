@@ -40,7 +40,7 @@ object SessionCookie {
       make(session, session.memberId.apply()))
 
   def discard =
-    SetCookies.discarding(Name)
+    SetCookies(Cookie(Name, "", maxAge = Some(0), path = Some("/")))
 
   def make(session: Session, memberId: Int) =
     Cookie(Name, str(session, memberId), httpOnly = true)
