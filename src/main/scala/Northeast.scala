@@ -40,7 +40,7 @@ object Northeast extends Config {
               SessionCookie.drop(session) ~>
                 Redirect(State.unapply(params) match {
                   case Some("propose") =>
-                    "/2015/talks"
+                    "/2015/talks#speak"
                   case _ =>
                     "/"
                 })

@@ -159,8 +159,7 @@ hr {
   color:#fff;
 }
 
-.btn {
-  font-size:1.25em;
+.btn  {
   padding:.15em .25em;
   color:#fff;
   text-shadow:0 1px #g30A7DF;
@@ -231,6 +230,15 @@ hr {
   background-image: linear-gradient(top, #DBDBDB, #9FA1A2);
 }
 
+
+.less-top-padding {
+  padding-top:6px !important;
+}
+
+input[type="submit"] {
+  padding:.4em;
+}
+
 .btn.voted-yes {
   padding:.15em .25em;
   color:#fff;
@@ -297,7 +305,9 @@ input[type='text'], textarea {
   transition: all .25s ease-in-out;
 }
 
+
 @media (min-width: 960px) {
+  
   h1 {
     font-size: 4em;
   }
@@ -314,4 +324,97 @@ input[type='text'], textarea {
 
 .small {
   font-size:smaller;
+}
+
+.modal {
+  box-shadow: 0px 0px 6px #ccc;
+  -webkit-box-shadow: 0px 0px 6px #ccc;
+  -moz-box-shadow: 0px 0px 6px #ccc;
+  border:1px solid #ddd;
+  top: 550px;
+  left: 10%;
+  transform: translate(-50%, -50%);
+  width: 80%;
+  z-index: 1000;
+  background: #fff;
+  color:#333;
+  position:absolute;
+  padding: 1em;
+  -moz-box-sizing: border-box;
+       box-sizing: border-box;
+  border-radius: 6px;
+  -webkit-transition: all 400ms cubic-bezier(0.68, -0.55, 0.265, 1.55);
+          transition: all 400ms cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  -webkit-transform: scale(0);
+      -ms-transform: scale(0);
+          transform: scale(0);
+  opacity: 0;
+}
+
+.modal.active {
+  -webkit-transform: scale(1);
+      -ms-transform: scale(1);
+          transform: scale(1);
+  opacity: 1;
+}
+
+@media (max-width:600px) {
+ .modal {
+    top:800px;
+  }
+}
+
+@media (min-width:600px) {
+  .modal {
+    top: 750px;
+  }
+}
+
+ul { list-style:none; margin:0; padding:0; }
+
+.circle {
+  line-height: 0;/* remove line-height */ 
+  display: inline-block;/* circle wraps image */
+  margin: 5px;
+  border: 5px solid rgba(218,218,218,0.8);
+  border-radius: 50%;/* relative value */
+  /*box-shadow: 0px 0px 5px rgba(0,0,0,0.4);*/
+  transition: linear 0.25s;
+  height: 70px;
+  width: 70px;
+  overflow:hidden;
+}
+
+.circle img {
+   border-radius: 50%;/* relative value for
+                             adjustable image size */
+}
+
+.circle:hover {
+  transition: ease-out 0.1s;
+  border: 5px solid rgba(218,218,218,0.2);
+  -webkit-transition: ease-out 0.1s;
+}
+
+a.circle {
+  color: transparent;
+} /* IE fix: removes blue border */
+
+.note {
+  font-size:smaller;
+  background:#eee;
+  border-radius: 6px;
+  margin:.5em 0;
+}
+
+.note a {
+  color: #333;
+}
+
+.limit-label {
+  color:#ccc;
+}
+
+.modal a {
+  color:#333;
 }

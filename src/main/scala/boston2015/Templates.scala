@@ -6,165 +6,83 @@ import java.net.URLEncoder.encode
 
 trait Templates {
 
-  def newProposalForm =
-    <form action="/2015/talks" method="POST" id="propose-form" class="proposing">
-      <div id="proposal-notifications">
-        <div id="proposal-notification"></div>
-        <div id="proposal-edit-notification"></div>
-      </div>
-      <div class="grid">
-        <div class="unit half right center-on-mobiles">
-          <label for="kind"><i class="fa fa-clock-o"></i> Select a talk length</label>
-        </div>
-        <div class="unit half left center-on-mobiles">
-          <select name="kind">
-            <option value="medium">Medium (45 min)</option>
-            <option value="short">Short (30 min)</option>
-            <option value="lightning">Lightning (15 min)</option>
-          </select>
-        </div>
-      </div>
-      <div class="grid">
-        <div class="unit whole">
-          <label for="name">Give your talk a good name</label>
-        </div>
-        <div class="unit whole">
-          <input type="text" name="name" maxlength={ Proposal.MaxTalkName + "" } placeholder="How I learned to love my type system" />
-        </div>
-      </div>
-      <div class="grid">
-        <div class="unit whole">
-          <label for="desc">What's your talk is about?</label>
-        </div>
-        <div class="unit whole">
-          <div class="limited">
-            <textarea name="desc" data-limit={ Proposal.MaxTalkDesc + "" }
-              placeholder={ "Say it in %s characters or less" format(
-                  Proposal.MaxTalkDesc) }></textarea>
-          </div>
-          <div class="limit-label"></div>
-        </div>
-        <div class="unit">
-          <input type="submit" value="Propose Talk" class="btn" />
-        </div>
-      </div>
-    </form>
-
-  def propList(proposals: Iterable[Proposal]): xml.NodeSeq =
-    (<span>{
+  /** list of current member's proposals and modal for editing them */
+  private def proposed
+   (proposals: Iterable[Proposal]): xml.NodeSeq =
+    (<h3 id="proposed">Your current talk proposals</h3><ul>{
       proposals.map { p =>
-        <h3><span class="small">{ p.kind match {
-          case "medium"    =>
-            <span class="mute">45 min</span>
-          case "short"     =>
-            <span>30 min</span>
-          case "lightning" =>
-            <span>15 min</span>
-        } } <i class="fa fa-clock-o"></i></span> { p.name } <a class="btn small">Edit</a></h3>
+        <li>
+         <p>
+          <a href="#" class="btn propose"
+           data-id={p.id} data-kind={p.kind}
+           data-name={p.name} data-desc={p.desc}><i class="fa fa-pencil-square-o"></i> Edit</a>
+           { p.kind match {
+             case "medium"    =>
+               <span class="mute"> 45 min</span>
+             case "short"     =>
+               <span> 30 min</span>
+             case "lightning" =>
+               <span> 15 min</span>
+           } } <i class="fa fa-clock-o"></i>
+          <a href={s"#${p.domId}"} title={p.name}> { p.name } </a>
+         </p>
+        </li>
       }
-    }</span>)
+    }</ul>
+   )
 
-  def propose(proposals: Iterable[Proposal]): xml.NodeSeq = (<section>
+  /** every proposal related thing owned by the current member */
+  private def propose(proposals: Iterable[Proposal]): xml.NodeSeq = (<section>
     <div class="grid center-on-mobiles" id="propose">
       <div class="unit whole">
-        <h2><i class="fa fa-bullhorn"></i> Speak up</h2>
+       <p>
+         Attending NE Scala is only half the experience.
+       </p>
+       <p>
+        Attendees are encouraged so submit talk proposals that other attendees can vote on.
+        You can submit up to <strong>3 talk proposals</strong>. If you're shy, don't be afraid.
+        A 15 minute lightning talk goes by faster
+        than you think. If you're used to talking for hours, remember to time yourself.
+       </p>
       </div>
       <div id="propose-talk">
         <div id="propose-container" class="unit">
           { proposals.size match {
             case 0 =>
               <span>
-                <p>Submit a new talk proposal</p>
-                { newProposalForm }
+                <p>
+                 <a href="#" class="btn propose">Submit a new talk proposal</a>
+                </p>
               </span>
             case n if n < Proposal.Max =>
               <span>
-                <p>Your current talk proposals</p>
-                { propList(proposals) }
-                <p>Submit a new talk proposal</p>
-                { newProposalForm }
+                { proposed(proposals) }
+                <p><a href="#" class="btn propose">Submit a new talk proposal</a></p>
                </span>
             case n =>
               <span>
-                <p>Your current talk proposals</p>
-                { propList(proposals) }
+                { proposed(proposals) }
               </span>
           } }
+        <div class="modal">
+         <div class="grid form"></div>
+        </div>
         </div>
       </div>
     </div>
   </section>)
 
-  def proposalList(props: Iterable[Proposal]) =
-    listOf(props, "proposals", Proposal.MaxTalkName,
-           Proposal.MaxTalkDesc, "Your talk proposals", "Edit Talk", "#propose-form")
-
-  def listOf(
-    props: Iterable[Proposal],
-    kind: String,
-    maxName: Int,
-    maxDesc: Int,
-    listTitle: String,
-    editLabel: String,
-    sourceForm: String) =
-    <div id={ kind }>
-      <h2 class="proposal-header">{ listTitle }</h2>
-       <ul id={ "%s-list" format kind }>{ if (props.isEmpty) { <li id="no-proposals" class="instruct">None yet</li>} }
-       {
-         props.map { p =>
-         <li id={ p.id }>
-           <form action={ s"/2015/$kind/${encode(p.id, "utf8")}" }
-                 method="POST" class="propose-edit-form">
-             <div>
-               <h3>
-                 <a href="#" class="toggle name" data-val={ p.name }>{ p.name }</a>
-               </h3>
-               <input type="text" name="name" maxlength={ maxName + "" } value={ p.name } />
-             </div>
-             <div class="preview">
-               <div class="controls clearfix">
-                 <a href="#" class="edit-proposal" data-proposal={ p.id }>
-                    Make some quick changes
-                  </a> or <a href={"mailto:doug@meetup.com?subject=please withdraw talk %s" format p.id }>
-                    Email us
-                  </a> if you wish to withdraw this talk.
-               </div>
-               <div>
-                 <p>
-                    This is a <select class="edit-kind" name="kind" disabled="disabled">
-                    <option value="medium" selected={ Option(p.kind).filter(_ == "medium").map( _ => "selected").orNull }>Medium (45 min)</option>
-                    <option value="short" selected={ Option(p.kind).filter(_ == "short").map( _ => "selected").orNull }>Short (30 min)</option>
-                    <option value="lightning" selected={ Option(p.kind).filter(_ == "lightning").map( _ => "selected").orNull }>Lightning (15 min)</option>
-                    </select> length talk.
-                 </p>
-               </div>
-               <p class="linkify desc" data-val={ p.desc }>{ p.desc }</p>
-               <div class="edit-desc limited">
-                  <textarea data-limit={ maxDesc + "" } name="desc">{ p.desc }</textarea>
-                  <div class="limit-label"></div>
-                  <div class="form-extras">
-                    <div class="edit-controls clearfix">
-                      <input type="submit" value={ editLabel } class="btn" />
-                      <input type="button" value="Cancel" class="btn cancel" />
-                    </div>
-                  </div>
-                </div>
-             </div>
-           </form>
-         </li>
-         }
-       }
-     </ul>
-    </div>
-
-
-  def proposalPage(session: Option[SessionCookie] = None) =
+  def proposalsPage
+   (proposals: Iterable[Proposal])
+   (session: Option[SessionCookie] = None) =
     layout(session)(scripts = Seq("/js/2015/proposals.js"))(
-      <div class="unit whole center lead inverse">
-        <p>
+      <div class="unit whole align-center lead inverse">
+        <div class="grid">
+          <p class="unit whole">
           This year's symposium borrows from last year's mix of talk lengths in order to give
           new attendees a chance to speak up and share what's on their mind.
-        </p>
+          </p>
+        </div>
         <div class="grid">
           <div class="unit one-third">
             <a href="#medium-proposals">Med</a>
@@ -182,12 +100,16 @@ trait Templates {
             <p class="small mute">6 slots</p>
           </div>        
         </div>
-      </div>)(<div class="unit whole center">
+      </div>)(<div class="grid center" id="speak">
+       <div class="unit whole">
+         <h2>
+           <i class="fa fa-bullhorn"></i> Speak up
+         </h2>
+       </div>
+       <div class="unit whole">
       { session match {
           case Some(member) if member.nescalaMember =>
-            <p>
-              You may submit up to 3 talk proposals.
-            </p> ++ { propose(member.proposals) }
+            propose(member.proposals)
           case Some(member) =>
             <p>
               You can be part of this year's symposium by joining our <a href="http://www.meetup.com/nescala/">Meetup group</a>
@@ -198,7 +120,86 @@ trait Templates {
               and <a href="/login?state=propose">logging in</a> to vote or to submit a talk.
             </p>            
         } }
-      </div>)
+        </div>
+      </div>
+      <div class="inverse whole" id="proposals">
+        <div class="grid">
+        <div class="unit whole">
+          <h2>
+           <i class="fa fa-check-circle-o"></i> Listen up
+          </h2>
+          <p>
+            NE Scala does not select speakers for you to watch and listen to, you do. Talks
+            are proposed by your peers and in a short time we will open up voting polls for you
+            to select the talks you want to see.
+          </p>
+        </div>
+        <div class="unit whole">{
+          proposals.groupBy(_.kind).map {
+            case (kind, ps) =>
+              <h3 id={s"$kind-proposals"} class="unit whole">
+                {ps.size} <strong>{ kind }</strong> length proposals
+              </h3>
+              <ul>{ ps.map(proposal(false, Nil)) }</ul>
+          }
+        }</div>
+      </div></div>)
+
+  private def personal(p: Proposal): xml.NodeSeq = avatar(p) ++ links(p)
+
+  private def avatar(p: Proposal) =
+    <a href={ s"http://meetup.com/nescala/members/${p.memberId}"}
+      class="circle" style={s"background-image:url(${p.member.get.photo}); background-size: cover; background-position: 50%"}>
+    </a>
+
+  private def links(proposal: Proposal) =
+    (<div class="links">
+     <a class="primary" href={ s"http://meetup.com/nescala/members/${proposal.memberId}" } target="_blank">
+       { proposal.member.get.name }
+     </a>
+      {
+        if (proposal.member.get.twttr.isDefined) (
+          <p>
+            <i class="fa fa-twitter"></i>
+            <a class="twttr small" href={ s"http://twitter.com/${proposal.member.get.twttr.get.drop(1)}"} target="_blank">
+             { proposal.member.get.twttr.get }
+            </a>
+          </p>
+        )
+      }
+    </div>)
+
+   /** a single li element for a proposal */
+   private def proposal
+    (canVote: Boolean, votes: Seq[String])(p: Proposal)  =
+    <li class="unit whole talk" id={ p.domId }>
+    <div class="grid">
+      <div class="unit one-fifth">
+        { personal(p) }
+      </div>
+      <div class="unit four-fifths">
+        <h2><a href={ "#"+p.domId }>{ p.name }</a></h2>
+        <div>
+          <span class="mute"><i class="fa fa-clock-o"></i> { p.kind match {
+            case "medium" => "45 minutes"
+            case "short" => "30 minutes"
+            case "lightning" => "15 minutes"
+          } }
+          </span>
+          { if (canVote && votes.contains(p.id))
+            <form class="ballot" action="/2014/votes" method="POST">
+             <input type="hidden" name="vote" value={ p.id }/>
+             <input type="hidden" name="action" value={ if (votes.contains(p.id)) "unvote" else "vote" }/>
+             <input type="submit" class="voting btn"
+              value="This got your vote" disabled="disabled"/>
+            </form>
+          }
+        </div>
+        <p class="desc">{ p.desc }</p>
+      </div>
+    </div>
+    <hr/>
+  </li>
 
   def indexPage(session: Option[SessionCookie] = None) =
     layout(session)(scripts = Seq(
@@ -218,23 +219,22 @@ trait Templates {
               { session match {
                 case Some(member) if member.nescalaMember =>
                   <p class="pushdown">
-                    <a href="/2015/talks" class="btn">Propose a talk</a>
+                    <a href="/2015/talks#speak" class="btn">Propose a talk</a>
                   </p>
                 case Some(member) =>
-                  <p>
+                  <p class="pushdown">
                     Join our <a href="http://www.meetup.com/nescala">Meetup group</a> to submit a proposal.
                   </p>
                 case _ =>
-                  <p>
-                    <a href="/login" class="btn">Login</a>
-                    <p>to submit a talk proposal</p>
+                  <p class="pushdown">
+                    <a href="/login?state=propose" class="btn">Login</a> to submit a talk proposal
                   </p>
               }}
             </div>
           </div>
           <div class="communicate">
             <a class="icon" href="http://twitter.com/nescalas" target="_blank"><i class="fa fa-twitter"></i>
-               <span>Listen for the bird call</span>
+               <span>Listen for our call</span>
             </a>
             <a href="http://www.meetup.com/nescala/" target="_blank" class="icon"><i class="icon-scala"></i><span>Join our community</span></a>
             <a href="#what" class="icon"><i class="fa fa-check-circle-o"></i><span>Listen to your peers</span></a>
@@ -320,7 +320,7 @@ trait Templates {
         <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet"/>
         <link href="/css/font-mfizz/font-mfizz.css" rel="stylesheet"/>
         <link rel="stylesheet" type="text/css" href="/css/2015/style.css" />
-        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>{
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>{
           styles.map { s => <link rel="stylesheet" type="text/css" href={s}/> } ++
           scripts.map { s => <script type="text/javascript" src={s}></script> }
         }
@@ -334,7 +334,7 @@ trait Templates {
             to <strong>Boston</strong>
           </h1>
           <hr/>
-          <div>northeast scala symposium 2015</div>
+          <div><a href="/">northeast scala symposium 2015</a></div>
           <hr/>
           { headContent }
         </div>

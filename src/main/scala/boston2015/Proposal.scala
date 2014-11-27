@@ -9,13 +9,28 @@ case class Proposal(
   desc: String,
   kind: String,
   member: Option[Member] = None,
-  time: Option[Date] = None)
+  time: Option[Date] = None) {
+  lazy val domId = id.split(":")(3)
+  lazy val memberId = id.split(":")(2) 
+}
 
 object Proposal {
   val Pattern = """boston2015:proposals:(.*):(.*)""".r
   val MaxTalkName = 200
   val MaxTalkDesc = 600
   val Max = 3
+
+  def all: Iterable[Proposal] =
+    Store { s =>
+      s.keys(s"boston2015:proposals:*:*").getOrElse(Nil).flatMap {
+        _.flatMap {
+          case pkey @ Pattern(member, id) =>
+            s.hmget[String, String](pkey, "name", "desc", "kind").map { attrs =>
+              Proposal(pkey, attrs("name"), attrs("desc"), attrs("kind"), Member.get(member))
+            }
+        }
+      }
+    }
 
   def list(memberId: Int): Iterable[Proposal] =
     Store { s =>
@@ -37,7 +52,11 @@ object Proposal {
   }
 
   def edit(
-    member: Member, key: String, name: String, desc: String, kind: String): Either[String, String] =
+    member: Member,
+    key: String,
+    name: String,
+    desc: String,
+    kind: String): Either[String, Proposal] =
     Store { s =>
       trimmed(name, desc).right.flatMap {
         case (trimmedName, trimmedDesc) =>
@@ -48,7 +67,7 @@ object Proposal {
                   "name" -> trimmedName,
                   "desc" -> trimmedDesc,
                   "kind" -> kind))
-                Right(key)
+                Right(Proposal(key, trimmedName, trimmedDesc, kind, Some(member)))
               } else Left("Invalid proposal")
             case _ =>
               Left("Invalid proposal")
@@ -56,9 +75,12 @@ object Proposal {
       }
     }
   
-  /** @return either of error or tuple of current proposal count for member and proposal id */
+  /** @return either of error or tuple of current proposal count for member and proposal */
   def create(
-    member: Member, name: String, desc: String, kind: String): Either[String, (Long, String)] =
+    member: Member,
+    name: String,
+    desc: String,
+    kind: String): Either[String, (Long, Proposal)] =
     Store { s =>
       trimmed(name, desc).right.flatMap {
         case (trimmedName, trimmedDesc) =>
@@ -82,7 +104,8 @@ object Proposal {
               "kind"  -> kind,
               "votes" -> "0"
             ))
-            Right((s.incr(counter).get, nextKey))
+            Right((s.incr(counter).get,
+                   Proposal(nextKey, trimmedName, trimmedDesc, kind, Some(member))))
           }
       }
     }

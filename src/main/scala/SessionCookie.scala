@@ -43,7 +43,7 @@ object SessionCookie {
     SetCookies(Cookie(Name, "", maxAge = Some(0), path = Some("/")))
 
   def make(session: Session, memberId: Int) =
-    Cookie(Name, str(session, memberId), httpOnly = true)
+    Cookie(Name, str(session, memberId), httpOnly = true, path = Some("/"))
 
   def str(session: Session, memberId: Int) =
     Seq(session.uuid, memberId.toString, Hashing(session.uuid, memberId.toString))

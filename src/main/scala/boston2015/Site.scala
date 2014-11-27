@@ -12,46 +12,66 @@ import scala.util.control.NonFatal
 
 object Site extends Templates {
 
-  def talks = Redirect("/2015/talks")
+  def talks(anchor: String = "") =
+    if (anchor.nonEmpty) Redirect(s"/2015/talks#$anchor")
+    else Redirect("/2015/talks")
+
+  def proposeit
+   (session: SessionCookie,
+    params: Params.Map,
+    id: Option[String] = None): ResponseFunction[Any] =
+    if (!session.nescalaMember) talks() else {
+      val cached = Member.get(session.member.toString)
+      val expected = for {
+        name <- lookup("name") is required("name is required")
+        desc <- lookup("desc") is required("desc is required")
+        kind <- lookup("kind") is required("kind is required")
+      } yield id match {
+        case None =>
+          Proposal.create(cached.get, name.get, desc.get, kind.get)
+          .fold({ err =>
+             println(s"create err $err")
+             talks("propose")
+           }, {
+             case (_, created) =>
+               talks(created.domId)
+           })
+        case Some(key @ Proposal.Pattern(memberid, _))
+          if memberid == session.member.toString =>
+          Proposal.edit(cached.get, key, name.get, desc.get, kind.get)
+           .fold({ err =>
+              println(s"edit err $err")
+              talks("propose")
+            }, { updated =>
+                talks(updated.domId)
+            })
+        case _ =>
+          // key provided but its not ours
+          talks()
+      }
+      expected(params).orFail { errors =>
+        talks("propose")
+      }
+    }
 
   def pages: Intent[Any, Any] = {
     case GET(req) & Path(Seg(Nil)) =>
       respond(req)(indexPage)
     case GET(req) & Path(Seg("2015" :: "talks" :: Nil)) =>
-      respond(req)(proposalPage)
+      respond(req)(proposalsPage(Proposal.all))
     case POST(req) & Path(Seg("2015" :: "talks" :: Nil)) & Params(params) =>
       respond(req) {
-        case session @ Some(member) =>
-          if (!member.nescalaMember) proposalPage(session) else {
-            val cached = Member.get(member.member.toString)
-            val expected = for {
-              name <- lookup("name") is required("name is required")
-              desc <- lookup("desc") is required("desc is required")
-              kind <- lookup("kind") is required("kind is required")
-            } yield Proposal.create(
-              cached.get, name.get, desc.get, kind.get).fold({
-              err =>
-                println(s"err $err")
-                proposalPage(session)
-            }, {
-              case _ =>
-                talks
-            })
-            expected(params).orFail { errors =>
-              println(s"errors $errors")
-              proposalPage(session)
-            }
-          }
+        case Some(member) =>
+          proposeit(member, params)
         case _ =>
-          talks
+          talks()
       }
     case POST(req) & Path(Seg("2015" :: "talks" :: UrlDecoded(id) :: Nil)) & Params(params) =>
       respond(req) {
-        case session @ Some(member) =>
-          // todo: fill me in
-          proposalPage(session)
+        case Some(member) =>
+          proposeit(member, params, Some(id))
         case _ =>
-          talks
+          talks()
       }
   }
 
