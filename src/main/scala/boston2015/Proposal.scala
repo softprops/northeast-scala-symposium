@@ -51,6 +51,24 @@ object Proposal {
     else Right((trimmedName, trimmedDesc))
   }
 
+  def withdraw(key: String) =
+    Store { s =>
+      key match {
+        case Pattern(who, _) =>
+          if (!s.exists(key)) Left("proposal does not exist") else {
+            s.del(key).filter(_ > 0)
+              .map( _ => s.decr(s"count:boston2015:proposals:$who")) match {
+                case Some(value) =>
+                  Right(value)
+                case _ =>
+                  Left("failed to withdraw proposal completely")
+              }
+          }
+        case _ =>
+          Left("invalid key")
+      }
+    }
+
   def edit(
     member: Member,
     key: String,
