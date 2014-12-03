@@ -44,6 +44,9 @@ trait Templates {
         A 15 minute lightning talk goes by faster
         than you think. If you're used to talking for hours, remember to time yourself.
        </p>
+       <p>
+       Proposals will be accepted until Mon Dec 8 11:59pm Boston time.
+       </p>
       </div>
       <div id="propose-talk">
         <div id="propose-container" class="unit">
@@ -219,15 +222,15 @@ trait Templates {
               { session match {
                 case Some(member) if member.nescalaMember =>
                   <p class="pushdown">
-                    <a href="/2015/talks#speak" class="btn">Propose a talk</a>
+                    <a href="/2015/talks#speak" class="btn">Propose a talk</a> (by Mon Dec 8)
                   </p>
                 case Some(member) =>
                   <p class="pushdown">
-                    Join our <a href="http://www.meetup.com/nescala">Meetup group</a> to submit a proposal.
+                    Join our <a href="http://www.meetup.com/nescala">Meetup group</a> to submit a proposal (by Mon Dec 8)
                   </p>
                 case _ =>
                   <p class="pushdown">
-                    <a href="/login?state=propose" class="btn">Login</a> to submit a talk proposal
+                    <a href="/login?state=propose" class="btn">Login</a> to submit a talk proposal (by Mon Dec 8)
                   </p>
               }}
             </div>
