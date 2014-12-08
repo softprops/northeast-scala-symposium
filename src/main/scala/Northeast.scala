@@ -41,6 +41,8 @@ object Northeast extends Config {
                 Redirect(State.unapply(params) match {
                   case Some("propose") =>
                     "/2015/talks#speak"
+                  case Some(value) =>
+                    s"/2015/talks#$value"
                   case _ =>
                     "/"
                 })

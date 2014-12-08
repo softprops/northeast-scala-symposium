@@ -4,17 +4,41 @@ import dispatch._ // for future pimping
 import dispatch.Defaults._
 import nescala.{ Meetup, SessionCookie }
 import nescala.request.UrlDecoded
-import unfiltered.request.{ GET, HttpRequest, Params, Path, POST, Seg, & }
+import org.joda.time.{ DateMidnight, DateTimeZone }
+import unfiltered.request.{ DELETE, GET, HttpRequest, Params, Path, POST, Seg, & }
 import unfiltered.request.QParams._
-import unfiltered.response.{ Redirect, ResponseString, ResponseFunction, Unauthorized }
+import unfiltered.response.{ JsonContent, Redirect, ResponseString, ResponseFunction, Unauthorized }
 import unfiltered.Cycle.Intent
 import scala.util.control.NonFatal
+import scala.util.Random
 
 object Site extends Templates {
+
+  val DayOneEvent = 218741329
+  val TZ = DateTimeZone.forID("US/Eastern")
+  val proposalCutoff = // tuesday @ mignight
+    new DateMidnight(TZ).withYear(2014).withMonthOfYear(12).withDayOfMonth(9)
+
+  def proposalsOpen = !proposalCutoff.isAfterNow
+  def votesOpen = !proposalsOpen // todo: set a cutoff for this
 
   def talks(anchor: String = "") =
     if (anchor.nonEmpty) Redirect(s"/2015/talks#$anchor")
     else Redirect("/2015/talks")
+
+  def vote
+   (session: SessionCookie,
+    id: String,
+    yes: Boolean): ResponseFunction[Any] =
+    if (!session.canVote) talks() else {
+      def err(msg: String) =
+        s"""{"status":400, "msg":"$msg"}"""
+      def ok(remaining: Int) =
+        s"""{"status":200, "remaining":$remaining}"""
+      JsonContent ~> ResponseString(
+        Proposal.vote(session.member, id, yes)
+          .fold(err, ok))
+    }
 
   def proposeit
    (session: SessionCookie,
@@ -58,7 +82,7 @@ object Site extends Templates {
     case GET(req) & Path(Seg(Nil)) =>
       respond(req)(indexPage)
     case GET(req) & Path(Seg("2015" :: "talks" :: Nil)) =>
-      respond(req)(proposalsPage(Proposal.all))
+      respond(req)(proposalsPage(Random.shuffle(Proposal.all)))
     case POST(req) & Path(Seg("2015" :: "talks" :: Nil)) & Params(params) =>
       respond(req) {
         case Some(member) =>
@@ -70,6 +94,20 @@ object Site extends Templates {
       respond(req) {
         case Some(member) =>
           proposeit(member, params, Some(id))
+        case _ =>
+          talks()
+      }
+    case req @ Path(Seg("2015" :: "talks" :: UrlDecoded(id) :: "votes" :: Nil)) & Params(params) =>        
+      respond(req) {
+        case Some(member) =>
+          req match {
+            case POST(_) =>
+              vote(member, id, true)
+            case DELETE(_) =>
+              vote(member, id, false)
+            case _ =>
+              talks()
+          }
         case _ =>
           talks()
       }

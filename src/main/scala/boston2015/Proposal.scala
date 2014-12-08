@@ -15,32 +15,85 @@ case class Proposal(
 }
 
 object Proposal {
-  val Pattern = """boston2015:proposals:(.*):(.*)""".r
+  val Prefix = "boston2015:"
+  val Pattern = s"""${Prefix}proposals:(.*):(.*)""".r
   val MaxTalkName = 200
   val MaxTalkDesc = 600
   val Max = 3
+  val MaxVotes = 6
+
+  def votekey(member: Int) = s"${Prefix}talk_votes:$member"
+
+  def votes(member: Int): Set[String] =
+    Store {
+      _.smembers(votekey(member)).map(_.flatten).getOrElse(Set.empty)
+    }
+
+  def vote
+   (member: Int,
+    proposal: String,
+    yes: Boolean): Either[String, Int] =
+    proposal match {
+      case Pattern(_, _) =>
+        val votes = votekey(member)
+        Store { s =>
+          if (yes) {
+            if (s.sismember(votes, proposal)) Left("vote exists")
+            else if (s.scard(votes).map(_.toInt).exists(_ >= MaxVotes)) Left("max votes exceeded")
+            else Right(s.pipeline { pl =>
+              pl.hincrby(proposal, "votes", 1)
+              pl.sadd(votes, proposal)
+              pl.scard(votes)
+            }.map {
+              case pvotes :: _ :: Some(currentCount: Long) :: Nil =>
+                MaxVotes - currentCount.toInt
+              case _ =>
+                MaxVotes
+            }.getOrElse(MaxVotes))
+          } else {
+            if (!s.sismember(votes, proposal)) Left("vote not found") else Right(
+              s.pipeline { pl =>
+                pl.hincrby(proposal, "votes", -1)
+                pl.srem(votes, proposal)
+                pl.scard(votes)
+              }.map {
+                case pvotes :: _ :: Some(currentCount: Long) :: Nil =>
+                  MaxVotes - currentCount.toInt
+                case _ =>
+                  MaxVotes
+              }.getOrElse(MaxVotes))
+          }
+        }
+      case _ =>
+        Left("invalid vote")    
+    }
+    
 
   def all: Iterable[Proposal] =
     Store { s =>
-      s.keys(s"boston2015:proposals:*:*").getOrElse(Nil).flatMap {
-        _.flatMap {
-          case pkey @ Pattern(member, id) =>
-            s.hmget[String, String](pkey, "name", "desc", "kind").map { attrs =>
-              Proposal(pkey, attrs("name"), attrs("desc"), attrs("kind"), Member.get(member))
-            }
-        }
-      }
+      val grouped = s.keys(s"${Prefix}proposals:*:*").map(_.flatten).getOrElse(Nil)
+       .groupBy {
+         case Pattern(member, _) => member
+       }
+       val members = grouped.keys.map { member =>
+         (member, Member.get(member))
+       }.toMap
+       (grouped.map {
+         case (member, props) =>
+           props.map { pkey =>
+             val attrs = s.hmget[String, String](pkey, "name", "desc", "kind").get            
+             Proposal(pkey, attrs("name"), attrs("desc"), attrs("kind"), members(member))
+           }
+       }).flatten
     }
 
   def list(memberId: Int): Iterable[Proposal] =
     Store { s =>
-      s.keys(s"boston2015:proposals:$memberId:*").getOrElse(Nil).flatMap {
-        _.flatMap {
-          pkey => s.hmget[String, String](pkey, "name", "desc", "kind").map { attrs =>
-            Proposal(pkey, attrs("name"), attrs("desc"), attrs("kind"))
-          }
+      s.keys(s"${Prefix}proposals:$memberId:*").map(_.flatten).getOrElse(Nil)
+       .map { pkey =>
+          val attrs = s.hmget[String, String](pkey, "name", "desc", "kind").get
+          Proposal(pkey, attrs("name"), attrs("desc"), attrs("kind"))
         }
-      }
     }
 
   def trimmed(
@@ -57,7 +110,7 @@ object Proposal {
         case Pattern(who, _) =>
           if (!s.exists(key)) Left("proposal does not exist") else {
             s.del(key).filter(_ > 0)
-              .map( _ => s.decr(s"count:boston2015:proposals:$who")) match {
+              .map( _ => s.decr(s"count:${Prefix}:proposals:$who")) match {
                 case Some(value) =>
                   Right(value)
                 case _ =>
@@ -102,7 +155,7 @@ object Proposal {
     Store { s =>
       trimmed(name, desc).right.flatMap {
         case (trimmedName, trimmedDesc) =>
-          val proposals = s"boston2015:proposals:${member.id}"
+          val proposals = s"${Prefix}proposals:${member.id}"
           val counter = s"count:$proposals"
           val proposed = s.get(counter).getOrElse("0").toInt
           if (proposed + 1 > Max) Left("Exceeded max proposals") else {
@@ -114,7 +167,7 @@ object Proposal {
                          System.currentTimeMillis.toString, mem.twttr))          
               }
             }
-            val nextId = s.incr("boston2015:proposals:ids").get
+            val nextId = s.incr("${Prefix}proposals:ids").get
             val nextKey = s"$proposals:$nextId"
             s.hmset(nextKey, Map(
               "name"  -> trimmedName,

@@ -44,23 +44,30 @@ trait Templates {
         A 15 minute lightning talk goes by faster
         than you think. If you're used to talking for hours, remember to time yourself.
        </p>
-       <p>
-       Proposals will be accepted until Mon Dec 8 11:59pm Boston time.
-       </p>
+        { if (Site.proposalsOpen)
+          <p>Proposals will be accepted until Mon Dec 8 11:59pm Boston time.</p>
+         else
+          <p><i class="fa fa-info-circle"></i> Proposals are now closed.</p>
+       }
       </div>
       <div id="propose-talk">
         <div id="propose-container" class="unit">
           { proposals.size match {
             case 0 =>
-              <span>
+              if (Site.proposalsOpen) <span>
                 <p>
                  <a href="#" class="btn propose">Submit a new talk proposal</a>
                 </p>
-              </span>
+              </span> else <span/>
             case n if n < Proposal.Max =>
               <span>
                 { proposed(proposals) }
-                <p><a href="#" class="btn propose">Submit a new talk proposal</a></p>
+                {
+                  if (Site.proposalsOpen)
+                    <p><a href="#" class="btn propose">Submit a new talk proposal</a></p>
+                  else
+                    <span/>
+                }
                </span>
             case n =>
               <span>
@@ -78,7 +85,7 @@ trait Templates {
   def proposalsPage
    (proposals: Iterable[Proposal])
    (session: Option[SessionCookie] = None) =
-    layout(session)(scripts = Seq("/js/2015/proposals.js"))(
+    layout(session)(scripts = Seq("/js/2015/proposals.js", "/js/2015/voting.js"))(
       <div class="unit whole align-center lead inverse">
         <div class="grid">
           <p class="unit whole">
@@ -132,18 +139,52 @@ trait Templates {
            <i class="fa fa-check-circle-o"></i> Listen up
           </h2>
           <p>
-            NE Scala does not select speakers for you to watch and listen to, you do. Talks
-            are proposed by your peers and in a short time we will open up voting polls for you
-            to select the talks you want to see.
+            NE Scala does not select speakers for you to watch and listen to, you do.
           </p>
+            {
+              if (Site.votesOpen) session match {
+                case Some(member) if member.canVote =>
+                  <p>You may vote for up to 6 talks you'd like to see for this year's symposium below.</p>
+                  <p id="votes-remaining">
+                  { (Proposal.MaxVotes - member.votes.size) match {
+                    case 0 =>
+                      <span>You have <strong>no votes</strong> remaining</span>
+                    case 1 =>
+                      <span>You have <strong>one vote</strong> remaining</span>
+                    case n =>
+                      <span>You have <strong>{n} notes</strong> remaining</span>
+                  } }
+                  </p>
+                case Some(_) =>
+                  <p>
+                    Member's RSVP'd on <a href="http://www.meetup.com/nescala/events/218741329/">meetup.com</a> may
+                    vote for the proposed talk they want to see.
+                  </p>
+                case _ =>
+                  <p>
+                    Member's RSVP'd on <a href="http://www.meetup.com/nescala/events/218741329/">meetup.com</a> may
+                    <a class="btn" href="/login?state=proposals">Login</a> and vote for the talk proposals they want to see.
+                  </p>
+              }
+              else
+                <p>
+                  Talks are proposed by your peers and in a short time we will open up voting polls for you
+                  to select the talks you want to see.
+                </p>
+            }
         </div>
         <div class="unit whole">{
-          proposals.groupBy(_.kind).map {
+          val grouped = proposals.groupBy(_.kind)
+          Array("medium", "short", "lightning")
+           .map(len => (len, grouped.get(len).getOrElse(Nil))).map {
             case (kind, ps) =>
               <h3 id={s"$kind-proposals"} class="unit whole">
-                {ps.size} <strong>{ kind }</strong> length proposals
+                { ps.size } <strong>{ kind }</strong> length proposals
               </h3>
-              <ul>{ ps.map(proposal(false, Nil)) }</ul>
+              <ul>{ ps.map(proposal(
+                Site.votesOpen && session.exists(_.canVote),
+                session.filter(_ => Site.votesOpen).map(_.votes).getOrElse(Set.empty)))
+              }</ul>
           }
         }</div>
       </div></div>)
@@ -174,7 +215,7 @@ trait Templates {
 
    /** a single li element for a proposal */
    private def proposal
-    (canVote: Boolean, votes: Seq[String])(p: Proposal)  =
+    (canVote: Boolean, votes: Set[String])(p: Proposal)  =
     <li class="unit whole talk" id={ p.domId }>
     <div class="grid">
       <div class="unit one-fifth">
@@ -189,13 +230,13 @@ trait Templates {
             case "lightning" => "15 minutes"
           } }
           </span>
-          { if (canVote && votes.contains(p.id))
-            <form class="ballot" action="/2014/votes" method="POST">
-             <input type="hidden" name="vote" value={ p.id }/>
-             <input type="hidden" name="action" value={ if (votes.contains(p.id)) "unvote" else "vote" }/>
-             <input type="submit" class="voting btn"
-              value="This got your vote" disabled="disabled"/>
-            </form>
+          { if (canVote)
+            <p><form class="ballot" action={s"/2015/talks/${p.id}/votes"}
+              method={ if (votes.contains(p.id)) "DELETE" else "POST"}>
+             <button type="submit" class={s"voting btn ${if (votes.contains(p.id)) "voted-yes" else "" }"}>
+              { if (votes.contains(p.id)) "Change your mind?" else "Let's make this happen"}
+             </button>
+            </form></p>
           }
         </div>
         <p class="desc">{ p.desc }</p>
@@ -222,15 +263,40 @@ trait Templates {
               { session match {
                 case Some(member) if member.nescalaMember =>
                   <p class="pushdown">
-                    <a href="/2015/talks#speak" class="btn">Propose a talk</a> (by Mon Dec 8)
+                    {
+                      if (Site.proposalsOpen)
+                        <span><a href="/2015/talks#speak" class="btn">Propose a talk</a> (by Mon Dec 8)</span>
+                      else if (Site.votesOpen)
+                        <span><a href="/2015/talks#proposals" class="btn">Vote for a talk</a></span>
+                      else
+                        <span/>
+                    }
                   </p>
                 case Some(member) =>
                   <p class="pushdown">
-                    Join our <a href="http://www.meetup.com/nescala">Meetup group</a> to submit a proposal (by Mon Dec 8)
+                  {
+                    if (Site.proposalsOpen)
+                      <span>Join our <a href="http://www.meetup.com/nescala/">Meetup group</a> to submit a proposal (by Mon Dec 8)</span>
+                    else if (Site.votesOpen)
+                      <span>RSVP'd our <a href="http://www.meetup.com/nescala/">Meetup group</a> to submit a proposal (by Mon Dec 8)</span>
+                    else
+                      <span/>
+                  }
                   </p>
                 case _ =>
                   <p class="pushdown">
-                    <a href="/login?state=propose" class="btn">Login</a> to submit a talk proposal (by Mon Dec 8)
+                    {
+                      if (Site.proposalsOpen)
+                        <span><a href="/login?state=propose" class="btn">Login</a> to submit a talk proposal (by Mon Dec 8)</span>
+                      else if (Site.votesOpen)
+                        <span>
+                          <a href="/login?state=proposals" class="btn">Login</a>
+                          to vote on talks
+                        </span>
+                      else
+                        <span/>
+                    }
+                
                   </p>
               }}
             </div>

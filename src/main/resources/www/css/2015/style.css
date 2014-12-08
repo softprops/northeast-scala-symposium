@@ -71,7 +71,7 @@ a.icon {
   height:28px;
   padding-top:12px;
   margin:0 2px;
-  transition: all .5s;
+  transition: all .3s;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -160,7 +160,7 @@ hr {
 }
 
 .btn  {
-  padding:.15em .25em;
+  padding:.25em .25em;
   color:#fff;
   text-shadow:0 1px #g30A7DF;
   border:1px solid #25DBFF;
@@ -179,7 +179,7 @@ hr {
 }
 
 .btn:hover {
-   background-image: -moz-linear-gradient(top, #66efff, #13CAEE);
+  background-image: -moz-linear-gradient(top, #66efff, #13CAEE);
   background-image: -webkit-gradient(linear, center top, center bottom, from(#66efff), to(#13CAEE));
   background-image: -o-linear-gradient(top, #66efff, #13CAEE);
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#66efff', endColorstr='#13CAEE');
@@ -205,7 +205,6 @@ hr {
   -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#F0F0F0', endColorstr='#D8D8D8')";
   background-image: linear-gradient(top, #F0F0F0, #D8D8D8);
 }
-
 
 .btn.cancel {
   border-color:#9FA1A2;
@@ -239,8 +238,17 @@ input[type="submit"] {
   padding:.4em;
 }
 
+.ballot .btn:before {
+  content:"\f05d";
+  font-family: FontAwesome;
+}
+
+.btn.voted-yes:before {
+  content:"\f00d";
+  font-family: FontAwesome;
+}
+
 .btn.voted-yes {
-  padding:.15em .25em;
   color:#fff;
   text-shadow:0 1px #g30A7DF;
   border:1px solid #76BD19;

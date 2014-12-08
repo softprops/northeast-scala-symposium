@@ -63,7 +63,25 @@ object Meetup extends Config {
           false
       }.apply()
 
-  def tokens(js: JValue): Option[(String, String)] =
+  def rsvped(session: Session, eventId: Int): Future[Boolean] =
+    http(sign(url(s"https://api.meetup.com/2/event/$eventId"), session)
+         <<? Map("fields" -> "self", "only" -> "self.rsvp.response")
+         OK as.json4s.Json)
+      .map { js =>
+        (for {
+          JObject(event)              <- js
+          ("self", JObject(self))     <- event
+          ("rsvp", JObject(rsvp))     <- self
+          ("response", JString(resp)) <- rsvp
+        } yield resp)
+        .headOption
+        .exists(_ == "yes")
+      }.recover {
+        case NonFatal(_) =>
+          false
+      }
+
+  private def tokens(js: JValue): Option[(String, String)] =
     (for {
       JObject(response)                   <- js
       ("access_token", JString(access))   <- response

@@ -67,5 +67,4 @@ object Member {
           Member(id, attrs("name"), attrs("photo"), attrs("mtime"),
                  attrs.get("twttr"))
         }
-
 }
