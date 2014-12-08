@@ -19,7 +19,7 @@ object Site extends Templates {
   val proposalCutoff = // tuesday @ mignight
     new DateMidnight(TZ).withYear(2014).withMonthOfYear(12).withDayOfMonth(9)
 
-  def proposalsOpen = !proposalCutoff.isAfterNow
+  def proposalsOpen = proposalCutoff.isAfterNow
   def votesOpen = !proposalsOpen // todo: set a cutoff for this
 
   def talks(anchor: String = "") =
