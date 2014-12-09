@@ -63,6 +63,22 @@ object Meetup extends Config {
           false
       }.apply()
 
+  def hosts(session: Session, eventId: Int): Future[Iterable[Int]] =
+    http(sign(url(s"https://api.meetup.com/2/event/$eventId"), session)
+         <<? Map("fields" -> "event_hosts", "only" -> "event_hosts.member_id")
+         OK as.json4s.Json)
+      .map { js =>
+        for {
+          JObject(event)                 <- js
+          ("event_hosts", JArray(hosts)) <- event
+          JObject(host)                  <- hosts
+          ("member_id", JInt(id))        <- host
+        } yield id.toInt
+      }.recover {
+        case NonFatal(_) =>
+          Nil
+      }
+
   def rsvped(session: Session, eventId: Int): Future[Boolean] =
     http(sign(url(s"https://api.meetup.com/2/event/$eventId"), session)
          <<? Map("fields" -> "self", "only" -> "self.rsvp.response")
