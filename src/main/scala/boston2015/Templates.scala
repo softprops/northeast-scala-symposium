@@ -152,7 +152,7 @@ trait Templates {
                     case 1 =>
                       <span>You have <strong>one vote</strong> remaining</span>
                     case n =>
-                      <span>You have <strong>{n} notes</strong> remaining</span>
+                      <span>You have <strong>{n} votes</strong> remaining</span>
                   } }
                   </p>
                 case Some(_) =>
