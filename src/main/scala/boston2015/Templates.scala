@@ -233,7 +233,8 @@ trait Templates {
           { if (canVote)
             <p><form class="ballot" action={s"/2015/talks/${p.id}/votes"}
               method={ if (votes.contains(p.id)) "DELETE" else "POST"}>
-             <button type="submit" class={s"voting btn ${if (votes.contains(p.id)) "voted-yes" else "" }"}>
+             <button type="submit" class={s"voting btn ${if (votes.contains(p.id)) "voted-yes" else "" }"}
+              disabled={if (!votes.contains(p.id) && (Proposal.MaxVotes - votes.size < 1)) Some(xml.Text("disabled")) else None} >
               { if (votes.contains(p.id)) "Change your mind?" else "Let's make this happen"}
              </button>
             </form></p>
