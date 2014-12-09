@@ -9,7 +9,8 @@ case class Proposal(
   desc: String,
   kind: String,
   member: Option[Member] = None,
-  time: Option[Date] = None) {
+  time: Option[Date] = None,
+  votes: Int = 0) {
   lazy val domId = id.split(":")(3)
   lazy val memberId = id.split(":")(2) 
 }
@@ -81,8 +82,8 @@ object Proposal {
        (grouped.map {
          case (member, props) =>
            props.map { pkey =>
-             val attrs = s.hmget[String, String](pkey, "name", "desc", "kind").get            
-             Proposal(pkey, attrs("name"), attrs("desc"), attrs("kind"), members(member))
+             val attrs = s.hmget[String, String](pkey, "name", "desc", "kind", "votes").get
+             Proposal(pkey, attrs("name"), attrs("desc"), attrs("kind"), members(member), votes = attrs("votes").toInt)
            }
        }).flatten
     }
