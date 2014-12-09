@@ -26,6 +26,19 @@ object Site extends Templates {
     if (anchor.nonEmpty) Redirect(s"/2015/talks#$anchor")
     else Redirect("/2015/talks")
 
+  def tally(props: Iterable[Proposal]) = {
+    val sb = new StringBuilder()
+    val grouped = props.groupBy(_.kind)
+    sb.append(s"${props.size} proposals\n")
+    Array("medium", "short", "lightning").foreach { len =>
+      sb.append(s"\n# $len proposals\n")
+      grouped(len).toSeq.sortBy { p => (-p.votes, p.name) }.foreach { p =>
+        sb.append(p.votes).append(" ").append(p.name).append(" (").append(p.member.map(_.name).getOrElse("?")).append(")\n")
+      }
+    }
+    ResponseString(sb.toString)
+  }
+
   def vote
    (session: SessionCookie,
     id: String,
@@ -87,6 +100,13 @@ object Site extends Templates {
       respond(req) {
         case Some(member) =>
           proposeit(member, params)
+        case _ =>
+          talks()
+      }
+    case GET(req) & Path(Seg("2015" :: "talks" :: "peek" :: Nil)) =>
+      respond(req) {
+        case Some(member) if Meetup.hosts(member.session, DayOneEvent).apply().exists(_ == member.member) =>
+          tally(Proposal.all)
         case _ =>
           talks()
       }
