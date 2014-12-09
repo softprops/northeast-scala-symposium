@@ -145,6 +145,7 @@ trait Templates {
               if (Site.votesOpen) session match {
                 case Some(member) if member.canVote =>
                   <p>You may vote for up to 6 talks you'd like to see for this year's symposium below.</p>
+                  <p>Polls close Mon Dec 15 at 11:59pm.</p>
                   <p id="votes-remaining">
                   { (Proposal.MaxVotes - member.votes.size) match {
                     case 0 =>
@@ -268,7 +269,7 @@ trait Templates {
                       if (Site.proposalsOpen)
                         <span><a href="/2015/talks#speak" class="btn">Propose a talk</a> (by Mon Dec 8)</span>
                       else if (Site.votesOpen)
-                        <span><a href="/2015/talks#proposals" class="btn">Vote for a talk</a></span>
+                        <span><a href="/2015/talks#proposals" class="btn">Vote for a talk</a> (polls close Mon Dec 15 11:59pm)</span>
                       else
                         <span/>
                     }
@@ -292,7 +293,7 @@ trait Templates {
                       else if (Site.votesOpen)
                         <span>
                           <a href="/login?state=proposals" class="btn">Login</a>
-                          to vote on talks
+                          to vote on talks (polls close Mon Dec 15 11:59pm)
                         </span>
                       else
                         <span/>
