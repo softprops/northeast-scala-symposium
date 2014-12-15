@@ -1,5 +1,6 @@
 package nescala.boston2015
 
+import com.google.common.cache.{ CacheBuilder, CacheLoader }
 import dispatch._ // for future pimping
 import dispatch.Defaults._
 import nescala.{ Meetup, SessionCookie }
@@ -11,6 +12,7 @@ import unfiltered.response.{ JsonContent, Redirect, ResponseString, ResponseFunc
 import unfiltered.Cycle.Intent
 import scala.util.control.NonFatal
 import scala.util.Random
+import java.util.concurrent.TimeUnit
 
 object Site extends Templates {
 
@@ -18,13 +20,22 @@ object Site extends Templates {
   val TZ = DateTimeZone.forID("US/Eastern")
   val proposalCutoff = // tuesday @ mignight
     new DateMidnight(TZ).withYear(2014).withMonthOfYear(12).withDayOfMonth(9)
+  val votesCutoff =
+    new DateMidnight(TZ).withYear(2014).withMonthOfYear(12).withDayOfMonth(15)
 
   def proposalsOpen = proposalCutoff.isAfterNow
-  def votesOpen = !proposalsOpen // todo: set a cutoff for this
+  def votesOpen = votesCutoff.isAfterNow
 
   def talks(anchor: String = "") =
     if (anchor.nonEmpty) Redirect(s"/2015/talks#$anchor")
     else Redirect("/2015/talks")
+
+  // cache sponsor list for one hour
+  def sponsors = CacheBuilder.newBuilder
+    .expireAfterWrite(1, TimeUnit.HOURS)
+    .build(new CacheLoader[String, List[Meetup.Sponsor]] {
+      def load(urlname: String) = Meetup.sponsors(urlname).apply()
+    })
 
   def tally(props: Iterable[Proposal]) = {
     val sb = new StringBuilder()
@@ -93,7 +104,7 @@ object Site extends Templates {
 
   def pages: Intent[Any, Any] = {
     case GET(req) & Path(Seg(Nil)) =>
-      respond(req)(indexPage)
+      respond(req)(indexPage(sponsors.get("nescala")))
     case GET(req) & Path(Seg("2015" :: "talks" :: Nil)) =>
       respond(req)(proposalsPage(Random.shuffle(Proposal.all)))
     case POST(req) & Path(Seg("2015" :: "talks" :: Nil)) & Params(params) =>

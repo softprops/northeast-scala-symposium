@@ -1,6 +1,6 @@
 package nescala.boston2015
 
-import nescala.SessionCookie
+import nescala.{ Meetup, SessionCookie }
 import unfiltered.response.Html5
 import java.net.URLEncoder.encode
 
@@ -247,7 +247,9 @@ trait Templates {
     <hr/>
   </li>
 
-  def indexPage(session: Option[SessionCookie] = None) =
+  def indexPage
+   (sponsors: List[Meetup.Sponsor])
+   (session: Option[SessionCookie] = None) =
     layout(session)(scripts = Seq(
       "https://maps.googleapis.com/maps/api/js?key=AIzaSyASm3CwaK9qtcZEWYa-iQwHaGi3gcosAJc&sensor=false",
       "/js/2015/index.js"))(
@@ -271,7 +273,7 @@ trait Templates {
                       else if (Site.votesOpen)
                         <span><a href="/2015/talks#proposals" class="btn">Vote for a talk</a> (polls close Mon Dec 15 11:59pm)</span>
                       else
-                        <span/>
+                        <span>Voting polls for <a href="/2015/talks#proposals">talk proposals</a><br/> are now closed.</span>
                     }
                   </p>
                 case Some(member) =>
@@ -282,7 +284,7 @@ trait Templates {
                     else if (Site.votesOpen)
                       <span>RSVP'd our <a href="http://www.meetup.com/nescala/">Meetup group</a> to submit a proposal (by Mon Dec 8)</span>
                     else
-                      <span/>
+                      <span>Voting polls for <a href="/2015/talks#proposals">talk proposals</a><br/> are now closed.</span>
                   }
                   </p>
                 case _ =>
@@ -296,7 +298,7 @@ trait Templates {
                           to vote on talks (polls close Mon Dec 15 11:59pm)
                         </span>
                       else
-                        <span/>
+                        <span>Voting polls for <a href="/2015/talks#proposals">talk proposals</a><br/> are now closed.</span>
                     }
                 
                   </p>
@@ -372,6 +374,19 @@ trait Templates {
               </p>
             </div>
           </div>
+        </div>
+        <div class="inverse" id="friends">
+          <div class="grid center-on-mobiles">
+            <div class="unit whole">
+              <h2>Friends</h2>
+              <p>Below are some of the sponsors that made this possible</p>
+              { sponsors.map { sponsor =>
+                <p class="unit one-third">
+                  <a title={sponsor.name} href={sponsor.link}><img src={sponsor.image}/></a>
+                </p>
+              } }
+            </div>
+          </div>
         </div>)
 
   def layout
@@ -416,7 +431,8 @@ trait Templates {
           <div>
             <a href="http://www.meetup.com/boston-scala/">Boston</a>,
             <a href="http://www.meetup.com/scala-phase/">Philadelphia</a>,
-            and <a href="http://www.meetup.com/ny-scala/">New York</a> scala enthusiasts and, of course, of all of
+            and <a href="http://www.meetup.com/ny-scala/">New York</a> scala enthusiasts,
+            our <a href="#friends">friends</a> and, of course, of all of
             <a href="http://www.meetup.com/nescala/photos/">you</a>.
           </div>
           <div>
