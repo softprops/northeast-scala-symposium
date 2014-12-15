@@ -21,7 +21,7 @@ object Site extends Templates {
   val proposalCutoff = // tuesday @ mignight
     new DateMidnight(TZ).withYear(2014).withMonthOfYear(12).withDayOfMonth(9)
   val votesCutoff =
-    new DateMidnight(TZ).withYear(2014).withMonthOfYear(12).withDayOfMonth(15)
+    new DateMidnight(TZ).withYear(2014).withMonthOfYear(12).withDayOfMonth(16)
 
   def proposalsOpen = proposalCutoff.isAfterNow
   def votesOpen = votesCutoff.isAfterNow
