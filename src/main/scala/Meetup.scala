@@ -11,6 +11,8 @@ import scala.util.control.NonFatal
 
 object Meetup extends Config {
 
+  case class Sponsor(name: String, image: String, link: String)
+
   object Nyc {
     val event_id = property("nyc.event_id")
   }
@@ -123,6 +125,25 @@ object Meetup extends Config {
         case Some((access, refresh)) =>
           Session.delete(session.uuid)
           Session.create(access, refresh)
+      }
+
+  def sponsors(urlname: String): Future[List[Sponsor]] =
+    http(url("https://api.meetup.com/2/groups/")
+         <<? Map("key"           -> apiKey,
+                "group_urlname" -> urlname,
+                "fields"        -> "sponsors",
+                "only"          -> "sponsors") OK as.json4s.Json)
+      .map { js =>
+        for {
+          JObject(response)              <- js
+          ("results", JArray(results))   <- response
+          JObject(group)                 <- results
+          ("sponsors", JArray(sponsors)) <- group
+          JObject(sponsor)               <- sponsors
+          ("name", JString(name))        <- sponsor
+          ("image_url", JString(img))    <- sponsor
+          ("url", JString(link))         <- sponsor
+        } yield Sponsor(name, img, link)
       }
 
   val AuthExchange = new dispatch.oauth.Exchange
