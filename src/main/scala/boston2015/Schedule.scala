@@ -22,7 +22,7 @@ object Schedule {
 
   case class Close(time: Date) extends Slot
 
-  def slots = (misc ++ Proposal.talks.map(Talk(_))).sortBy(_.time)
+  def slots = (misc ++ Proposal.talks.map(Talk(_))).sortBy(_.time.getTime)
 
   val misc = {
     def time(hour: Int, min: Int = 0) =
