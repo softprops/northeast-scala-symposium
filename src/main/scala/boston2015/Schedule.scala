@@ -26,10 +26,10 @@ object Schedule {
 
   val misc = {
     def time(hour: Int, min: Int = 0) =
-      Site.dayOneTime
+      new Date(Site.dayOneTime
         .withHourOfDay(hour)
         .withMinuteOfHour(min)
-        .toDate
+        .toDate.getTime)
     Seq(
       Open(time(8)),
       Intro(time(8, 50)),
