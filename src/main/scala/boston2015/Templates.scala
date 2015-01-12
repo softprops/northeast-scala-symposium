@@ -10,7 +10,7 @@ trait Templates {
 
   private def timestamp(d: Date) = {
     def fmt(f: String) = new SimpleDateFormat(f) {
-      setTimeZone(Site.TZ.toTimeZone)
+      setTimeZone(TimeZone.getTimeZone("US/Eastern"))
     }
     val time = (if (d.getMinutes > 0) fmt("h:mm") else fmt("h")).format(d)
     <span class="time">{ time }</span><span class="ampm">{ fmt("aa").format(d).toLowerCase }</span>
