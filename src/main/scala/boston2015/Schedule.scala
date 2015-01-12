@@ -33,7 +33,7 @@ object Schedule {
     }
 
     def time(hour: Int, min: Int = 0) = {
-      cal.set(2014, 3, 2, hour, min, 0)
+      cal.set(2015, 0, 30, hour, min, 0)
       cal.getTime
     }
 
