@@ -18,10 +18,37 @@ case class Proposal(
 object Proposal {
   val Prefix = "boston2015:"
   val Pattern = s"""${Prefix}proposals:(.*):(.*)""".r
+  val Talks = s"""${Prefix}talks""".r
   val MaxTalkName = 200
   val MaxTalkDesc = 600
   val Max = 3
   val MaxVotes = 6
+
+  def promote(proposal: String, slot: Date): Either[String, Unit] =
+    Store { s =>
+      if (!s.exists(proposal)) Left(
+        s"proposal $proposal does not exist") else proposal match {
+        case Proposal.Pattern(_,_) =>
+          Right(s.zadd(Talks, slot.getTime().toDouble, proposal))
+        case invalid => Left(s"invalid propsoal $invalid")
+      }
+    }
+
+  def talks: Seq[Proposal] =
+    Store { s =>
+      s.zrangeWithScore(Talks).map { xs =>
+        (List.empty[Proposal] /: xs) {
+          case (a, (key, slot)) =>
+            val attrs = s.hmget[String, String](
+              key, "name", "desc", "kind").get
+            val p = Proposal(
+              key, attrs("name"), attrs("desc"), attrs("kind"),
+              time = Some(new Date(slot.toLong))
+            )
+            p.copy(member = Member.stored(p.memberId)(s)) :: a
+        }
+      }.getOrElse(Nil)
+    }
 
   def votekey(member: Int) = s"${Prefix}talk_votes:$member"
 

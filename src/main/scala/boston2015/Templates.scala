@@ -3,12 +3,22 @@ package nescala.boston2015
 import nescala.{ Meetup, SessionCookie }
 import unfiltered.response.Html5
 import java.net.URLEncoder.encode
+import java.text.SimpleDateFormat
+import java.util.{ Date, TimeZone }
 
 trait Templates {
 
+  private def timestamp(d: Date) = {
+    def fmt(f: String) = new SimpleDateFormat(f) {
+      setTimeZone(Site.TZ.toTimeZone)
+    }
+    val time = (if (d.getMinutes > 0) fmt("h:mm") else fmt("h")).format(d)
+    <span class="time">{ time }</span><span class="ampm">{ fmt("aa").format(d).toLowerCase }</span>
+  }
+
   /** list of current member's proposals and modal for editing them */
   private def proposed
-   (proposals: Iterable[Proposal]): xml.NodeSeq =
+    (proposals: Iterable[Proposal]): xml.NodeSeq =
     (<h3 id="proposed">Your current talk proposals</h3><ul>{
       proposals.map { p =>
         <li>
@@ -248,7 +258,7 @@ trait Templates {
   </li>
 
   def indexPage
-   (sponsors: List[Meetup.Sponsor])
+   (slots: Seq[Schedule.Slot], sponsors: List[Meetup.Sponsor])
    (session: Option[SessionCookie] = None) =
     layout(session)(scripts = Seq(
       "https://maps.googleapis.com/maps/api/js?key=AIzaSyASm3CwaK9qtcZEWYa-iQwHaGi3gcosAJc&sensor=false",
@@ -326,6 +336,90 @@ trait Templates {
               </p>
             </div>
           </div>
+          <div>{
+            slots.map {
+              case Schedule.Open(at) =>
+                <div class="grid">
+                  <h3 class="right unit one-fifth">
+                    { timestamp(at) }
+                  </h3>
+                  <h3 class="unit four-fifths">
+                    Doors Open
+                  </h3>
+                </div>
+                <div class="grid">
+                  <div class="unit one-fifth"></div>
+                  <div class="unit four-fifths">
+                    <p>Check in and grab some coffee</p>
+                  </div>
+                </div>
+              case Schedule.Intro(at) =>
+                <div class="grid">
+                  <h3 class="right unit one-fifth">
+                    { timestamp(at) }
+                  </h3>
+                  <h3 class="unit four-fifths">
+                    Opening Remarks
+                  </h3>
+                </div>
+                <div class="grid">
+                  <div class="unit one-fifth"></div>
+                  <div class="unit four-fifths">
+                    <p>Let's remember why we are here thank those that made this happen</p>
+                  </div>
+                </div>
+              case Schedule.Break(at) =>
+                <div class="grid">
+                  <h3 class="right unit one-fifth">
+                    { timestamp(at) }
+                  </h3>
+                  <h3 class="unit four-fifths break">
+                    Short break
+                  </h3>
+                </div>
+              case Schedule.Close(at) =>
+                <div class="grid">
+                  <h3 class="right unit one-fifth">
+                    { timestamp(at) }
+                  </h3>
+                  <h3 class="unit four-fifths">
+                    Day one closer
+                  </h3>
+                </div>
+              case Schedule.Lunch(at) =>
+                <div class="grid">
+                  <h3 class="right unit one-fifth">
+                    { timestamp(at) }
+                  </h3>
+                  <h3 class="unit four-fifths">
+                    Lunch
+                  </h3>
+                </div>
+                <div class="grid">
+                  <div class="unit one-fifth"></div>
+                  <div class="unit four-fifths">
+                    <p>Let's eat!</p>
+                  </div>
+                </div>
+              case slot @ Schedule.Talk(p) =>
+                <div class="grid" id ={ s"talk-${p.domId}" }>
+                  <h3 class="right unit one-fifth">
+                    { timestamp(slot.time) }
+                  </h3>
+                  <h3 class="unit four-fifths">
+                    <a href={s"#talk-${p.domId}"}>{ p.name }</a>
+                  </h3>
+                </div>
+                <div class="grid">
+                  <div class="unit one-fifth right center-on-mobiles">
+                    <p>{ personal(p) }</p>
+                  </div>
+                  <div class="unit four-fifths">
+                    <p>{ p.desc }</p>                      
+                  </div>
+                </div>
+            }
+          }</div>
         </div>
         <div id="when">
           <div class="grid">

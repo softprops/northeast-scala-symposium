@@ -5,7 +5,7 @@ import dispatch._ // for future pimping
 import dispatch.Defaults._
 import nescala.{ Meetup, SessionCookie }
 import nescala.request.UrlDecoded
-import org.joda.time.{ DateMidnight, DateTimeZone }
+import org.joda.time.{ DateMidnight, DateTimeZone, LocalDateTime }
 import unfiltered.request.{ DELETE, GET, HttpRequest, Params, Path, POST, Seg, & }
 import unfiltered.request.QParams._
 import unfiltered.response.{ JsonContent, Redirect, ResponseString, ResponseFunction, Unauthorized }
@@ -18,12 +18,23 @@ object Site extends Templates {
 
   val DayOneEvent = 218741329
   val TZ = DateTimeZone.forID("US/Eastern")
+
+  val dayOneTime =
+    new LocalDateTime(TZ)
+      .withYear(2015).withMonthOfYear(1)
+      .withDayOfMonth(30).withMinuteOfHour(0)
+      .withSecondOfMinute(0).withMillisOfSecond(0)
+
   val proposalCutoff = // tuesday @ mignight
-    new DateMidnight(TZ).withYear(2014).withMonthOfYear(12).withDayOfMonth(9)
+    new DateMidnight(TZ).withYear(2014)
+      .withMonthOfYear(12).withDayOfMonth(9)
+
   val votesCutoff =
-    new DateMidnight(TZ).withYear(2014).withMonthOfYear(12).withDayOfMonth(16)
+    new DateMidnight(TZ).withYear(2014)
+      .withMonthOfYear(12).withDayOfMonth(16)
 
   def proposalsOpen = proposalCutoff.isAfterNow
+
   def votesOpen = votesCutoff.isAfterNow
 
   def talks(anchor: String = "") =
@@ -104,7 +115,7 @@ object Site extends Templates {
 
   def pages: Intent[Any, Any] = {
     case GET(req) & Path(Seg(Nil)) =>
-      respond(req)(indexPage(sponsors.get("nescala")))
+      respond(req)(indexPage(Schedule.slots, sponsors.get("nescala")))
     case GET(req) & Path(Seg("2015" :: "talks" :: Nil)) =>
       respond(req)(proposalsPage(Random.shuffle(Proposal.all)))
     case POST(req) & Path(Seg("2015" :: "talks" :: Nil)) & Params(params) =>
@@ -144,7 +155,9 @@ object Site extends Templates {
       }
   }
 
-  def respond(req: HttpRequest[_])(handle: Option[SessionCookie] => ResponseFunction[Any]) =
+  def respond
+   (req: HttpRequest[_])
+   (handle: Option[SessionCookie] => ResponseFunction[Any]) =
     req match {
       case SessionCookie.Value(sc) =>
         sc.fold(handle(None), { member => handle(Some(member)) })

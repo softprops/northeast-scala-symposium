@@ -45,7 +45,6 @@ body > footer {
 
 h1, h2, h3 {
   font-family: "Montserrat", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  text-shadow:0 1px 1px #a92a41;
 }
 
 h1 {
@@ -425,4 +424,8 @@ a.circle {
 
 .modal a {
   color:#333;
+}
+
+.break {
+  color:#DD8080;
 }
