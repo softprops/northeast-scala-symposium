@@ -8,7 +8,7 @@ import java.util.{ Date, TimeZone }
 
 trait Templates {
 
-  private def timestamp(d: Date, offset: Boolean = false) = {
+  private def timestamp(d: Date, offset: Boolean = true) = {
     def fmt(f: String) = new SimpleDateFormat(f) {
       if (offset) {
         setTimeZone(TimeZone.getTimeZone("US/Eastern"))
