@@ -8,9 +8,11 @@ import java.util.{ Date, TimeZone }
 
 trait Templates {
 
-  private def timestamp(d: Date) = {
+  private def timestamp(d: Date, offset: Boolean = false) = {
     def fmt(f: String) = new SimpleDateFormat(f) {
-      setTimeZone(TimeZone.getTimeZone("US/Eastern"))
+      if (offset) {
+        setTimeZone(TimeZone.getTimeZone("US/Eastern"))
+      }
     }
     val time = (if (d.getMinutes > 0) fmt("h:mm") else fmt("h")).format(d)
     <span class="time">{ time }</span><span class="ampm">{ fmt("aa").format(d).toLowerCase }</span>
@@ -404,7 +406,7 @@ trait Templates {
               case slot @ Schedule.Talk(p) =>
                 <div class="grid" id ={ s"talk-${p.domId}" }>
                   <h3 class="right unit one-fifth">
-                    { timestamp(slot.time) }
+                    { timestamp(slot.time, true) }
                   </h3>
                   <h3 class="unit four-fifths">
                     <a href={s"#talk-${p.domId}"}>{ p.name }</a>
