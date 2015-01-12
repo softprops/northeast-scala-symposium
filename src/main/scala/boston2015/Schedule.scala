@@ -1,6 +1,6 @@
 package nescala.boston2015
 
-import java.util.Date
+import java.util.{ Calendar, Date, TimeZone }
 
 object Schedule {
 
@@ -25,11 +25,18 @@ object Schedule {
   def slots = (misc ++ Proposal.talks.map(Talk(_))).sortBy(_.time.getTime)
 
   val misc = {
-    def time(hour: Int, min: Int = 0) =
-       Site.dayOneTime
-        .withHourOfDay(hour)
-        .withMinuteOfHour(min)
-        .toDate
+    val cal = {
+      val c = Calendar.getInstance()
+      c.setTimeZone(TimeZone.getTimeZone(
+        "US/Eastern"))
+      c
+    }
+
+    def time(hour: Int, min: Int = 0) = {
+      cal.set(2014, 3, 2, hour, min, 0)
+      cal.getTime
+    }
+
     Seq(
       Open(time(8)),
       Intro(time(8, 50)),
