@@ -14,7 +14,7 @@ object Schedule {
 
   case class Lunch(time: Date) extends Slot
 
-  case class Break(time: Date) extends Slot
+  case class Break(time: Date, length: Int) extends Slot
 
   case class Talk(p: Proposal) extends Slot {
     def time = p.time.get
@@ -40,16 +40,16 @@ object Schedule {
     Seq(
       Open(time(8)),
       Intro(time(8, 50)),
-      Break(time(9, 45)),
-      Break(time(10, 20)),
-      Break(time(11, 25)),
-      Break(time(12)),
+      Break(time(9, 45), 5),
+      Break(time(10, 20), 20),
+      Break(time(11, 25), 5),
+      Break(time(12), 5),
       Lunch(time(12, 20)),
-      Break(time(12 + 2, 20)),
-      Break(time(12 + 3, 10)),
-      Break(time(12 + 3, 30)),
-      Break(time(12 + 4, 20)),
-      Break(time(12 + 4, 55)),
+      Break(time(12 + 2, 20), 5),
+      Break(time(12 + 3, 10), 5),
+      Break(time(12 + 3, 30), 20),
+      Break(time(12 + 4, 20), 5),
+      Break(time(12 + 4, 55), 5),
       Close(time(12 + 5, 30)))
   }
 }
