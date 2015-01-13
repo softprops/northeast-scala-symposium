@@ -370,13 +370,13 @@ trait Templates {
                     <p>Let's remember why we are here thank those that made this happen</p>
                   </div>
                 </div>
-              case Schedule.Break(at) =>
+              case Schedule.Break(at, length) =>
                 <div class="grid">
                   <h3 class="right unit one-fifth">
                     { timestamp(at) }
                   </h3>
                   <h3 class="unit four-fifths break">
-                    Short break
+                    Break ({length} minutes)
                   </h3>
                 </div>
               case Schedule.Close(at) =>
