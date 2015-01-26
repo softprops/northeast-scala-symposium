@@ -456,7 +456,8 @@ trait Templates {
                 Northeast Scala Symposium is held annually. In 2015, we will occupy the greater Boston area on <a href="http://www.meetup.com/nescala/events/218741329/">Friday, January 30</a> and <a href="http://www.meetup.com/nescala/events/218741348/">Saturday, January 31</a>.
               </p>
               <p>
-                Attendance requires an RSVP.
+                To attend, RSVP separately for <a href="http://www.meetup.com/nescala/events/218741329/">day one</a> and
+                <a href="http://www.meetup.com/nescala/events/218741348/">day two</a>.
               </p>
             </div>
           </div>
