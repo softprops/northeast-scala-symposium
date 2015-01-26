@@ -43,6 +43,9 @@ trait Templates {
     }</ul>
    )
 
+  private def pollsClosed =
+    <span>Votes on <a href="/2015/talks#proposals">talk proposals</a><br/>are in; winners below.</span>
+
   /** every proposal related thing owned by the current member */
   private def propose(proposals: Iterable[Proposal]): xml.NodeSeq = (<section>
     <div class="grid center-on-mobiles" id="propose">
@@ -285,7 +288,7 @@ trait Templates {
                       else if (Site.votesOpen)
                         <span><a href="/2015/talks#proposals" class="btn">Vote for a talk</a> (polls close Mon Dec 15 11:59pm)</span>
                       else
-                        <span>Voting polls for <a href="/2015/talks#proposals">talk proposals</a><br/> are now closed.</span>
+                        pollsClosed
                     }
                   </p>
                 case Some(member) =>
@@ -296,7 +299,7 @@ trait Templates {
                     else if (Site.votesOpen)
                       <span>RSVP'd our <a href="http://www.meetup.com/nescala/">Meetup group</a> to submit a proposal (by Mon Dec 8)</span>
                     else
-                      <span>Voting polls for <a href="/2015/talks#proposals">talk proposals</a><br/> are now closed.</span>
+                      pollsClosed
                   }
                   </p>
                 case _ =>
@@ -310,7 +313,7 @@ trait Templates {
                           to vote on talks (polls close Mon Dec 15 11:59pm)
                         </span>
                       else
-                        <span>Voting polls for <a href="/2015/talks#proposals">talk proposals</a><br/> are now closed.</span>
+                        pollsClosed
                     }
                 
                   </p>
