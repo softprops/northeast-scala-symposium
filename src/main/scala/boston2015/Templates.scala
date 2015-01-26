@@ -339,6 +339,7 @@ trait Templates {
               <p>
                 A uniquely-blended programming language deserves a uniquely-blended conference format. NE Scala offers a mix of speaker-oriented conference presentations with unconference-style sessions and discussions. All presenters are attendees and all attendees select presenters.
               </p>
+              <h2><strong>Day 1 schedule</strong></h2>
             </div>
           </div>
           <div>{
@@ -425,6 +426,12 @@ trait Templates {
                 </div>
             }
           }</div>
+          <div class="grid">
+            <div class="unit">
+              <h2><strong>Day 2 schedule</strong></h2>
+              <p>See the <a href="http://www.meetup.com/nescala/events/218741348/">Meetup page</a>.</p>
+            </div>
+          </div>
         </div>
         <div id="when">
           <div class="grid">
