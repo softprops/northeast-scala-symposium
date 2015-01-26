@@ -392,6 +392,21 @@ trait Templates {
                     Day one closer
                   </h3>
                 </div>
+              case Schedule.Party(at) =>
+                <div class="grid">
+                  <h3 class="right unit one-fifth">
+                    { timestamp(at) }
+                  </h3>
+                  <h3 class="unit four-fifths">
+                    MediaMath Party
+                  </h3>
+                </div>
+                <div class="grid">
+                  <div class="unit one-fifth"></div>
+                  <div class="unit four-fifths">
+                    <p>Until 9pm, a few blocks away at <a href="http://www.rosamexicano.com/boston/">Rosa Mexicano</a>, 155 Seaport Blvd.  Drinks and appetizers included. Bring your nametag. Thank you <a href="http://www.mediamath.com">MediaMath</a> for sponsoring!</p>
+                  </div>
+                </div>
               case Schedule.Lunch(at) =>
                 <div class="grid">
                   <h3 class="right unit one-fifth">
