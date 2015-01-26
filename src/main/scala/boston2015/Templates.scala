@@ -356,7 +356,7 @@ trait Templates {
                 <div class="grid">
                   <div class="unit one-fifth"></div>
                   <div class="unit four-fifths">
-                    <p>Check in and grab some coffee</p>
+                    <p>Check in and grab some coffee and snacks, courtesy of <a href="http://hp.com">Hewlett Packard</a>.</p>
                   </div>
                 </div>
               case Schedule.Intro(at) =>
