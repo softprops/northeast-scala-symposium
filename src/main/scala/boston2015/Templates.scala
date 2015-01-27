@@ -43,6 +43,9 @@ trait Templates {
     }</ul>
    )
 
+  private def pollsClosed =
+    <span>Votes on <a href="/2015/talks#proposals">talk proposals</a><br/>are in; winners below.</span>
+
   /** every proposal related thing owned by the current member */
   private def propose(proposals: Iterable[Proposal]): xml.NodeSeq = (<section>
     <div class="grid center-on-mobiles" id="propose">
@@ -285,7 +288,7 @@ trait Templates {
                       else if (Site.votesOpen)
                         <span><a href="/2015/talks#proposals" class="btn">Vote for a talk</a> (polls close Mon Dec 15 11:59pm)</span>
                       else
-                        <span>Voting polls for <a href="/2015/talks#proposals">talk proposals</a><br/> are now closed.</span>
+                        pollsClosed
                     }
                   </p>
                 case Some(member) =>
@@ -296,7 +299,7 @@ trait Templates {
                     else if (Site.votesOpen)
                       <span>RSVP'd our <a href="http://www.meetup.com/nescala/">Meetup group</a> to submit a proposal (by Mon Dec 8)</span>
                     else
-                      <span>Voting polls for <a href="/2015/talks#proposals">talk proposals</a><br/> are now closed.</span>
+                      pollsClosed
                   }
                   </p>
                 case _ =>
@@ -310,7 +313,7 @@ trait Templates {
                           to vote on talks (polls close Mon Dec 15 11:59pm)
                         </span>
                       else
-                        <span>Voting polls for <a href="/2015/talks#proposals">talk proposals</a><br/> are now closed.</span>
+                        pollsClosed
                     }
                 
                   </p>
@@ -336,6 +339,7 @@ trait Templates {
               <p>
                 A uniquely-blended programming language deserves a uniquely-blended conference format. NE Scala offers a mix of speaker-oriented conference presentations with unconference-style sessions and discussions. All presenters are attendees and all attendees select presenters.
               </p>
+              <h2><strong>Day 1 schedule</strong></h2>
             </div>
           </div>
           <div>{
@@ -352,7 +356,7 @@ trait Templates {
                 <div class="grid">
                   <div class="unit one-fifth"></div>
                   <div class="unit four-fifths">
-                    <p>Check in and grab some coffee</p>
+                    <p>Check in and grab some coffee and snacks, courtesy of <a href="http://hp.com">Hewlett Packard</a>.</p>
                   </div>
                 </div>
               case Schedule.Intro(at) =>
@@ -388,6 +392,21 @@ trait Templates {
                     Day one closer
                   </h3>
                 </div>
+              case Schedule.Party(at) =>
+                <div class="grid">
+                  <h3 class="right unit one-fifth">
+                    { timestamp(at) }
+                  </h3>
+                  <h3 class="unit four-fifths">
+                    MediaMath Party
+                  </h3>
+                </div>
+                <div class="grid">
+                  <div class="unit one-fifth"></div>
+                  <div class="unit four-fifths">
+                    <p>Until 9pm, a few blocks away at <a href="http://www.rosamexicano.com/boston/">Rosa Mexicano</a>, 155 Seaport Blvd.  Drinks and appetizers included. Bring your nametag. Thank you <a href="http://www.mediamath.com">MediaMath</a> for sponsoring!</p>
+                  </div>
+                </div>
               case Schedule.Lunch(at) =>
                 <div class="grid">
                   <h3 class="right unit one-fifth">
@@ -422,6 +441,12 @@ trait Templates {
                 </div>
             }
           }</div>
+          <div class="grid">
+            <div class="unit">
+              <h2><strong>Day 2 schedule</strong></h2>
+              <p>See the <a href="http://www.meetup.com/nescala/events/218741348/">Meetup page</a>.</p>
+            </div>
+          </div>
         </div>
         <div id="when">
           <div class="grid">
@@ -431,7 +456,8 @@ trait Templates {
                 Northeast Scala Symposium is held annually. In 2015, we will occupy the greater Boston area on <a href="http://www.meetup.com/nescala/events/218741329/">Friday, January 30</a> and <a href="http://www.meetup.com/nescala/events/218741348/">Saturday, January 31</a>.
               </p>
               <p>
-                Attendance requires an RSVP.
+                To attend, RSVP separately for <a href="http://www.meetup.com/nescala/events/218741329/">day one</a> and
+                <a href="http://www.meetup.com/nescala/events/218741348/">day two</a>.
               </p>
             </div>
           </div>

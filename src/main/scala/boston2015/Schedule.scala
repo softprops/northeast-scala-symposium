@@ -22,6 +22,8 @@ object Schedule {
 
   case class Close(time: Date) extends Slot
 
+  case class Party(time: Date) extends Slot
+
   def slots = (misc ++ Proposal.talks.map(Talk(_))).sortBy(_.time.getTime)
 
   val misc = {
@@ -50,6 +52,8 @@ object Schedule {
       Break(time(12 + 3, 30), 20),
       Break(time(12 + 4, 20), 5),
       Break(time(12 + 4, 55), 5),
-      Close(time(12 + 5, 30)))
+      Close(time(12 + 5, 30)),
+      Party(time(12 + 6))
+    )
   }
 }
