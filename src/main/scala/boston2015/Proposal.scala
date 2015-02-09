@@ -9,8 +9,10 @@ case class Proposal(
   desc: String,
   kind: String,
   member: Option[Member] = None,
-  time: Option[Date] = None,
-  votes: Int = 0) {
+  time: Option[Date]     = None,
+  votes: Int             = 0,
+  slides: Option[String] = None,
+  video: Option[String]  = None) {
   lazy val domId = id.split(":")(3)
   lazy val memberId = id.split(":")(2) 
 }
@@ -34,16 +36,29 @@ object Proposal {
       }
     }
 
+  def setSlides = setField("slides")_
+
+  def setVideo = setField("video")_
+
+  def setField
+   (field: String)(key: String, value: String): Either[String, Unit] =
+    Store { s =>
+      if (!s.exists(key)) Left(s"proposal $key does not exist")
+      else Right(s.hmset(key, Map(field -> value)))
+    }
+
   def talks: Seq[Proposal] =
     Store { s =>
       s.zrangeWithScore(Talks).map { xs =>
         (List.empty[Proposal] /: xs) {
           case (a, (key, slot)) =>
             val attrs = s.hmget[String, String](
-              key, "name", "desc", "kind").get
+              key, "name", "desc", "kind", "slides", "video").get
             val p = Proposal(
               key, attrs("name"), attrs("desc"), attrs("kind"),
-              time = Some(new Date(slot.toLong))
+              time = Some(new Date(slot.toLong)),
+              slides = attrs.get("slides"),
+              video = attrs.get("video")
             )
             p.copy(member = Member.stored(p.memberId)(s)) :: a
         }

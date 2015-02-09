@@ -436,7 +436,17 @@ trait Templates {
                     <p>{ personal(p) }</p>
                   </div>
                   <div class="unit four-fifths">
-                    <p>{ p.desc }</p>                      
+                    <p>{ p.desc }</p>
+                    { p.slides.fold(<span/>) { slides =>
+                      <a href={slides} target="_blank">
+                        <i class="fa fa-film"></i> Slides
+                      </a>
+                    } }
+                    { p.video.fold(<span/>) { video =>
+                      <a href={video} target="_blank">
+                        <i class="fa fa-film"></i> Video
+                      </a>
+                    } }
                   </div>
                 </div>
             }
