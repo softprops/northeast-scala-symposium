@@ -266,7 +266,6 @@ trait Templates {
    (slots: Seq[Schedule.Slot], sponsors: List[Meetup.Sponsor])
    (session: Option[SessionCookie] = None) =
     layout(session)(scripts = Seq(
-      "https://maps.googleapis.com/maps/api/js?key=AIzaSyASm3CwaK9qtcZEWYa-iQwHaGi3gcosAJc&sensor=false",
       "/js/2015/index.js"))(
       <div class="grid">
             <div class="unit half right center-on-mobiles">
@@ -481,9 +480,6 @@ trait Templates {
               </p>
             </div>
           </div>
-        </div>
-        <div class="unit whole center-on-mobiles">
-          <div id="map"></div>
         </div>
         <div id="kindness">
           <div class="grid">
