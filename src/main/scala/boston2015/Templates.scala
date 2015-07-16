@@ -570,6 +570,16 @@ trait Templates {
           <div>
             hosting by the fine folks @ <a href="https://www.heroku.com/">Heroku</a>
           </div>
+          <div>
+            &nbsp;
+          </div>
+          <div>
+            previous years:
+              <a href="/2014">2014</a> |
+              <a href="/2013">2013</a> |
+              <a href="/2012">2012</a> |
+              <a href="/2011">2011</a>
+          </div>
         </footer>
       </body>
     </html>
