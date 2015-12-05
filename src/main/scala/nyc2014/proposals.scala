@@ -219,7 +219,7 @@ object Proposals extends Templates {
     case req @ GET(Path(Seg("2014" :: "talks" :: Nil))) => Clock("fetching 2012 talks proposals") {
       val (authed, canVote, votes) =  req match {
         case AuthorizedToken(t)
-          if (Meetup.has_rsvp(Meetup.Nyc2014.dayoneEventId, t.token)) =>
+          if (Meetup.rsvped(Meetup.Nyc2014.dayoneEventId, t.token)) =>
             println("has rsvp and logged in")
             val mid = t.memberId.get
             val votekey = s"nyc2014:talk_votes:$mid"

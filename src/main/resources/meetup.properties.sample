@@ -9,13 +9,4 @@ MEMCACHE_USERNAME = MEMCACHED_USERNAME
 
 REDISTOGO_URL = REDIS_URL
 
-nyc.event_id = 15526582
-boston.dayone_event_id = 37637442
-boston.daytwo_event_id = 44042982
-boston.daythree_event_id = 44049692
-philly.event_id = 97192402
-
 secret = SITE_SECRET
-
-nyc.2014.dayone_event_id = 160217402
-nyc.2014.daytwo_event_id = 160255032

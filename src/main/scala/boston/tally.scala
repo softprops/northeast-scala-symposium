@@ -41,5 +41,5 @@ object Tally extends Templates {
       tallied(true, total, entries.sortBy(_("votes").toInt).reverse, kind)
     }
 
-  private def hosting(who: String) = Meetup.hosting(who, Meetup.Boston.dayone_event_id)
+  private def hosting(who: String) = Meetup.hosting(who, Meetup.Boston.dayoneEventId)
 }

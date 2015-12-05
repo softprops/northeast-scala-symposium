@@ -258,7 +258,7 @@ trait Templates {
         else
           <p class="instruct">You have used up all your talk proposals</p>
        }</div>)
- 
+
   def newProposalForm =
     <form action="/2014/proposals" method="POST" id="propose-form" class="proposing">
       <div id="proposal-notifications">
@@ -550,7 +550,7 @@ trait Templates {
 
   val attending = <section>
     <div class="grid">
-      <div class="unit whole day" data-event={ Meetup.Nyc2014.dayoneEventId }>
+      <div class="unit whole day" data-event={ Meetup.Nyc2014.dayoneEventId.toString }>
         <ul class="rsvps"></ul>
       </div>
     </div>
@@ -617,4 +617,3 @@ trait Templates {
 }
 
 object Templates extends Templates {}
-

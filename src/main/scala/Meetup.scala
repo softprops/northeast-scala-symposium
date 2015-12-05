@@ -14,22 +14,22 @@ object Meetup extends Config {
   case class Sponsor(name: String, image: String, link: String)
 
   object Nyc {
-    val event_id = property("nyc.event_id")
+    val eventId: Int = 15526582
   }
 
   object Nyc2014 {
-    val dayoneEventId = property("nyc.2014.dayone_event_id")
-    val daytwoEventId = property("nyc.2014.daytwo_event_id")
+    val dayoneEventId: Int = 160217402
+    val daytwoEventId: Int = 160255032
   }
 
   object Boston {
-    val dayone_event_id = property("boston.dayone_event_id")
-    val daytwo_event_id = property("boston.daytwo_event_id")
-    val daythree_event_id = property("boston.daythree_event_id")
+    val dayoneEventId: Int = 37637442
+    val daytwoEventId: Int = 44042982
+    val daythreeEventId: Int = 44049692
   }
 
   object Philly {
-    val eventId = property("philly.event_id")
+    val eventId: Int = 97192402
   }
 
   case class SimpleMember(id: String, name: String, photo: String, twttr: Option[String])
@@ -38,7 +38,7 @@ object Meetup extends Config {
     "http://img1.meetupstatic.com/39194172310009655/img/noPhoto_50.gif"
 
   lazy val consumer = new ConsumerKey(
-    property("mu_consumer"), property("mu_consumer_secret"))  
+    property("mu_consumer"), property("mu_consumer_secret"))
 
   lazy val consumerRedirectUri =
     property("mu_redirect_uri")
@@ -114,7 +114,7 @@ object Meetup extends Config {
                 "code"          -> code,
                 "redirect_uri"  -> redirect) OK as.json4s.Json)
         .map(tokens).apply()
-  
+
   def refresh(session: Session): Future[Session] =
     http(url("https://secure.meetup.com/oauth2/access")
          << Map("client_id"     -> consumer.getKey,
@@ -159,7 +159,7 @@ object Meetup extends Config {
       (implicit executor: ExecutionContext)
       : Future[Either[String,RequestToken]] = {
       val promised = http(
-        url(requestToken) 
+        url(requestToken)
         << Map("oauth_callback" -> callback)
         <@ (consumer)
         > as.oauth.Token
@@ -174,7 +174,7 @@ object Meetup extends Config {
 
   def http = new Http
 
-  def has_rsvp(eventId: String, token: RequestToken): Boolean = {
+  def rsvped(eventId: Int, token: RequestToken): Boolean = {
     val body = Clock("checking rsvp") {
       http(
         host / "2" / "event" / eventId <<? Map("fields" -> "self", "only" -> "self.rsvp.response") <@(consumer, token)
@@ -267,7 +267,7 @@ object Meetup extends Config {
           ("results", r2) <- fs
           ("meta", m2)    <- fs
         } yield (r2, m2)).head
-        
+
         parse(r2, m2) ++ json
       }
     }
@@ -281,17 +281,17 @@ object Meetup extends Config {
     parse(res, meta)
   }
 
-  def hosting(memberId: String, eventId: String) =
+  def hosting(memberId: String, eventId: Int) =
     hosts(eventId).contains(memberId.toInt)
 
-  def hosts(eventId: String) =  {
+  def hosts(eventId: Int) =  {
     val body = http(host / "2" / "event" / eventId <<? Map(
       "fields" -> "event_hosts", "only" -> "event_hosts.member_id", "key" -> apiKey)
       > as.json4s.Json).apply()
     for (JInt(id) <- body \ "event_hosts" \ "member_id") yield id
   }
 
-  def event(eventId: String) = {
+  def event(eventId: Int) = {
     val body = http(host / "2"/ "event" / eventId <<? Map(
       "key" -> apiKey, "fields" -> "rsvp_rules", "only" -> "rsvp_rules,rsvp_limit,yes_rsvp_count")
       > as.json4s.Json).apply()

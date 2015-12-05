@@ -20,7 +20,7 @@ object Votes {
     case POST(Path(Seg("boston" :: "votes" :: Nil))) &
       AuthorizedToken(t) & Params(p) => Clock("voting for proposal") {
         val mid = t.memberId.get
-        if(!Meetup.has_rsvp(Meetup.Boston.dayone_event_id, t.token)) JsonContent ~> ResponseString(
+        if(!Meetup.rsvped(Meetup.Boston.dayoneEventId, t.token)) JsonContent ~> ResponseString(
           errorJson("you must rsvp to vote")) else {
           val expected = for {
             vote <- lookup("vote") is required("vote is required")

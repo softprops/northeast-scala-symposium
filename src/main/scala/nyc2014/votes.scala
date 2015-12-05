@@ -45,7 +45,7 @@ object Votes {
   //
   // the members current voting count it stored in the format
   // count:nyc2014:talk_votes:{memberId}
-  // 
+  //
   // when unvoting, given
   // - a talkKey: "nyc2014:proposals:{proposerId}:{talkId}"
   // - a voterCountKey "count:nyc2014:talk_votes:{voterId}"
@@ -53,7 +53,7 @@ object Votes {
   // be sure to.
   //
   // 1) decrement the proposals vote count
-  // redis.hincrby(talkKey, "votes", -1) 
+  // redis.hincrby(talkKey, "votes", -1)
   //
   // 2) decrement the voters voterCountKey
   // redis.decr(voterCountKey)
@@ -65,11 +65,11 @@ object Votes {
     case POST(Path(Seg("2014" :: "votes" :: Nil))) &
       AuthorizedToken(t) & Params(p) => Clock("voting for proposal") {
         val mid = t.memberId.get
-        if (!Meetup.has_rsvp(Meetup.Nyc2014.dayoneEventId, t.token)) JsonContent ~> ResponseString(
+        if (!Meetup.rsvped(Meetup.Nyc2014.dayoneEventId, t.token)) JsonContent ~> ResponseString(
           errorJson("you must rsvp to vote")) else {
           val expected = for {
             vote <- lookup("vote") is required("vote is required")
-            action <- lookup("action") is required("action is required")            
+            action <- lookup("action") is required("action is required")
           } yield {
             val Talk = """^nyc2014:proposals:(.*):(.*)$""".r
             val votedfor = vote.get
@@ -116,7 +116,7 @@ object Votes {
                           maxvotes - currentCount.asInstanceOf[Long]
                         case _ => maxvotes
                       }).getOrElse(maxvotes)))
-                      
+
                     case _ =>
                       ResponseString(errorJson("invalid action"))
                   }

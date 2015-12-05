@@ -45,7 +45,7 @@ object Votes {
   //
   // the members current voting count it stored in the format
   // count:philly:talk_votes:{memberId}
-  // 
+  //
   // when unvoting, given
   // - a talkKey: "philly:proposals:{proposerId}:{talkId}"
   // - a voterCountKey "count:philly:talk_votes:{voterId}"
@@ -53,7 +53,7 @@ object Votes {
   // be sure to.
   //
   // 1) decrement the proposals vote count
-  // redis.hincrby(talkKey, "votes", -1) 
+  // redis.hincrby(talkKey, "votes", -1)
   //
   // 2) decrement the voters voterCountKey
   // redis.decr(voterCountKey)
@@ -65,7 +65,7 @@ object Votes {
     case POST(Path(Seg("philly" :: "votes" :: Nil))) &
       AuthorizedToken(t) & Params(p) => Clock("voting for proposal") {
         val mid = t.memberId.get
-        if (!Meetup.has_rsvp(Meetup.Philly.eventId, t.token)) JsonContent ~> ResponseString(
+        if (!Meetup.rsvped(Meetup.Philly.eventId, t.token)) JsonContent ~> ResponseString(
           errorJson("you must rsvp to vote")) else {
           val expected = for {
             vote <- lookup("vote") is required("vote is required")

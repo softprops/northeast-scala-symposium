@@ -111,7 +111,7 @@ trait Templates extends nescala.Templates with SponsorTemplate {
        }
      </ul>
     </div>
-  
+
   val twttrFollow = {
     <a href="https://twitter.com/nescalas" class="twitter-follow-button" data-show-count="false" data-size="large">Follow @nescalas</a>
   }
@@ -206,7 +206,7 @@ trait Templates extends nescala.Templates with SponsorTemplate {
     </div>
 
   val drexelMap = "http://goo.gl/maps/s0n7h"
-  
+
   def blurb(authed: Boolean) =
     <div id="blurb">
       <div class="contained">
@@ -338,7 +338,7 @@ trait Templates extends nescala.Templates with SponsorTemplate {
             } else <span></span> }
           </div>
         </div>
-      </div>   
+      </div>
       <div class="r desc">
         {if(t.isDefinedAt("video")) { youtube(t("video")) ++ <hr/> } }
         <p>{ t("desc").trim() }</p>
@@ -398,7 +398,7 @@ trait Templates extends nescala.Templates with SponsorTemplate {
           </p>
         </div>
       </div>
-      <div class="day clearfix divy" data-event={ Meetup.Philly.eventId }>
+      <div class="day clearfix divy" data-event={ Meetup.Philly.eventId.toString }>
        { rsvps }
       </div>
     </div>
@@ -424,7 +424,7 @@ trait Templates extends nescala.Templates with SponsorTemplate {
         </a>.
       </p>
       <div id="propose-container" class="divy">
-        { proposalList(proposals) } 
+        { proposalList(proposals) }
       </div>
     </div>
   }
@@ -450,7 +450,7 @@ trait Templates extends nescala.Templates with SponsorTemplate {
             } else <span></span> }
           </div>
         </div>
-      </div>          
+      </div>
       <div class="r desc">
         {if(t.isDefinedAt("video")) { youtube(t("video")) ++ <hr/> } }
         <p>{ t("desc").trim() }</p>

@@ -110,7 +110,7 @@ trait Templates extends nescala.Templates with SponsorTemplate {
        }
      </ul>
     </div>
-  
+
   val twttrFollow = {
     <a href="https://twitter.com/nescalas" class="twitter-follow-button" data-show-count="false" data-lang="en" data-size="large">Follow @nescalas</a>
   }
@@ -208,8 +208,8 @@ trait Templates extends nescala.Templates with SponsorTemplate {
       <h4 class="tban"></h4><ul class="rsvps"></ul><p class="extra-rsvps"></p>
     </div>
 
- def dayOne(authed: Boolean, keynote: Map[String, String], talks: Seq[Map[String, String]], panel: Map[String, String]) = 
-   <div id="day-one" data-event={ Meetup.Boston.dayone_event_id } class="day clearfix">
+ def dayOne(authed: Boolean, keynote: Map[String, String], talks: Seq[Map[String, String]], panel: Map[String, String]) =
+   <div id="day-one" data-event={ Meetup.Boston.dayoneEventId.toString } class="day clearfix">
       <div class="contained">
         <div id="talk-submissions">
           <div class="l">
@@ -277,7 +277,7 @@ trait Templates extends nescala.Templates with SponsorTemplate {
               </div>
             </div>
           </div>
-          
+
           <div class="r desc">
             {if(t.isDefinedAt("video")) { <a class="vid" href={ t("video").toString }>video</a> } }
             <p>{ t("desc").trim() }</p>
@@ -309,7 +309,7 @@ trait Templates extends nescala.Templates with SponsorTemplate {
     </div>
 
   private val dayTwo =
-    <div id="day-two" data-event={ Meetup.Boston.daytwo_event_id } class="day clearfix">
+    <div id="day-two" data-event={ Meetup.Boston.daytwoEventId.toString } class="day clearfix">
       <div class="contained">
         <div class="l">
           <h1><a href="http://www.meetup.com/nescala/events/44042982/" target="_blank">Day 02</a></h1>
@@ -318,7 +318,7 @@ trait Templates extends nescala.Templates with SponsorTemplate {
             <span>10am @<a href="http://maps.google.com/maps?q=32+Vassar+Street%2C+Cambridge%2C+MA">Stata Center</a></span>
           </h3>
           <p>Scala Workshops</p>
-          
+
         </div>
         <div class="r">
           The second day of the symposium is a hands-on unconference of Scala coding workshops held at MIT's Stata Center.
@@ -334,7 +334,7 @@ trait Templates extends nescala.Templates with SponsorTemplate {
     </div>
 
   private val dayThree =
-    <div id="day-three" data-event={ Meetup.Boston.daythree_event_id }
+    <div id="day-three" data-event={ Meetup.Boston.daythreeEventId.toString }
       class="day clearfix">
       <div class="contained">
         <div class="l">
@@ -344,7 +344,7 @@ trait Templates extends nescala.Templates with SponsorTemplate {
             <span>10am @<a href="http://maps.google.com/maps?q=32+Vassar+Street%2C+Cambridge%2C+MA">Stata Center</a></span>
           </h3>
           <p>Hack day</p>
-          
+
         </div>
         <div class="r">No formal events are planned, but space at the Stata Center will be available for attendees to meet, talk, and hack.</div>
         { rsvps }
