@@ -1,4 +1,6 @@
-# properties used for dev testing
+# properties used for dev testing.
+#
+# copy this file to src/main/resources/meetup.properties
 #
 # app instances will prefer env vars over properties
 # defined in this file. deployment in heroku uses
