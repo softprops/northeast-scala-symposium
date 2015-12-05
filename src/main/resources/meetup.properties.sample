@@ -1,12 +1,32 @@
+# properties used for dev testing
+#
+# app instances will prefer env vars over properties
+# defined in this file. deployment in heroku uses
+# env vars for configuraiton exclusively in production
+# you can manage these locally via https://toolbelt.heroku.com/
+# using the `heroku config` cmdline tool.
+# note you will need a git remote as defined under https://dashboard.heroku.com/apps/{appname}/settings
+# under the Info sections Git URL field
+# `git remote add heroku git@heroku.com:{appname}.git`
+#
+# alternatively you can mangage configuration via your browser
+# @ https://dashboard.heroku.com/apps/{appname}/settings
+# under the Config Variables section
+
+# meetup api oauth consumer credentials
+# https://secure.meetup.com/meetup_api/oauth_consumers/
 mu_consumer = MEETUP_OAUTH_CONSUMER_KEY
 mu_consumer_secret = MEETUP_OAUTH_CONSUMER_SECRET
 host = HOST_FOR_OAUTH_CALLBACK
+
+# meetup api key
+# https://secure.meetup.com/meetup_api/key/
 api_key = MEETUP_API_KEY
 
-MEMCACHE_SERVERS = MEMCACHED_SERVER_HOST
-MEMCACHE_PASSWORD = MEMCACHED_PASSWORD
-MEMCACHE_USERNAME = MEMCACHED_USERNAME
-
+# redistogo connection string
+# https://redistogo.com/instances?language=en
 REDISTOGO_URL = REDIS_URL
 
+# a randomly generated string
+# used for browser cookie signing
 secret = SITE_SECRET
